@@ -177,14 +177,15 @@ export const messageFor = {
 };
 
 // What the run route sends to OpenRouter, shown on the page. The Researcher's request turns on OpenRouter's web
-// search (the Exa engine, which cites its sources), which costs a little more per call. Reasoning is off: with it on,
-// a Claude model given a whole repository can spend its entire output budget thinking and answer with nothing.
+// search (the Exa engine, which cites its sources), which costs a little more per call. Reasoning gets a small fixed budget:
+// left to itself, a Claude model given a whole repository can spend its entire output budget thinking and answer
+// with nothing, and the newer models won't let it be turned off.
 export function runRequest({ model, role, instructions, message }) {
   const search = roles.find((r) => r.key === role)?.search;
   return {
     model,
-    max_tokens: 4000,
-    reasoning: { enabled: false },
+    max_tokens: 8000,
+    reasoning: { max_tokens: 1024 },
     ...(search ? { plugins: [{ id: "web", engine: "exa", max_results: 6 }] } : {}),
     messages: [
       { role: "system", content: instructions },
