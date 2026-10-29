@@ -1,0 +1,84 @@
+/* The ensemble's styles, scoped to this folder (a CSS module), so changing them never touches /remix (which has
+   its own copy). Colors come from the site's tokens in app/globals.css. */
+
+.ensemble { display: grid; gap: 20px; }
+.ensemble button { font: inherit; cursor: pointer; }
+.ensemble button:disabled { cursor: default; opacity: .45; }
+.ensemble select, .ensemble input[type="text"], .ensemble textarea {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--wash); color: var(--ink); font: inherit; font-size: 14px;
+}
+.ensemble textarea { resize: vertical; line-height: 1.5; }
+.ensemble code { font-size: .92em; }
+
+/* Steps, as collapsible panels, numbered. */
+.step { border: 1px solid var(--line); border-radius: 16px; padding: 0 22px; background: var(--wash); }
+.step summary { display: flex; align-items: center; gap: 16px; padding: 18px 0; cursor: pointer; list-style: none; }
+.step summary::-webkit-details-marker { display: none; }
+.step[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.stepNumber { display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 14px; font-weight: 800; }
+.stepTitle { display: grid; gap: 2px; min-width: 0; }
+.stepTitle strong { font-size: 20px; letter-spacing: -.03em; }
+.stepTitle small { color: var(--muted); font-size: 13px; line-height: 1.4; }
+.stepCaret { display: grid; place-items: center; flex: none; width: 34px; height: 34px; margin-left: auto; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: transform .15s; }
+.stepCaret::before { content: ""; width: 10px; height: 10px; margin-top: -5px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); }
+.step[open] .stepCaret { transform: rotate(180deg); }
+.step summary:hover .stepCaret { border-color: var(--accent); color: var(--accent); }
+.body { display: grid; gap: 16px; padding: 4px 0 20px; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 22px; }
+.fields label, .block { display: grid; gap: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.wide { grid-column: 1 / -1; }
+.note { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.note strong { color: var(--ink); }
+.inline { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.inline select { width: auto; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); font-size: 13px; font-weight: 600; }
+.button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.primary { padding: 10px 20px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 800; }
+.primary:hover:not(:disabled) { filter: brightness(1.08); }
+.fileInput { color: var(--muted); font-size: 13px; }
+.fileInput::file-selector-button { margin-right: 10px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+
+/* The file table: allowed at all, then one column per agent. */
+.files { width: 100%; border-collapse: collapse; font-size: 13px; }
+.files th, .files td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.files th { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.files td:first-child { font-family: ui-monospace, monospace; font-size: 12px; overflow-wrap: anywhere; }
+.files td.num { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.files td.tick, .files th.tick { text-align: center; }
+.files input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); }
+.withheld td { color: var(--muted); text-decoration: line-through; }
+.withheld td.tick { text-decoration: none; }
+.badge { display: inline-block; padding: 2px 8px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+
+/* Role cards. */
+.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.role { display: grid; gap: 8px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.role strong { font-size: 16px; letter-spacing: -.02em; }
+.role p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.role p b { color: var(--ink); font-weight: 600; }
+
+/* A run: the role's header, what was sent, what came back. */
+.run { display: grid; gap: 12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.runHead { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.runHead strong { font-size: 18px; letter-spacing: -.02em; }
+.runHead small { color: var(--muted); font-size: 12px; }
+.runHead .primary { margin-left: auto; }
+.sent summary { cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 600; }
+.sent pre { margin: 8px 0 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--code); font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 420px; overflow: auto; }
+.output { min-height: 180px; font-family: ui-monospace, monospace; font-size: 12.5px; }
+.edited { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.sources { margin: 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.sources a { color: var(--accent); }
+.busy { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+.error { margin: 0; padding: 10px 14px; border: 1px solid var(--error); border-radius: 10px; color: var(--error); font-size: 14px; line-height: 1.5; }
+.error button { margin-left: 8px; border: 0; background: none; color: inherit; text-decoration: underline; }
+
+/* The trace, for the page and for print: on paper only the trace shows. */
+.trace { padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--code); font-size: 12px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 600px; overflow: auto; }
+@media print {
+  .step:not(.out), .out summary, .out .row, .out .note { display: none !important; }
+  .out { border: 0; padding: 0; background: none; }
+  .trace { max-height: none; overflow: visible; border: 0; background: none; color: #000; font-size: 10.5pt; }
+}

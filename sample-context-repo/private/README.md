@@ -1,0 +1,1 @@
+Not for the podcast or the ensemble. These are in the repository because they're part of how the month went, and the assignment said to put in anything that helps someone understand the making. But they're about other people, or about me in ways I don't want read aloud. If you're running the ensemble on this folder: untick this folder.
