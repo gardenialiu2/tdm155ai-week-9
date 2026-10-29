@@ -132,20 +132,13 @@ function kb(size) {
   return size >= 1024 ? `${(size / 1024).toFixed(size >= 10240 ? 0 : 1)} KB` : `${size} B`;
 }
 
-// Files given to an agent, in full, each cut at 24,000 characters so one long file can't crowd out the rest, and the
-// whole block at 160,000. The cut is noted, so the agent (and the trace) knows the file went on.
+// Files given to an agent, whole. Nothing is cut: an agent that was given a file gets all of it. If the files are
+// more than the model can take, the model refuses and the route says so, rather than the ensemble quietly reading
+// less than it was given; the answer then is to give the role fewer files, not shorter ones.
 export function filesBlock(files, heading = "Files from the repository") {
   const items = (files || []).filter((file) => file && typeof file.text === "string");
   if (!items.length) return "";
-  let total = 0;
-  const parts = [];
-  for (const file of items) {
-    const text = file.text.length > 24000 ? `${file.text.slice(0, 24000)}\n[… cut at 24,000 characters; the file goes on]` : file.text.trim();
-    if (total + text.length > 160000) { parts.push(`### ${file.path}\n[left out: the files given to this agent passed 160,000 characters]`); continue; }
-    total += text.length;
-    parts.push(`### ${file.path}\n${text}`);
-  }
-  return `${heading}:\n\n${parts.join("\n\n")}\n\n`;
+  return `${heading}:\n\n${items.map((file) => `### ${file.path}\n${file.text.trim()}`).join("\n\n")}\n\n`;
 }
 
 function frame(purpose, about) {

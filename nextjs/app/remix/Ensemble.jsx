@@ -120,10 +120,10 @@ export default function Ensemble() {
     for (const file of Array.from(event.target.files || [])) {
       const path = file.webkitRelativePath || file.name;
       const ext = path.slice(path.lastIndexOf(".")).toLowerCase();
-      if (skipFolders.test(path) || /(^|\/)\./.test(path) || !textTypes.has(ext) || file.size > 200000) continue;
+      if (skipFolders.test(path) || /(^|\/)\./.test(path) || !textTypes.has(ext)) continue;
       out.push({ path, size: file.size, text: await file.text() });
     }
-    if (!out.length) { setError("No text files in that folder (Markdown, text, CSV, JSON, HTML, code; under 200 KB each)."); return; }
+    if (!out.length) { setError("No text files in that folder (Markdown, text, CSV, JSON, HTML, code)."); return; }
     takeFiles(out);
   }
 

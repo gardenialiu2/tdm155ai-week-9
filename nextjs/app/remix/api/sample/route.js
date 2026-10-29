@@ -18,7 +18,6 @@ async function walk(dir, base) {
     if (entry.isDirectory()) out.push(...(await walk(full, rel)));
     else if (textTypes.has(path.extname(entry.name).toLowerCase())) {
       const { size } = await stat(full);
-      if (size > 200000) continue;
       out.push({ path: rel, size, text: await readFile(full, "utf8") });
     }
   }
