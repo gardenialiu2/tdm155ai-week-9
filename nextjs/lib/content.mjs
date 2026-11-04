@@ -7,7 +7,7 @@ export const site = {
   label: "Week 9",
   term: "TDM 155AI · Fall 2026",
   // The home page's heading and the line under it.
-  heading: "Agents and systems",
+  heading: "Agents, systems, orchestration",
   deck: "TDM 155AI, week 9 · November 4, 2026",
 };
 
@@ -66,6 +66,8 @@ async function parse(file) {
     content = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
   }
   const heading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  // A document that opens with its own H1 under a frontmatter title would show its title twice: drop that first H1.
+  if (typeof data.title === "string") content = content.replace(/^\s*#\s+.+\r?\n/, "");
   return { data, content, heading };
 }
 

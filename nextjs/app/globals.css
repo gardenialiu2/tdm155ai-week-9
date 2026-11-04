@@ -52,7 +52,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .site-header { min-height: 80px; margin: 0 var(--gutter); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .wordmark { font-size: 20px; font-weight: 800; letter-spacing: -.035em; }
 .wordmark span { margin-left: 8px; color: var(--muted); font-weight: 450; }
-.site-header nav { display: flex; gap: 26px; font-size: 14px; }
+.site-header nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 22px; font-size: 14px; }
 .site-header nav a:hover { color: var(--accent); }
 .site-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; padding: 26px var(--gutter); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 

@@ -58,7 +58,7 @@ export default async function EntryPage({ params }) {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader current={slug[0] === "ai-research" ? (slug[1] === "glossary" ? "glossary" : "research") : ""} />
       <main id="main" className="article-shell">
         <Breadcrumbs trail={trail} title={entry.title} />
         <header className="article-heading">

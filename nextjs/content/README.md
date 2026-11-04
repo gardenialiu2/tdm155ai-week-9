@@ -29,6 +29,7 @@ An agent is not a smarter chatbot. It is a model plus **what it's told** (its in
 
 - **[Theater](/theater):** pick a system, rehearse it for free, run it, stop it, and read its dashboard. Systems are folders in `systems/` at the repo root; [the Theater docs](/docs/theater) explain each step and [the format](/docs/theater/09-system-format).
 - **[Runs](/theater/runs):** every run on this computer; [View a log](/theater/view) opens anyone's `.jsonl`.
+- **[Research](/ai-research) and the [Glossary](/ai-research/glossary):** orchestration in AI and in human practice (music, dance, film and theater, reality TV, labs, startups), and the terms for today, each with its AI sense, its human sense, and an example from the theater. Written with AI on the morning of the class; check before citing.
 - **[Docs](/docs):** the Theater, what an agent is, and the ensemble on paper.
 - **[Ensemble](/ensemble):** a worked example of a fixed graph: four roles read a context repository and brief a podcast host, with a person approving each step. [Remix](/remix) is your copy to change.
 

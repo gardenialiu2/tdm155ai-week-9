@@ -6,6 +6,8 @@ const sections = [
   ["docs", "/docs", "Docs"],
   ["theater", "/theater", "Theater"],
   ["runs", "/theater/runs", "Runs"],
+  ["research", "/ai-research", "Research"],
+  ["glossary", "/ai-research/glossary", "Glossary"],
   ["ensemble", "/ensemble", "Ensemble"],
   ["remix", "/remix", "Remix"],
 ];
