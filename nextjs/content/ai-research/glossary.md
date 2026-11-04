@@ -3,13 +3,13 @@ title: "A glossary of orchestration: agents, loops, graphs, and the people who r
 description: Core terms for designing a theater of agents, each with its meaning in AI engineering, its meaning in a human practice where it has one, and an example from a student's ensemble.
 author: claude (RS research pane, TDM 155AI week 9)
 date: 2026-11-04
-status: "batches 1 to 3; agent research, check before citing"
+status: "the big words (Nov 4) and batches 1 to 3; agent research, check before citing"
 order: 0
 ---
 
 # A glossary of orchestration
 
-Terms for class 9 of TDM 155AI, *agents, systems, orchestration*, with directing, producing, and choreography in the background. Batch 1 (33 core terms) follows the class sequence: the smallest loop, the small graph, how much the model decides, running without you, and the theater (the cast, the producers, the observers). Batch 2 (58 more) follows the research notes: the products as of today, simulations of people, producers and game masters, scores and choreography, and labs, startups, and coaches, plus a few more building blocks.
+Terms for class 9 of TDM 155AI, *agents, systems, orchestration*, with directing, producing, and choreography in the background. It opens with the big words students have already heard (agent, agentic AI, agentic system, tool, loop and graph engineering), with a note on how loosely they are used. Batch 1 (33 core terms) follows the class sequence: the smallest loop, the small graph, how much the model decides, running without you, and the theater (the cast, the producers, the observers). Batch 2 (58 more) follows the research notes: the products as of today, simulations of people, producers and game masters, scores and choreography, and labs, startups, and coaches, plus a few more building blocks.
 
 Each entry has four parts. **In AI engineering** gives the term as builders of agent systems use it. **In human practice** gives its meaning in music, theater, film, television, or another field where people orchestrate other people. **In the theater of agents** is a one-line example from the kind of system you are building this week: an ensemble of characters (system 1), the producers who write into it (system 2), and the observers who read both (system 3). **Sources** says where each claim comes from and how far it has been checked.
 
@@ -20,6 +20,82 @@ How the sources are marked:
 - **unverified**: general background, not checked against a source today.
 
 Product details change weekly. Every product claim carries a date. The research notes linked below go further than the glossary on each topic.
+
+## The big words: agent, agentic, and their neighbors
+
+Students arrive having heard *agent* and *agentic AI*. These words overlap, and none of them has one standard definition: vendors, researchers, and this course use them differently, and their meanings have shifted since 2023. Marlon's framing for November 4 is a set of features that overlap and nest rather than a taxonomy: acting without the user launching each action (autonomy), deciding what to do next, calling tools, resources, and APIs, and graph complexity, with decisions and loops inside it. Not everything called an agent has every feature. The Lab's November 1 working frame of three parts (orchestration, agency, autonomy) is one useful cut through those features, not an exhaustive list. Marlon also offers a way to think about "one agent": a circle drawn around some nodes because it is useful to treat them as a unit, a metaphor that lets us borrow intuitions from human collaboration without assuming agent systems must copy it.
+
+The entries in this section are new on November 4. Related entries elsewhere in the glossary: Agent, Augmented LLM, Loop, Stop condition, Cap, Graph, Router (switch), State, Workflow vs. agent, Agency, Orchestration, Autonomy, Trigger, Heartbeat, Harness, Subagent, Graph of graphs, Commander's intent.
+
+### Agentic AI
+
+**In AI engineering.** An umbrella term, not a technical one: AI systems that do more than answer once, because they loop, call tools, decide some of their own next steps, or run without a person starting each action. Usage drifted from a modifier to a category. Andrew Ng's letters in *The Batch* in March and April 2024 used it as a modifier: "four design patterns for AI agentic workflows ... Reflection, Tool use, Planning and Multi-agent collaboration," where "an agentic workflow prompts the LLM multiple times, giving it opportunities to build step by step to higher-quality output." By 2025 and 2026 it named a product category and an industry body (the Agentic AI Foundation, which took over MCP in December 2025). We found no source that settles who first used the phrase, and we don't assign it one.
+
+**In human practice.** *Agency* in the social sciences is a person's capacity to act on their own behalf; *agentic* is that capacity as an adjective. The everyday sense, someone who takes initiative, is the one the marketing borrows.
+
+**In the theater of agents.** The class's systems are agentic in different degrees: the step 0a loop barely, the step 2 ensemble with a director that chooses interventions more, a cast that runs on a schedule and spawns its own scenes most.
+
+**Sources.** Andrew Ng, *The Batch* [issue 242](https://www.deeplearning.ai/the-batch/issue-242/) (March 27, 2024; read Nov 4), with the same pattern names in issues 243–245 (read Nov 4); issue 241 (March 20, 2024; read Nov 4) says "agent workflows," not "agentic." Agentic AI Foundation: Nov 1 essay 07 (Anthropic's December 2025 announcement page returned 404 on Nov 4). Marlon's Nov 4 framing: TL's summary of his Slack notes, `plan/unit-3/slack-context-20261104.md`.
+
+### Agentic system
+
+**In AI engineering.** Anthropic's umbrella for everything from fixed pipelines to open-ended agents: "we categorize all these variations as agentic systems, but draw an important architectural distinction between workflows and agents." Workflows are "systems where LLMs and tools are orchestrated through predefined code paths"; agents are "systems where LLMs dynamically direct their own processes and tool usage." In the Lab, the agentic system, not "an AI," is the unit to design and judge (Marlon's anchor, after Imas, Koh, and Legg's "Organizing Intelligence").
+
+**In human practice.** A crew, a company, a band, a lab: the system works because of how its parts are arranged, not because any one member is brilliant. The Lab's essays on film crews, kitchens, and newsrooms read these as agentic systems made of people.
+
+**In the theater of agents.** The cast, the producers who write into it, and the observers who read both are one agentic system: change the producer and the same cast plays a different show.
+
+**Sources.** Anthropic, ["Building effective agents"](https://www.anthropic.com/research/building-effective-agents) (Dec 19, 2024; read Nov 4). Imas, Koh, and Legg: see [Papers and essays](documentation/papers-and-essays.md), "Already in the Lab's reading." Marlon's "the agentic system as the unit": weekly doc, Nov 1.
+
+### Tool
+
+**In AI engineering.** A function the model can ask the program to run: search the web, read a file, roll a die, post to Slack, call another agent. The model writes a request (the tool's name and arguments); the harness or your code runs it and hands back the result; the model continues. Tools are how a model touches anything outside its own text. MCP is a standard way to offer tools, resources, and prompts to any model. Choosing which tool to call, and when, is one of the places an agent decides for itself.
+
+**In human practice.** A stagehand's cue sheet, the editor's software, a phone call to the casting office: the means a person uses to act on the world rather than talk about it.
+
+**In the theater of agents.** Give the producer two tools, `inject_event` and `whisper(character, note)`, and nothing else; everything it does to the show goes through those two calls, which makes it easy to log.
+
+**Sources.** Anthropic, ["Tool use with Claude"](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) (read Nov 4, via the [catalog](documentation/catalog.md)); "Writing effective tools for agents" in [Papers and essays](documentation/papers-and-essays.md). See also Augmented LLM and MCP in this glossary.
+
+### Self-guidance (deciding what to do next)
+
+**In AI engineering.** The model, not the programmer, chooses the next step: which tool, which branch, whether to try again, whether the goal is met. Marlon on Nov 4: agency can appear in a loop or a graph, as "determining when a goal has been achieved, testing a plan, or choosing a route." It is a dial, not a switch: a system can be prewired at some nodes and model-decided at others. Vendors often call this *autonomy*; in this glossary, autonomy is about running without a person starting each action, and the two are separate dials.
+
+**In human practice.** The difference between a musician reading a fully written part and one improvising inside a structure (*In C*, *Cobra*), or between a crew member following a call sheet and one acting on the director's intent.
+
+**In the theater of agents.** In step 0b the switch is code (`if vote == "guilty"`); swap it for a node where the model decides which scene comes next, and the same graph now guides itself at that point.
+
+**Sources.** TL's summary of Marlon's Nov 4 Slack notes, `plan/unit-3/slack-context-20261104.md`; Anthropic, ["Building effective agents"](https://www.anthropic.com/research/building-effective-agents) (read Nov 4). See also Agency, Autonomy, and Workflow vs. agent.
+
+### Loop engineering
+
+**In AI engineering.** A 2026 coinage, mostly in blogs and essays rather than standards: designing the loop that prompts, checks, and re-runs an agent, instead of prompting it yourself turn by turn. Addy Osmani's essay "Loop Engineering" (June 7, 2026): "Loop engineering is replacing yourself as the person who prompts the agent. You design the system that does it instead." He quotes Peter Steinberger: "You shouldn't be prompting coding agents anymore. You should be designing loops that prompt your agents." In practice it means scheduled or self-repeating runs (`/loop`, automations, routines), goals with checks, worktrees, skills, subagents, and, above all, stop conditions and caps. None of the pages we read says who coined the phrase.
+
+**In human practice.** Rehearsal schedules and production calendars, stand-up meetings, the weekly editorial cycle: designing the recurring process that produces the work, rather than doing each piece by hand.
+
+**In the theater of agents.** You stop typing "next scene" and write a loop that does: every 30 seconds, read the log, prompt the next speaker, check the milestone, and stop after 40 turns or when the director says the episode is done.
+
+**Sources.** Addy Osmani, ["Loop Engineering"](https://addyosmani.com/blog/loop-engineering/) (June 7, 2026; read Nov 4). Shittu Olumide, ["An Introduction to Loop Engineering"](https://machinelearningmastery.com/an-introduction-to-loop-engineering/) (Machine Learning Mastery, July 23, 2026; read Nov 4), which defines it as "designing the system that prompts, checks, remembers, and re-runs an AI agent, instead of a person doing all of that by hand." Steinberger's X post itself could not be opened (unverified).
+
+### Graph engineering
+
+**In AI engineering.** A newer label, proposed in an August 2026 survey and not yet in wide use: designing explicit graphs of tasks, agents, and system state so that many agents can be coordinated, rather than improving one agent's prompt, context, harness, or loop. The survey places it after a sequence it names "Prompt Engineering ..., Context Engineering ..., Harness Engineering ..., and Loop Engineering," and says "Graph Engineering constructs explicit, dynamic, evolving graph structures representing tasks, agents, and system states." Read the sequence as one paper's framing, not settled history. In this course, *graph* is simply nodes that do work and edges that pass state; graph engineering is designing that graph on purpose.
+
+**In human practice.** The production board, the org chart, the run of show, the cue-to-cue: the drawn structure of who hands what to whom.
+
+**In the theater of agents.** Draw the show before running it: cast nodes, a director node with two outgoing edges (intervene or let it run), an observer node fed by every turn; then change one edge and run it again.
+
+**Sources.** Feng, Xiang, Yang, et al. (35 authors), ["Graph Engineering in the Era of LLM Agents: From Individual Intelligence to System Intelligence"](https://arxiv.org/abs/2608.21156), arXiv 2608.21156 (v1 Aug 21, v2 Aug 26, 2026; abstract read Nov 4). See also Graph, Node, Edge, and Graph of graphs.
+
+### Nesting
+
+**In AI engineering.** Loops inside graphs, graphs inside nodes, agents inside agents. A node in a graph can itself be an agent running its own loop; an agent can start subagents, which start their own; a scheduled job can launch a whole graph. Claude Code allows subagents to nest "up to three layers below the main conversation." Nesting is why the features in this section don't separate cleanly: a system can be prewired at the top and self-guided inside one node, or always on at the outside and a fixed pipeline inside.
+
+**In human practice.** A production company contains shows, a show contains crews, a crew contains departments, each with its own head and its own routine. A play within a play.
+
+**In the theater of agents.** The reality show is a graph (challenge, vote, elimination); inside the vote node, each contestant is an agent looping over the transcript; outside the whole show, a nightly job runs a new episode: three levels of nesting, each with its own cap.
+
+**Sources.** Claude Code [subagents documentation](https://code.claude.com/docs/en/sub-agents) (read Nov 4 in note 01); Marlon's Nov 4 framing ("the features overlap and nest"), TL's summary in `plan/unit-3/slack-context-20261104.md`. See also Subagent and Graph of graphs.
 
 ## The smallest unit: one agent in a loop
 
@@ -139,17 +215,17 @@ Product details change weekly. Every product claim carries a date. The research 
 
 ### Agency
 
-**In AI engineering.** In the Lab's working frame (three parts, Nov 1), agency is choice: whether the model decides the path or you wired it in advance. Vendors often call this "autonomy." CrewAI, for example, calls crews "autonomous" when it means they choose their own steps, so read product copy carefully.
+**In AI engineering.** In the Lab's Nov 1 working frame, agency is choice: whether the model decides the path or you wired it in advance. Vendors often call this "autonomy." CrewAI, for example, calls crews "autonomous" when it means they choose their own steps, so read product copy carefully.
 
 **In human practice.** How much latitude a performer, soldier, or employee has. Mission command gives subordinates the commander's intent and leaves the how to them.
 
 **In the theater of agents.** Turn agency up by letting characters choose whom to address and when to stay silent. Turn it down by fixing the order.
 
-**Sources.** The three-part frame: weekly doc, "the theme: agents and systems" (terms proposed by Claude, agreed by Marlon, Nov 1). CrewAI usage and mission command: Nov 1 essays 07 and 05.
+**Sources.** The Nov 1 working frame (one cut through overlapping features, not a taxonomy; see "The big words" above): weekly doc, "the theme: agents and systems" (terms proposed by Claude, agreed by Marlon, Nov 1). CrewAI usage and mission command: Nov 1 essays 07 and 05.
 
 ### Orchestration
 
-**In AI engineering.** Coordinating many steps, tools, and agents in one run: who does what, in what order, in parallel or in sequence. In the Lab's frame it names the complexity of a single run ("the product of many intelligences," Marlon). In software, Chris Peltz (2003) defined orchestration as a process owned and run by one party that calls others in a defined order.
+**In AI engineering.** Coordinating many steps, tools, and agents in one run: who does what, in what order, in parallel or in sequence. In the Lab's Nov 1 working frame it names the complexity of a single run ("the product of many intelligences," Marlon). In software, Chris Peltz (2003) defined orchestration as a process owned and run by one party that calls others in a defined order.
 
 **In human practice.** In music, orchestration is "the study or practice of writing music for an orchestra": assigning each line to the instrument suited to it, a design-time job. Running the performance is **conducting**, which became a separate job only around 1820, when, by one account, "it became the norm to have a dedicated conductor who did not also play an instrument." The useful lesson: decide the parts before the run, and conduct during it.
 
@@ -201,7 +277,7 @@ Product details change weekly. Every product claim carries a date. The research 
 
 ### Autonomy
 
-**In AI engineering.** In the Lab's frame, autonomy means the system runs without a person starting each run: "always on, always running; on a loop or cron, … setting the agents free to continue running themselves and launching each other" (Marlon, Nov 1). The products of 2026 sell it under the names *always-on*, *proactive*, *background*, and *ambient* agents.
+**In AI engineering.** In the Lab's Nov 1 working frame, autonomy means the system runs without a person starting each run: "always on, always running; on a loop or cron, … setting the agents free to continue running themselves and launching each other" (Marlon, Nov 1). The products of 2026 sell it under the names *always-on*, *proactive*, *background*, and *ambient* agents.
 
 **In human practice.** A night watch, a standing order, a crew that keeps working after the director goes home.
 

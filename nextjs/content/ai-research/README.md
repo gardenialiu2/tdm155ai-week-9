@@ -17,7 +17,7 @@ These files are the source. The week 9 app (`tdm155ai/tdm155ai-week-9`) copies t
 
 | file | what it is | status |
 | --- | --- | --- |
-| [glossary.md](glossary.md) | core terms, each with an AI-engineering sense, a human-practice sense, an example from a theater of agents, and sources | batch 1 (33 core terms, in the order of the class), batch 2 (58 from notes 01–05), and batch 3 (15 from notes 06–07), 106 in all, Nov 4 |
+| [glossary.md](glossary.md) | core terms, each with an AI-engineering sense, a human-practice sense, an example from a theater of agents, and sources | an opening section on the big words (7 terms: agentic AI, agentic system, tool, self-guidance, loop engineering, graph engineering, nesting), batch 1 (33 core terms, in the order of the class), batch 2 (58 from notes 01–05), and batch 3 (15 from notes 06–07), 113 in all, Nov 4 |
 | [reading-path.md](reading-path.md) | what to read for each step of the class, from one loop to observers feeding a dashboard, drawn from everything here | done, Nov 4 |
 | [notes/01-agent-products-as-of-nov-4.md](notes/01-agent-products-as-of-nov-4.md) | the agent products and frameworks as of today: dots, Grok Bot, Muse, Claude Duet, ChatGPT Work, OpenClaw, Hermes, LangGraph, CrewAI, Agent Builder, Agents SDK, ADK, Microsoft Agent Framework, MCP | done, about 4,200 words |
 | [notes/02-simulations-of-people.md](notes/02-simulations-of-people.md) | Axelrod's tournaments, agent-based models, *Generative Agents*, LLMs in Werewolf and Diplomacy, and the critiques | done, about 4,000 words |
