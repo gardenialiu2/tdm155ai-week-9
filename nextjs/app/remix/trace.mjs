@@ -11,7 +11,7 @@ export function traceMarkdown(session) {
     for (const agent of ["intake", "interviewer", "sidekick"]) {
       const s = item[agent];
       const c = who(agent);
-      out.push(`### ${c.icon} ${c.name} (${c.role}): ${s.status}${s.cost ? ` · $${s.cost.toFixed(4)}` : ""}${s.model ? ` · ${s.model}` : ""}`, "");
+      out.push(`### ${c.icon} ${c.name}${c.role === c.name ? "" : ` (${c.role})`}: ${s.status}${s.cost ? ` · $${s.cost.toFixed(4)}` : ""}${s.model ? ` · ${s.model}` : ""}`, "");
       if (s.error) out.push(`Error: ${s.error}`, "");
       if (agent === "intake" && s.text) out.push(`${s.method}:`, "", "```", s.text, "```", "");
       if (agent === "interviewer" && s.questions) out.push(...(s.summary ? [s.summary, ""] : []), ...s.questions.map((q, i) => `${i + 1}. ${q.question}${q.why ? ` *Why:* ${q.why}` : ""}`), "");

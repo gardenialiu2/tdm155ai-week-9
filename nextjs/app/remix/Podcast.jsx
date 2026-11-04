@@ -10,7 +10,7 @@ import { traceMarkdown } from "./trace.mjs";
 import styles from "./podcast.module.css";
 
 // The podcast prep page: pick or start a session for one guest, add material (files, pasted notes, links), and
-// watch the four agents work on each item as it arrives. When you're done adding, Bea writes the host's briefing.
+// watch the four agents work on each item as it arrives. When you're done adding, the Producer writes the host's briefing.
 // Everything is saved on the server (output/podcast/<session>/); this page only shows it and sends what you add.
 
 const ACTIVE = new Set(["waiting", "running"]);
@@ -176,7 +176,7 @@ export default function Podcast() {
             <article className={styles.agent} key={agent.id} data-state={state}>
               <Avatar agent={agent.id} state={state} size={68} />
               <div>
-                <h3>{agent.name} <span>· {agent.role}</span></h3>
+                <h3>{agent.name}{agent.role !== agent.name && <span> · {agent.role}</span>}</h3>
                 <p className={styles.state}>{label[state === "working" ? "running" : state] || "idle"}{session ? ` · ${counts(agent.id)}` : ""}</p>
                 <p className={styles.muted}>{agent.job}</p>
                 {instructions[agent.id] && (
@@ -195,7 +195,7 @@ export default function Podcast() {
         <>
           <section className={`${styles.panel} ${styles.noPrint}`} aria-label="Add material">
             <h2>Add material <span className={styles.badge}>revision {session.revision}</span></h2>
-            <p className={styles.muted}>Anything the guest has: drafts, recordings, video, photos, PDFs, notes, links. Each item is saved first, then Piper reads it and Quinn and Kit start on it right away. Add as much as you like; nothing is final until you say you're done.</p>
+            <p className={styles.muted}>Anything the guest has: drafts, recordings, video, photos, PDFs, notes, links. Each item is saved first, then the Collector reads it and the Interviewer and the Sidekick start on it right away. Add as much as you like; nothing is final until you say you're done.</p>
             <label
               className={styles.drop}
               data-over={over}
@@ -230,8 +230,8 @@ export default function Podcast() {
               <Avatar agent="producer" state={agentState("producer")} size={84} />
               <div>
                 <h2>The host's briefing</h2>
-                {!open && !briefed && <p className={styles.muted}>Bea waits until you say you're done, then until every item is finished.</p>}
-                {open && <p className={styles.state}>Revision {open.n}: {open.briefing.status === "running" ? "Bea is writing the briefing…" : open.briefing.status === "failed" ? `failed: ${open.briefing.error}` : open.briefing.why || label[open.briefing.status]}</p>}
+                {!open && !briefed && <p className={styles.muted}>The Producer waits until you say you're done, then until every item is finished.</p>}
+                {open && <p className={styles.state}>Revision {open.n}: {open.briefing.status === "running" ? "The Producer is writing the briefing…" : open.briefing.status === "failed" ? `failed: ${open.briefing.error}` : open.briefing.why || label[open.briefing.status]}</p>}
               </div>
             </div>
             <div className={`${styles.row} ${styles.noPrint}`}>
@@ -304,7 +304,7 @@ function Item({ item, session, briefed, act }) {
         <Lane agent="intake" item={item} act={act}>
           <p className={styles.muted}>{item.intake.method} · {(item.intake.text || "").length.toLocaleString()} characters</p>
           <details className={styles.read}>
-            <summary>What Piper read</summary>
+            <summary>What the Collector read</summary>
             <pre>{item.intake.text}</pre>
           </details>
         </Lane>

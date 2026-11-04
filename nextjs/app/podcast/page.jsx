@@ -3,7 +3,7 @@ import Podcast from "./Podcast.jsx";
 
 export const metadata = {
   title: "Podcast prep",
-  description: "Four agents prepare the host: Piper takes everything in, Quinn proposes questions, Kit offers kind jokes, Bea writes the briefing.",
+  description: "Four agents prepare the host: the Collector takes everything in, the Interviewer proposes questions, the Sidekick offers kind jokes, the Producer writes the briefing.",
 };
 
 export default function PodcastPage() {

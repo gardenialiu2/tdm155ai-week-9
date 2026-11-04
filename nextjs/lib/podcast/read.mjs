@@ -6,7 +6,7 @@ import { promisify } from "node:util";
 import { env } from "../keys.mjs";
 import { chat } from "./model.mjs";
 
-// Piper's tools: what turns a saved original into text the other agents can read. Text files are read as they
+// The Collector's tools: what turns a saved original into text the other agents can read. Text files are read as they
 // are; audio and video are converted with ffmpeg (if it's installed) and transcribed through OpenRouter; images are
 // described and PDFs read by a vision model; links are fetched and stripped to text. Each returns
 // { text, method, cost }. Nothing here ever changes the original.
@@ -103,7 +103,7 @@ export async function describeImage(bytes, name, mime, model) {
   }
   const answer = await chat({
     model,
-    system: "You are Piper, the intake agent for a podcast's producers. Describe an image someone submitted, so that colleagues who can't see it can ask good questions about it. Be factual: what is in it, any text in it (transcribed exactly), what kind of image it is (photo, sketch, screenshot, frame, diagram). Under 200 words. Don't guess at meanings or praise it.",
+    system: "You are the Collector, the intake agent for a podcast's producers. Describe an image someone submitted, so that colleagues who can't see it can ask good questions about it. Be factual: what is in it, any text in it (transcribed exactly), what kind of image it is (photo, sketch, screenshot, frame, diagram). Under 200 words. Don't guess at meanings or praise it.",
     content: [{ type: "text", text: `The file is "${name}". Describe it.` }, { type: "image_url", image_url: { url: `data:${type};base64,${Buffer.from(data).toString("base64")}` } }],
   });
   return { text: answer.text, method: `described (${answer.model})`, cost: answer.cost };
@@ -113,7 +113,7 @@ export async function readPdf(bytes, name, model) {
   const answer = await chat({
     model,
     maxTokens: 8000,
-    system: "You are Piper, the intake agent for a podcast's producers. Give the full text of the PDF you're given, as plain Markdown, in reading order. Describe any images or figures in one bracketed line each. Don't summarize or comment.",
+    system: "You are the Collector, the intake agent for a podcast's producers. Give the full text of the PDF you're given, as plain Markdown, in reading order. Describe any images or figures in one bracketed line each. Don't summarize or comment.",
     content: [{ type: "text", text: `The file is "${name}".` }, { type: "file", file: { filename: path.basename(name), file_data: `data:application/pdf;base64,${Buffer.from(bytes).toString("base64")}` } }],
   });
   return { text: answer.text, method: `read as a PDF (${answer.model})`, cost: answer.cost };

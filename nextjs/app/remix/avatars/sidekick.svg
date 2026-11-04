@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Kit, Sidekick">
-  <title>Kit, Sidekick</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Sidekick">
+  <title>Sidekick</title>
   <circle cx="128" cy="128" r="128" fill="#251d35"/>
   <g transform="scale(2.56)" stroke="#ecece6" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
     <path d="M18.25 86 Q22 70 38 67 L62 67 Q78 70 81.75 86 A48 48 0 0 1 18.25 86 Z" fill="#4a3d60" />

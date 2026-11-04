@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Bea, Producer">
-  <title>Bea, Producer</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Producer">
+  <title>Producer</title>
   <circle cx="128" cy="128" r="128" fill="#361a28"/>
   <g transform="scale(2.56)" stroke="#ecece6" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
     <rect x="35" y="50" width="10" height="18" fill="#ee93b0" />

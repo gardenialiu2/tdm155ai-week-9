@@ -4,11 +4,11 @@ import { describeImage, kindOf, readLink, readPdf, readText, transcribe } from "
 import { load, note, readOriginal, saveBriefing, saveOriginal, update } from "./store.mjs";
 
 // The podcast prep workflow, on the server. Every item is saved first; then, as soon as it's in:
-//   Piper (intake)        reads it: text as is, sound transcribed, images described, PDFs read, links fetched
-//   Quinn (interviewer)   once Piper is done: questions tied to the item
-//   Kit (sidekick)        once Quinn is done (or failed): optional jokes, the guest never the butt
+//   The Collector     reads it: text as is, sound transcribed, images described, PDFs read, links fetched
+//   The Interviewer   once the Collector is done: questions tied to the item
+//   The Sidekick      once the Interviewer is done (or failed): optional jokes, the guest never the butt
 // and only when the person says they're done (which closes a revision: everything submitted so far):
-//   Bea (producer)        once every item in that revision is finished: the host's briefing
+//   The Producer      once every item in that revision is finished: the host's briefing
 // `pump` looks at a session and starts whatever is ready. It runs after every change, and on every read, so a
 // restarted server picks up where it left off (a job that was running when the server stopped goes back to waiting).
 
@@ -138,7 +138,7 @@ export async function pump(sessionId) {
       if (item.intake.status === "done" && TERMINAL.has(item.interviewer.status) && item.sidekick.status === "waiting") start(item, "sidekick");
     }
 
-    // Bea: for each closed revision still to brief, once its items are finished.
+    // The Producer: for each closed revision still to brief, once its items are finished.
     for (const rev of session.revisions) {
       if (rev.briefing.status !== "waiting" && rev.briefing.status !== "blocked") continue;
       const items = itemsFor(session, rev).filter((i) => !i.excluded);
@@ -174,10 +174,10 @@ async function work(sessionId, itemId, agent) {
   await update(sessionId, (s) => {
     const it = s.items.find((i) => i.id === itemId);
     it[agent] = { ...outcome, finished: new Date().toISOString() };
-    // Nothing to read means nothing for Quinn and Kit to do until Piper is retried (a retry resets them).
+    // Nothing to read means nothing for the Interviewer and the Sidekick to do until the Collector is retried (a retry resets them).
     if (agent === "intake" && outcome.status === "failed") {
-      it.interviewer = { status: "skipped", why: "Piper couldn't read this item" };
-      it.sidekick = { status: "skipped", why: "Piper couldn't read this item" };
+      it.interviewer = { status: "skipped", why: "The Collector couldn't read this item" };
+      it.sidekick = { status: "skipped", why: "The Collector couldn't read this item" };
     }
     note(s, agent, outcome.status, outcome.status === "failed" ? `${it.name}: ${outcome.error}` : summary(agent, it), itemId);
   });
@@ -199,7 +199,7 @@ async function intake(sessionId, item) {
   if (item.kind === "text") return readText(bytes, item.name);
   // Unknown kinds: try them as text; if that's mostly unreadable, say so rather than pretend.
   const attempt = await readText(bytes, item.name);
-  if ((attempt.text.match(/�/g) || []).length > attempt.text.length / 50) throw new Error(`Piper can't read a ${item.name.split(".").pop()} file. It's saved; convert it (to PDF, text, audio, or an image) and add it again.`);
+  if ((attempt.text.match(/�/g) || []).length > attempt.text.length / 50) throw new Error(`The Collector can't read a ${item.name.split(".").pop()} file. It's saved; convert it (to PDF, text, audio, or an image) and add it again.`);
   return attempt;
 }
 
@@ -207,14 +207,14 @@ async function interviewer(item) {
   const prompt = { system: instructions.interviewer, user: interviewerMessage(item) };
   const answer = await chat({ ...prompt, json: true, maxTokens: 2500 });
   const questions = (answer.data?.questions || []).filter((q) => q && typeof q.question === "string").map((q) => ({ question: q.question, why: String(q.why || "") }));
-  if (!questions.length) throw new Error("Quinn's answer had no questions in it (the model didn't answer in JSON). Retry.");
+  if (!questions.length) throw new Error("The Interviewer's answer had no questions in it (the model didn't answer in JSON). Retry.");
   return { summary: String(answer.data.summary || ""), questions, cost: answer.cost, model: answer.model, prompt };
 }
 
 async function sidekick(item) {
   const prompt = { system: instructions.sidekick, user: sidekickMessage(item) };
   const answer = await chat({ ...prompt, json: true, maxTokens: 1500 });
-  if (!answer.data) throw new Error("Kit's answer wasn't JSON. Retry.");
+  if (!answer.data) throw new Error("The Sidekick's answer wasn't JSON. Retry.");
   const jokes = (answer.data.jokes || []).filter((j) => j && typeof j.idea === "string").map((j) => ({ idea: j.idea, butt: ["host", "sidekick", "situation"].includes(j.butt) ? j.butt : "situation" }));
   return { jokes, jokesNote: jokes.length ? "" : String(answer.data.jokesNote || "No useful joke here."), cost: answer.cost, model: answer.model, prompt };
 }

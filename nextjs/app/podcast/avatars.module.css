@@ -18,7 +18,7 @@
 .kitHat { transform-origin: 50px 36px; }
 .beaLine1, .beaLine2, .beaLine3, .beaLine4 { transform-box: fill-box; transform-origin: left center; }
 
-/* Piper: a page drops into the tray and settles on the stack; a small nod when it lands. */
+/* The Collector: a page drops into the tray and settles on the stack; a small nod when it lands. */
 .avatar[data-state="working"] .piperPage { animation: piperPage 1.6s ease-in-out infinite; }
 .avatar[data-state="working"] .piperHead { animation: piperNod 1.6s ease-in-out infinite; }
 @keyframes piperPage {
@@ -33,7 +33,7 @@
   68% { transform: translateY(1.5px); }
 }
 
-/* Quinn: sound rings pulse from the mic; the question mark bobs; the head tilts, curious. */
+/* The Interviewer: sound rings pulse from the mic; the question mark bobs; the head tilts, curious. */
 .avatar[data-state="working"] .quinnRing1 { animation: quinnRing1 1.4s ease-out infinite; }
 .avatar[data-state="working"] .quinnRing2 { animation: quinnRing2 1.4s ease-out infinite; }
 .avatar[data-state="working"] .quinnQ { animation: quinnBob 2.8s ease-in-out infinite; }
@@ -57,7 +57,7 @@
   50% { transform: rotate(-4deg); }
 }
 
-/* Kit: tips the hat, eyebrow up, and puts it back. */
+/* The Sidekick: tips the hat, eyebrow up, and puts it back. */
 .avatar[data-state="working"] .kitHat { animation: kitHat 1.8s ease-in-out infinite; }
 .avatar[data-state="working"] .kitBrow { animation: kitBrow 1.8s ease-in-out infinite; }
 @keyframes kitHat {
@@ -69,7 +69,7 @@
   45%, 65% { transform: translateY(-2px); }
 }
 
-/* Bea: the clipboard's four lines write themselves in, then the page clears for the next brief. */
+/* The Producer: the clipboard's four lines write themselves in, then the page clears for the next brief. */
 .avatar[data-state="working"] .beaLine1 { animation: beaLine1 2s ease-out infinite; }
 .avatar[data-state="working"] .beaLine2 { animation: beaLine2 2s ease-out infinite; }
 .avatar[data-state="working"] .beaLine3 { animation: beaLine3 2s ease-out infinite; }

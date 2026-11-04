@@ -1,14 +1,14 @@
-// The podcast cast as small animated characters: Piper (Intake), Quinn (Interviewer), Kit (Sidekick), Bea (Producer).
+// The podcast cast as small animated characters: the Collector, the Interviewer, the Sidekick, the Producer.
 // Each drawing is inline SVG on a 100 x 100 grid. The `state` prop is written to data-state on the root, and the
 // stylesheet animates only [data-state="working"]; every other state is a still. No timers, no JS animation.
 // The static Slack icons in ./avatars/*.svg are the same drawings, scaled to 256 x 256: change both together.
 import s from "./avatars.module.css";
 
 const CAST = {
-  intake: { name: "Piper", role: "Intake", disc: "#15302b" },
-  interviewer: { name: "Quinn", role: "Interviewer", disc: "#33280f" },
-  sidekick: { name: "Kit", role: "Sidekick", disc: "#251d35" },
-  producer: { name: "Bea", role: "Producer", disc: "#361a28" },
+  intake: { name: "Collector", role: "Intake", disc: "#15302b" },
+  interviewer: { name: "Interviewer", role: "Interviewer", disc: "#33280f" },
+  sidekick: { name: "Sidekick", role: "Sidekick", disc: "#251d35" },
+  producer: { name: "Producer", role: "Producer", disc: "#361a28" },
 };
 
 const STATES = ["idle", "working", "waiting", "done", "failed"];
@@ -16,8 +16,8 @@ const STATES = ["idle", "working", "waiting", "done", "failed"];
 // The shared shoulders: a curve that meets the disc's edge, so no clip path is needed.
 const SHOULDERS = "M18.25 86 Q22 70 38 67 L62 67 Q78 70 81.75 86 A48 48 0 0 1 18.25 86 Z";
 
-// Piper, Intake: plain bob, round glasses, an in-tray. Working: a page slides in and settles on the stack.
-function Piper() {
+// Collector (intake): plain bob, round glasses, an in-tray. Working: a page slides in and settles on the stack.
+function Collector() {
   return (
     <>
       {/* figure:intake */}
@@ -45,9 +45,9 @@ function Piper() {
   );
 }
 
-// Quinn, Interviewer: one curl, wide eyes, a raised brow, an "oh?" mouth, a stand mic.
+// Interviewer: one curl, wide eyes, a raised brow, an "oh?" mouth, a stand mic.
 // Working: sound rings pulse out of the mic, the question mark bobs, the head tilts.
-function Quinn() {
+function Interviewer() {
   return (
     <>
       {/* figure:interviewer */}
@@ -84,9 +84,9 @@ function Quinn() {
   );
 }
 
-// Kit, Sidekick: a top hat with a red band, a permanent wink, a lopsided grin, a bow tie.
-// Working: Kit tips the hat and raises the open eye's brow.
-function Kit() {
+// Sidekick: a top hat with a red band, a permanent wink, a lopsided grin, a bow tie.
+// Working: the Sidekick tips the hat and raises the open eye's brow.
+function Sidekick() {
   return (
     <>
       {/* figure:sidekick */}
@@ -114,8 +114,8 @@ function Kit() {
   );
 }
 
-// Bea, Producer: hair in a bun, a headset, a clipboard held up. Working: the lines write themselves in, one by one.
-function Bea() {
+// Producer: hair in a bun, a headset, a clipboard held up. Working: the lines write themselves in, one by one.
+function Producer() {
   return (
     <>
       {/* figure:producer */}
@@ -152,7 +152,7 @@ function Bea() {
   );
 }
 
-const FIGURES = { intake: Piper, interviewer: Quinn, sidekick: Kit, producer: Bea };
+const FIGURES = { intake: Collector, interviewer: Interviewer, sidekick: Sidekick, producer: Producer };
 
 // A small still mark in the lower right for the states that need one.
 function Badge({ state }) {
@@ -190,7 +190,7 @@ export default function Avatar({ agent, state = "idle", size = 72 }) {
   const who = CAST[agent];
   const Figure = FIGURES[agent];
   const shown = STATES.includes(state) ? state : "idle";
-  const label = who ? `${who.name}, ${who.role}: ${shown}` : `Unknown agent: ${shown}`;
+  const label = who ? `${who.role === who.name ? who.name : `${who.name}, ${who.role}`}: ${shown}` : `Unknown agent: ${shown}`;
   return (
     <svg
       className={s.avatar}
