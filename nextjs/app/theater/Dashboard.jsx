@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { scriptMarkdown, summarize } from "./derive.mjs";
@@ -36,7 +37,7 @@ export default function Dashboard({ events = [], live = false }) {
         <button className={styles.button} onClick={() => save(`${fileBase}.jsonl`, events.map((e) => JSON.stringify(e)).join("\n") + "\n", "application/x-ndjson")}>Download the log (.jsonl)</button>
         <button className={styles.button} onClick={() => save(`${fileBase}-script.md`, scriptMarkdown(events), "text/markdown")}>Download the script (.md)</button>
         <button className={styles.button} onClick={() => window.print()}>Print</button>
-        {!live && events[0]?.run && <a className={styles.button} href={`/theater/runs/${encodeURIComponent(runId)}`}>Permalink</a>}
+        {!live && events[0]?.run && <a className={styles.button} href={`/systems/sessions/${encodeURIComponent(runId)}`}>Permalink</a>}
       </div>
 
       <div className={styles.panel}>
@@ -46,8 +47,10 @@ export default function Dashboard({ events = [], live = false }) {
           {s.running ? <span>{live ? "Running…" : "This log has no stop event (cut short?)."}</span> : <span>Stopped: {s.stop.text}.</span>}
         </p>
         <div className={styles.stats}>
-          {kind === "loop" && <div className={`${styles.stat} ${styles.big}`}><strong>{s.verdicts.length}</strong><span>tries (min {s.meta.config?.minTries}, max {s.meta.config?.maxTries})</span></div>}
-          {kind !== "loop" && <div className={styles.stat}><strong>{s.rounds}</strong><span>{kind === "switch" ? "steps" : `rounds of ${s.meta.config?.turns ?? "?"}`}</span></div>}
+          {kind === "loop" && <div className={`${styles.stat} ${styles.big}`}><strong>{s.verdicts.length}</strong><span>{s.meta.config?.answer ? `guesses (at most ${s.meta.config?.maxTries})` : `tries (min ${s.meta.config?.minTries}, max ${s.meta.config?.maxTries})`}</span></div>}
+          {kind === "cast" && s.meta.config?.speeches > 0 && <div className={`${styles.stat} ${styles.big}`}><strong>{s.speeches}</strong><span>speeches of {s.meta.config.speeches}</span></div>}
+          {kind === "cast" && !(s.meta.config?.speeches > 0) && <div className={styles.stat}><strong>{s.rounds}</strong><span>rounds of {s.meta.config?.turns ?? "?"}{s.speeches ? ` · ${s.speeches} speeches` : ""}</span></div>}
+          {(kind === "switch" || kind === "graph") && <div className={styles.stat}><strong>{s.verdicts.length ? (s.verdicts[0].state?.accept ? "right" : "wrong") : s.route ? "routed" : "…"}</strong><span>{s.route ? `to ${s.route.state?.branch}` : "steps"}</span></div>}
           <div className={styles.stat}><strong>{events.length}</strong><span>events</span></div>
           <div className={styles.stat}><strong>{s.calls}</strong><span>model calls</span></div>
           <div className={styles.stat}><strong>{(s.tokens.in + s.tokens.out).toLocaleString()}</strong><span>tokens ({s.tokens.in.toLocaleString()} in, {s.tokens.out.toLocaleString()} out)</span></div>
@@ -58,6 +61,14 @@ export default function Dashboard({ events = [], live = false }) {
           {s.eliminated.length > 0 && <div className={styles.stat}><strong>{s.eliminated.length}</strong><span>out: {s.eliminated.join(", ")}</span></div>}
         </div>
       </div>
+
+      {s.meta.roles && (
+        <div className={styles.panel}>
+          <h3>The control room: secret roles</h3>
+          <p className={styles.muted}>You can see these; the players can't. Each one is told only their own role (and traitors who the other traitors are).</p>
+          <p className={styles.roles}>{Object.entries(s.meta.roles).map(([name, role]) => <span key={name}>{name}: <strong>{role || "none"}</strong>{s.eliminated.includes(name) ? " (banished)" : ""}</span>)}</p>
+        </div>
+      )}
 
       <div className={styles.panel}>
         <h3>The graph</h3>
@@ -111,13 +122,32 @@ function Given({ e }) {
   );
 }
 
+// What the Script shows: everything, or one layer at a time, so the public scene reads apart from the private ITMs
+// and votes and from the producers' moves.
+const PRIVATE = ["aside", "vote"];
+const PRODUCER = ["twist", "challenge", "vote-call", "eliminate", "tie", "pass", "note", "goal"];
+const FILTERS = [
+  ["all", "Everything", () => true],
+  ["public", "The public scene", (e) => !PRIVATE.includes(e.kind) && e.layer !== "observer"],
+  ["private", "Private: ITMs and votes", (e) => PRIVATE.includes(e.kind)],
+  ["producers", "Producers and rules", (e) => PRODUCER.includes(e.kind) || e.layer === "producer"],
+];
+
 function Script({ events, kind }) {
+  const [filter, setFilter] = useState("all");
+  const hasPrivate = events.some((e) => PRIVATE.includes(e.kind));
+  const keep = FILTERS.find(([k]) => k === filter)?.[2] || (() => true);
   const rows = [];
+  if (hasPrivate) rows.push(
+    <div className={`${styles.filters} ${styles.noPrint}`} key="filters" role="group" aria-label="Show">
+      {FILTERS.map(([k, label]) => <button key={k} className={styles.button} aria-pressed={filter === k} onClick={() => setFilter(k)}>{label}</button>)}
+    </div>,
+  );
   let round = null;
-  for (const e of events) {
+  for (const e of events.filter((e) => e.kind === "start" || e.kind === "stop" || keep(e))) {
     if (e.round && e.round !== round && e.kind !== "observation") {
       round = e.round;
-      rows.push(<div className={styles.roundHead} key={`r${e.seq}`}>{kind === "loop" ? "Try" : "Round"} {round}</div>);
+      rows.push(<div className={styles.roundHead} key={`r${e.seq}`}>{kind === "loop" ? (e.state?.guess !== undefined || e.state?.byCode ? "Guess" : "Try") : "Round"} {round}</div>);
     }
     rows.push(
       <div className={styles.event} key={e.seq}>
@@ -137,10 +167,10 @@ function Line({ e }) {
   switch (e.kind) {
     case "start": return <div className={styles.direction}><ReactMarkdown remarkPlugins={[remarkGfm]}>{e.text}</ReactMarkdown></div>;
     case "input": return <span><span className={styles.who}>INPUT</span> {e.text}</span>;
-    case "line": return <span><span className={styles.who}>{e.speaker.toUpperCase()}</span>{to}<br />{e.text}</span>;
-    case "aside": return <span className={styles.aside}>({e.speaker}, to the camera) {e.text}</span>;
+    case "line": return <span><span className={styles.who}>{e.speaker.toUpperCase()}</span>{to}{e.turn ? <span className={styles.muted}> · speech {e.turn}</span> : null}<br />{e.text}</span>;
+    case "aside": return <span className={styles.aside}>({e.speaker}, {e.state?.label === "ITM" ? "ITM, private" : "to the camera"}) {e.text}</span>;
     case "vote": return <span className={styles.aside}>({e.speaker} votes for <strong>{e.state?.target || "nobody"}</strong>) {e.text}</span>;
-    case "verdict": return <span><span className={e.state?.accept ? styles.accept : styles.reject}>{e.speaker}: {e.state?.accept ? "ACCEPT" : "REJECT"}</span> {e.text}</span>;
+    case "verdict": return <span><span className={e.state?.accept ? styles.accept : styles.reject}>{e.speaker}{e.state?.byCode ? " (code)" : ""}: {e.state?.byCode ? (e.state?.accept ? "RIGHT" : "WRONG") : e.state?.accept ? "ACCEPT" : "REJECT"}</span> {e.text}</span>;
     case "route": return <span><span className={styles.producer}>{e.speaker} routes to {e.state?.branch}</span> {e.text}</span>;
     case "reply": return <span><span className={styles.who}>{e.speaker.toUpperCase()}</span><br />{e.text}</span>;
     case "goal": return <span className={styles.direction}><strong>{e.speaker}</strong>: {e.state?.reached ? "goal reached" : "not yet"}. {e.text}</span>;
@@ -280,7 +310,27 @@ function Graph({ s }) {
       </svg>
     );
   }
-  if (kind === "switch") {
+  if ((kind === "switch" || kind === "graph") && (s.verdicts.length || kind === "graph")) {
+    const [a, b] = s.meta.branches || [];
+    const chosen = s.route?.state?.branch;
+    const verdict = s.verdicts[0];
+    return (
+      <svg className={styles.svg} viewBox="0 0 760 170" role="img" aria-label="The graph">
+        {defs}
+        {node(90, 85, "input", true)}
+        {node(270, 85, s.meta.router || "router", Boolean(chosen), chosen ? "decided" : "")}
+        {node(460, 35, a || "branch A", chosen === a)}
+        {node(460, 135, b || "branch B", chosen === b)}
+        {node(660, 85, s.meta.judge || "the judge", Boolean(verdict), verdict ? (verdict.state?.accept ? "right" : "wrong") : "")}
+        {edge(170, 85, 188, 85, true, "", "in")}
+        {edge(350, 78, 378, 42, chosen === a, "", "a")}
+        {edge(350, 92, 378, 128, chosen === b, "", "b")}
+        {edge(540, 42, 578, 78, Boolean(verdict) && chosen === a, "", "ja")}
+        {edge(540, 128, 578, 92, Boolean(verdict) && chosen === b, "", "jb")}
+      </svg>
+    );
+  }
+  if (kind === "switch" || kind === "graph") {
     const [a, b] = s.meta.branches || [];
     const chosen = s.route?.state?.branch;
     return (

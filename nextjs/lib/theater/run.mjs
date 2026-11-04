@@ -1,10 +1,13 @@
-import { parseAction, parseGoal, parseLine, parseRoute, parseVerdict, parseVote } from "./parse.mjs";
+import { matches, parseAction, parseGoal, parseGuess, parseLine, parseRoute, parseVerdict, parseVote } from "./parse.mjs";
 
-// The Theater's three kinds of system, run on the server one model call at a time:
-//   loop    one agent (or a small cast) tries until a judge accepts, at least minTries and at most maxTries
-//   switch  a router reads the input and sends it down one of two branches
-//   cast    characters speak round-robin for `turns` rounds; a director may stop the scene when its goal is reached,
-//           producers may write into it (twists, challenges, votes, eliminations), observers read it and take notes
+// The Theater's kinds of system, run on the server one model call at a time:
+//   loop    one agent (or a small cast) tries until a judge accepts, at least minTries and at most maxTries; with an
+//           `answer`, the judge is code that checks each guess against it and the guessers never see it
+//   graph   a router reads the input and sends it down one of two branches; with an `answer` (or a judge.md), a final
+//           judge checks the branch's guess. (`switch` is the same thing without the judge, its earlier name.)
+//   cast    characters speak round-robin for `turns` rounds, or for `speeches` speeches in all; a director may stop the
+//           scene when its goal is reached, producers may write into it (twists, challenges, votes, eliminations),
+//           observers read it and take notes. Characters can hold secret roles (roles/), told only to themselves.
 // Every step is an event: `emit` receives it, and the route writes it to the log and streams it to the page. `call` is
 // the model call (lib/theater/model.mjs; the tests pass a fake). Caps are on by default: turns and tries are clamped,
 // the run stops at the cost ceiling, and `signal` is the Stop button.
@@ -20,6 +23,10 @@ export async function runSystem(system, { call, emit, signal, overrides = {} }) 
   config.maxTries = clamp(config.maxTries, 1, 20);
   config.minTries = clamp(config.minTries, 1, config.maxTries);
   config.costCeiling = clamp(config.costCeiling, 0.01, 5);
+  if (config.speeches > 0) {
+    config.speeches = clamp(config.speeches, 1, 120);
+    config.turns = Math.ceil(config.speeches / Math.max(1, system.cast.length));
+  }
   const state = { spent: 0, calls: 0, events: [] };
 
   const record = (event) => {
@@ -48,14 +55,15 @@ export async function runSystem(system, { call, emit, signal, overrides = {} }) 
     kind: "start",
     speaker: system.title,
     text: system.premise,
-    state: { system: system.name, title: system.title, kind: config.kind, config, cast: system.cast.map((c) => c.name), judge: system.judge?.name || null, router: system.router?.name || null, branches: system.branches.map((b) => b.name), director: system.director?.name || null, producers: system.producers.map((p) => p.name), observers: system.observers.map((o) => o.name) },
+    state: { system: system.name, title: system.title, kind: config.kind, config, cast: system.cast.map((c) => c.name), roles: secretRoles(system), judge: system.judge?.name || null, router: system.router?.name || null, branches: system.branches.map((b) => b.name), director: system.director?.name || null, producers: system.producers.map((p) => p.name), observers: system.observers.map((o) => o.name) },
   });
 
   let reason = "done";
   let extra = {};
   try {
+    checkRoles(system);
     if (config.kind === "loop") extra = await runLoop(system, config, { ask, record, usage });
-    else if (config.kind === "switch") extra = await runSwitch(system, config, { ask, record, usage });
+    else if (config.kind === "switch" || config.kind === "graph") extra = await runSwitch(system, config, { ask, record, usage });
     else extra = await runCast(system, config, { ask, record, usage, state });
     reason = extra.reason || reason;
   } catch (error) {
@@ -73,22 +81,65 @@ function clean(overrides) {
   const out = {};
   for (const [key, value] of Object.entries(overrides || {})) {
     if (value === "" || value === null || value === undefined) continue;
-    out[key] = ["turns", "maxTries", "minTries", "costCeiling", "producersEvery", "observersEvery"].includes(key) ? Number(value) : value;
+    out[key] = ["turns", "speeches", "maxTries", "minTries", "costCeiling", "producersEvery", "observersEvery"].includes(key) ? Number(value) : value;
   }
   return out;
 }
 
 // ---- the prompts ----------------------------------------------------------------------------------------------
 
-function characterPrompt(system, config, who, names) {
+function characterPrompt(system, config, who, names, format = null) {
   const others = names.filter((n) => n !== who.name);
+  const aside = config.asideLabel === "ASIDE"
+    ? "ASIDE: <optional: a private confessional to the camera; nobody in the scene hears it>"
+    : `${config.asideLabel}: <your private ${config.asideLabel === "ITM" ? "in-the-moment interview (ITM)" : "word"} to the camera, one or two sentences; nobody in the scene ever hears it. Be honest here.>`;
   return [
     `You are ${who.name}, a character in a scene played by AI agents for a class on agents and systems.`,
     `## The scene\n${system.premise}`,
     `## Who you are\n${who.data.voice ? `Your voice: ${who.data.voice}\n\n` : ""}${who.body}`,
+    roleBriefing(system, who, names),
     `## The others in the scene\n${others.join(", ") || "nobody else"}`,
-    `## How to reply\nReply in these labelled lines and nothing else:\nTO: <one name, or everyone>\nSAY: <what you say out loud: one to three sentences, in your voice>${config.confessionals ? "\nASIDE: <optional: a private confessional to the camera; nobody in the scene hears it>" : ""}\nStay in character. Speak only for yourself. Don't repeat what you've already said; move the scene.`,
-  ].join("\n\n");
+    `## How to reply\n${format || `Reply in these labelled lines and nothing else:\nTO: <one name, or everyone>\nSAY: <what you say out loud: one to three sentences, in your voice>${config.confessionals ? `\n${aside}` : ""}\nStay in character. Speak only for yourself. Don't repeat what you've already said; move the scene.`}`,
+  ].filter(Boolean).join("\n\n");
+}
+
+// ---- secret roles ----------------------------------------------------------------------------------------------
+// A cast file's `role:` names a file in roles/ (roles/traitor.md). Each character is told only its own role; a role
+// with `knowEachOther: true` also tells its members who the others are. Nobody else's prompt carries a role: the
+// scene, the votes, and the other characters never see them. The producers' and observers' control room does.
+
+const roleOf = (system, who) => {
+  const id = String(who.data?.role || "").toLowerCase();
+  return id ? system.roles?.find((r) => r.id === id || r.name.toLowerCase() === id) || null : null;
+};
+
+function roleBriefing(system, who, alive) {
+  const role = roleOf(system, who);
+  if (!role) return "";
+  const mates = system.cast.filter((c) => c.name !== who.name && roleOf(system, c) === role).map((c) => (alive.includes(c.name) ? c.name : `${c.name} (banished)`));
+  const known = role.data.knowEachOther ? `\n\nThe other ${role.name.toLowerCase()}s, known only to you and them: ${mates.join(", ") || "none"}.` : "";
+  return `## Your secret role: ${role.name}\nOnly you know this${role.data.knowEachOther ? " (and the others with the same role)" : ""}.\n\n${role.body}${known}`;
+}
+
+export function secretRoles(system) {
+  if (!system.roles?.length) return null;
+  return Object.fromEntries(system.cast.map((c) => [c.name, roleOf(system, c)?.name || null]));
+}
+
+function controlRoom(system) {
+  const roles = secretRoles(system);
+  return roles ? `\n\nThe control room only: the secret roles. Never announce, hint at, or confirm them.\n${Object.entries(roles).map(([n, r]) => `- ${n}: ${r || "none"}`).join("\n")}` : "";
+}
+
+// A role with `count:` must have exactly that many cast files (the Divine Villa's three traitors).
+function checkRoles(system) {
+  for (const role of system.roles || []) {
+    if (role.data.count === undefined) continue;
+    const have = system.cast.filter((c) => roleOf(system, c) === role).length;
+    if (have !== Number(role.data.count)) throw new Error(`roles/${role.id}.md says ${role.data.count} players are ${role.name}, but ${have} cast files have that role.`);
+  }
+  const unknown = system.cast.filter((c) => c.data.role && !roleOf(system, c));
+  if (unknown.length) throw new Error(`No file in roles/ for the role of ${unknown.map((c) => `${c.name} (${c.data.role})`).join(", ")}.`);
 }
 
 function agentPrompt(system, who, role, format) {
@@ -101,10 +152,10 @@ export function sceneSoFar(events, { self = null, everything = false } = {}) {
   for (const e of events.slice(-RECENT * 2)) {
     const at = e.round ? `[${e.round}] ` : "";
     if (e.kind === "line") lines.push(`${at}${e.speaker} → ${(e.to || ["everyone"]).join(", ")}: ${e.text}`);
-    else if (e.kind === "aside" && (everything || e.speaker === self)) lines.push(`${at}(${e.speaker}, aside to camera: ${e.text})`);
+    else if (e.kind === "aside" && (everything || e.speaker === self)) lines.push(`${at}(${e.speaker}, ${e.state?.label === "ITM" ? "ITM" : "aside"} to camera: ${e.text})`);
     else if (e.kind === "vote" && (everything || e.speaker === self)) lines.push(`${at}(${e.speaker} votes privately for ${e.state?.target || "nobody"}: ${e.text})`);
     else if (["twist", "challenge", "vote-call"].includes(e.kind)) lines.push(`${at}[PRODUCER ${e.speaker.toUpperCase()}: ${e.text}]`);
-    else if (e.kind === "eliminate") lines.push(`${at}[${e.text}]`);
+    else if (e.kind === "eliminate" || e.kind === "tie") lines.push(`${at}[${e.text}]`);
     else if (e.kind === "note") lines.push(`${at}[DIRECTOR'S NOTE: ${e.text}]`);
     else if (e.kind === "verdict") lines.push(`${at}[JUDGE ${e.speaker}: ${e.state?.accept ? "ACCEPT" : "REJECT"}: ${e.text}]`);
     else if (e.kind === "observation" && everything) lines.push(`${at}[OBSERVER ${e.speaker}: ${e.text}]`);
@@ -117,9 +168,11 @@ export function sceneSoFar(events, { self = null, everything = false } = {}) {
 async function runLoop(system, config, { ask, record, usage }) {
   const cast = system.cast;
   const names = cast.map((c) => c.name);
-  if (!cast.length || !system.judge) throw new Error("A loop needs at least one file in cast/ and a judge.md.");
+  const hidden = config.answer !== null && config.answer !== undefined && config.answer !== "";
+  if (!cast.length || (!system.judge && !hidden)) throw new Error("A loop needs at least one file in cast/, and a judge.md or an answer: in system.md.");
   const events = [];
   const push = (e) => events.push(record(e));
+  if (hidden) return guessLoop(system, config, { ask, push, usage, events, names });
   for (let tries = 1; tries <= config.maxTries; tries++) {
     for (const who of cast) {
       const answer = await ask(who, { system: characterPrompt(system, config, who, names), user: `The tries so far:\n${sceneSoFar(events, { self: who.name })}\n\nTry ${tries} of at most ${config.maxTries}. Your move.` }, 1500);
@@ -137,6 +190,28 @@ async function runLoop(system, config, { ask, record, usage }) {
   return { reason: `hard maximum of ${config.maxTries} tries reached`, tries: config.maxTries, accepted: false };
 }
 
+// A loop whose judge is code: one guess at a time, each checked against the hidden answer, stopping the moment one is
+// right (minTries still applies if a system sets it above 1). The answer is never in any agent's prompt.
+async function guessLoop(system, config, { ask, push, usage, events, names }) {
+  const judge = system.judge?.name || "The judge";
+  const format = "Reply in these labelled lines and nothing else:\nGUESS: <one guess, a word or two>\nSAY: <optional: one short sentence, in your voice>";
+  let n = 0;
+  for (let tries = 1; tries <= config.maxTries; tries++) {
+    for (const who of system.cast) {
+      if (n >= config.maxTries) break;
+      n++;
+      const answer = await ask(who, { system: characterPrompt(system, config, who, names, format), user: `The guesses so far, and what the judge said:\n${sceneSoFar(events, { self: who.name })}\n\nGuess ${n} of at most ${config.maxTries}. One guess.` }, 1200);
+      const { guess, say } = parseGuess(answer.text);
+      push({ layer: "cast", speaker: who.name, kind: "line", to: ["everyone"], text: say ? `${guess}. ${say}` : guess, round: n, state: { guess }, ...usage(answer) });
+      const right = matches(guess, config.answer);
+      const accept = right && n >= config.minTries;
+      push({ layer: "judge", speaker: judge, kind: "verdict", text: right ? (accept ? `Yes: ${guess}.` : `Right, but this game needs at least ${config.minTries} guesses.`) : `No, not ${guess}.`, round: n, state: { accept, tries: n, guess, minTries: config.minTries, maxTries: config.maxTries, byCode: true } });
+      if (accept) return { reason: `guessed right on guess ${n}`, tries: n, accepted: true };
+    }
+  }
+  return { reason: `hard maximum of ${config.maxTries} guesses reached`, tries: n, accepted: false };
+}
+
 // ---- switch ----------------------------------------------------------------------------------------------------
 
 async function runSwitch(system, config, { ask, record, usage }) {
@@ -151,9 +226,27 @@ async function runSwitch(system, config, { ask, record, usage }) {
   const route = parseRoute(answer.text, branches);
   record({ layer: "router", speaker: system.router.name, kind: "route", to: [route.branch], text: route.reason, state: { branch: route.branch, branches }, ...usage(answer) });
   const branch = system.branches.find((b) => b.name.toLowerCase() === route.branch.toLowerCase()) || system.branches[0];
-  const reply = await ask(branch, { system: agentPrompt(system, branch, "branch", "Reply in your own voice, briefly: no more than about 150 words."), user: input }, 1500);
-  record({ layer: "branch", speaker: branch.name, kind: "reply", text: reply.text.trim(), state: { branch: branch.name }, ...usage(reply) });
-  return { reason: `routed to ${branch.name}`, branch: branch.name };
+  const hidden = config.answer !== null && config.answer !== undefined && config.answer !== "";
+  const guessing = hidden || Boolean(system.judge);
+  const branchFormat = guessing ? "Reply in these labelled lines and nothing else:\nGUESS: <one answer, a word or two>\nWHY: <one sentence>" : "Reply in your own voice, briefly: no more than about 150 words.";
+  const reply = await ask(branch, { system: agentPrompt(system, branch, "branch", branchFormat), user: input }, 1500);
+  const { guess, why } = parseGuess(reply.text);
+  record({ layer: "branch", speaker: branch.name, kind: "reply", text: guessing ? `${guess}${why ? `. ${why}` : ""}` : reply.text.trim(), state: { branch: branch.name, guess: guessing ? guess : null }, ...usage(reply) });
+  if (!guessing) return { reason: `routed to ${branch.name}`, branch: branch.name };
+
+  // The final judge: code against the hidden answer, or a judge.md reading the input and the guess.
+  let accept;
+  let reason;
+  if (hidden) {
+    accept = matches(guess, config.answer);
+    reason = accept ? `Yes: ${guess}.` : `No: ${guess} isn't it.`;
+    record({ layer: "judge", speaker: system.judge?.name || "The judge", kind: "verdict", text: reason, state: { accept, guess, byCode: true } });
+  } else {
+    const verdict = await ask(system.judge, { system: agentPrompt(system, system.judge, "judge", "VERDICT: ACCEPT or REJECT\nREASON: <one sentence>"), user: `The input: ${input}\n\n${branch.name}'s answer: ${guess}${why ? ` (${why})` : ""}` }, 1000);
+    ({ accept, reason } = { ...parseVerdict(verdict.text), reason: parseVerdict(verdict.text).reason });
+    record({ layer: "judge", speaker: system.judge.name, kind: "verdict", text: reason, state: { accept, guess }, ...usage(verdict) });
+  }
+  return { reason: `routed to ${branch.name}, who guessed ${guess}: ${accept ? "right" : "wrong"}`, branch: branch.name, accepted: accept };
 }
 
 // ---- cast ------------------------------------------------------------------------------------------------------
@@ -167,7 +260,7 @@ async function runCast(system, config, { ask, record, usage, state }) {
 
   const observe = async (round) => {
     const notes = await Promise.all(system.observers.map(async (who) => {
-      const answer = await ask(who, { system: agentPrompt(system, who, "observer", "Write your notes in Markdown, briefly (under 200 words). You only watch: nothing you write reaches the scene."), user: `Everything so far, including the private asides and votes:\n${sceneSoFar(all(), { everything: true })}` }, 1500);
+      const answer = await ask(who, { system: agentPrompt(system, who, "observer", "Write your notes in Markdown, briefly (under 200 words). You only watch: nothing you write reaches the scene."), user: `Everything so far, including the private asides and votes:${controlRoom(system)}\n\n${sceneSoFar(all(), { everything: true })}` }, 1500);
       return { who, answer };
     }));
     for (const { who, answer } of notes) record({ layer: "observer", speaker: who.name, kind: "observation", text: answer.text.trim(), round, ...usage(answer) });
@@ -175,15 +268,21 @@ async function runCast(system, config, { ask, record, usage, state }) {
   };
 
   let round = 0;
+  let spoken = 0;
+  const total = config.speeches > 0 ? config.speeches : null;
   for (round = 1; round <= config.turns; round++) {
     for (const name of [...alive]) {
       if (!alive.includes(name)) continue;
+      if (total && spoken >= total) break;
       const who = byName.get(name);
-      const answer = await ask(who, { system: characterPrompt(system, config, who, alive), user: `The scene so far:\n${sceneSoFar(all(), { self: name })}\n\nRound ${round} of ${config.turns}. Your turn.` }, 1500);
+      const when = total ? `Speech ${spoken + 1} of ${total} in all.` : `Round ${round} of ${config.turns}.`;
+      const answer = await ask(who, { system: characterPrompt(system, config, who, alive), user: `The scene so far:\n${sceneSoFar(all(), { self: name })}\n\n${when} Your turn.` }, 1500);
       const line = parseLine(answer.text, alive);
-      record({ layer: "cast", speaker: name, kind: "line", to: line.to, text: line.say, round, ...usage(answer) });
-      if (config.confessionals && line.aside) record({ layer: "cast", speaker: name, kind: "aside", to: ["camera"], text: line.aside, round });
+      spoken++;
+      record({ layer: "cast", speaker: name, kind: "line", to: line.to, text: line.say, round, turn: spoken, ...usage(answer) });
+      if (config.confessionals && line.aside) record({ layer: "cast", speaker: name, kind: "aside", to: ["camera"], text: line.aside, round, turn: spoken, state: { label: config.asideLabel } });
     }
+    if (total && spoken >= total) break;
 
     if (system.director) {
       const format = "GOAL: REACHED or NOT YET\nREASON: <one sentence>\nNOTE: <optional: one short note to the cast for the next round>";
@@ -201,10 +300,17 @@ async function runCast(system, config, { ask, record, usage, state }) {
 
     if (system.producers.length && round % config.producersEvery === 0 && round < config.turns) {
       for (const who of system.producers) {
-        const format = "ACTION: twist | challenge | vote | eliminate | none\nTARGET: <a character's name, only for eliminate>\nTEXT: <the announcement the cast hears, one to three sentences>";
+        // A producer's file can limit what it may do (`actions: [vote]`) and when (`rounds: [2]`).
+        if (Array.isArray(who.data.rounds) && !who.data.rounds.map(Number).includes(round)) continue;
+        const allowed = Array.isArray(who.data.actions) && who.data.actions.length ? who.data.actions.map((a) => String(a).toLowerCase()) : ["twist", "challenge", "vote", "eliminate", "none"];
+        const format = `ACTION: ${allowed.join(" | ")}${allowed.includes("eliminate") ? "\nTARGET: <a character's name, only for eliminate>" : ""}\nTEXT: <the announcement the cast hears, one to three sentences>`;
         const ratings = config.ratingsLoop && lastNotes ? `\n\nThe observers' latest notes (the ratings):\n${lastNotes}` : "";
-        const answer = await ask(who, { system: agentPrompt(system, who, "producer", format), user: `Still in the game: ${alive.join(", ")}.\n\nEverything so far, including the private asides:\n${sceneSoFar(all(), { everything: true })}${ratings}\n\nRound ${round} of ${config.turns} is over. What do you do?` }, 1000);
+        const answer = await ask(who, { system: agentPrompt(system, who, "producer", format), user: `Still in the game: ${alive.join(", ")}.${controlRoom(system)}\n\nEverything so far, including the private asides:\n${sceneSoFar(all(), { everything: true })}${ratings}\n\nRound ${round} of ${config.turns} is over. What do you do?` }, 1000);
         const action = parseAction(answer.text, alive);
+        if (!allowed.includes(action.action)) {
+          record({ layer: "producer", speaker: who.name, kind: "pass", text: `Chose ${action.action}, which this producer isn't allowed to do (only ${allowed.join(", ")}).`, round, ...usage(answer) });
+          continue;
+        }
         if (action.action === "none") {
           record({ layer: "producer", speaker: who.name, kind: "pass", text: action.text || "(no action)", round, ...usage(answer) });
           continue;
@@ -218,15 +324,22 @@ async function runCast(system, config, { ask, record, usage, state }) {
           const tally = {};
           for (const name of alive) {
             const voter = byName.get(name);
-            const vote = await ask(voter, { system: characterPrompt(system, config, voter, alive), user: `The scene so far:\n${sceneSoFar(all(), { self: name })}\n\nThe producers have called a vote. In private, name one person still in the game to send home: ${alive.filter((n) => n !== name).join(", ")}.\nReply:\nVOTE: <one name>\nWHY: <one sentence, to the camera>` }, 800);
+            const question = config.voteQuestion || "The producers have called a vote. In private, name one person still in the game to send home.";
+            const vote = await ask(voter, { system: characterPrompt(system, config, voter, alive), user: `The scene so far:\n${sceneSoFar(all(), { self: name })}\n\n${question}\nYou may vote for: ${alive.filter((n) => n !== name).join(", ")}. Use only what you have seen and heard.\nReply:\nVOTE: <one name>\nWHY: <one sentence, to the camera>` }, 800);
             const parsed = parseVote(vote.text, alive, name);
             if (parsed.target) tally[parsed.target] = (tally[parsed.target] || 0) + 1;
             record({ layer: "cast", speaker: name, kind: "vote", to: parsed.target ? [parsed.target] : null, text: parsed.why, round, state: { target: parsed.target }, ...usage(vote) });
           }
-          const out = Object.entries(tally).sort((a, b) => b[1] - a[1])[0]?.[0];
-          if (out) {
+          // The most votes goes; a tie sends nobody home. A banishment can reveal the true role, from the files.
+          const ranked = Object.entries(tally).sort((a, b) => b[1] - a[1]);
+          const cast = Object.values(tally).reduce((a, b) => a + b, 0);
+          if (ranked.length && (ranked.length === 1 || ranked[0][1] > ranked[1][1])) {
+            const out = ranked[0][0];
             alive = alive.filter((n) => n !== out);
-            record({ layer: "producer", speaker: who.name, kind: "eliminate", to: [out], text: `${out} is voted out (${tally[out]} of ${Object.values(tally).reduce((a, b) => a + b, 0)} votes).`, round, state: { eliminated: out, tally, alive } });
+            const role = config.revealOnBanish ? roleOf(system, byName.get(out))?.name || null : null;
+            record({ layer: "producer", speaker: who.name, kind: "eliminate", to: [out], text: `${out} is voted out (${tally[out]} of ${cast} votes).${role ? ` ${out}'s true role: ${role}.` : ""}`, round, state: { eliminated: out, tally, alive, role } });
+          } else {
+            record({ layer: "producer", speaker: who.name, kind: "tie", to: ["everyone"], text: ranked.length ? `A tie (${ranked.filter(([, n]) => n === ranked[0][1]).map(([n]) => n).join(", ")}): nobody goes home.` : "No valid votes: nobody goes home.", round, state: { tally } });
           }
           continue;
         }
@@ -243,6 +356,7 @@ async function runCast(system, config, { ask, record, usage, state }) {
       }
     }
   }
-  if (system.observers.length) await observe(config.turns);
+  if (system.observers.length) await observe(Math.min(round, config.turns));
+  if (total) return { reason: `all ${spoken} speeches given`, rounds: Math.min(round, config.turns), speeches: spoken, reached: false, alive };
   return { reason: system.director ? `all ${config.turns} rounds played; the goal was not reached` : `all ${config.turns} rounds played`, rounds: config.turns, reached: false, alive };
 }

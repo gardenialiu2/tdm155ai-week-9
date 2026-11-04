@@ -13,4 +13,13 @@ export default {
   outputFileTracingIncludes: {
     "/*": ["./content/**/*"],
   },
+  // The Theater is shown as Systems, and its runs as Sessions (Marlon, Nov 4); the code stays in app/theater/.
+  async rewrites() {
+    return [
+      { source: "/systems", destination: "/theater" },
+      { source: "/systems/sessions", destination: "/theater/sessions" },
+      { source: "/systems/sessions/:id", destination: "/theater/sessions/:id" },
+      { source: "/systems/view", destination: "/theater/view" },
+    ];
+  },
 };

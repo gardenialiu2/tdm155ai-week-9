@@ -26,7 +26,22 @@ export function parseLine(text, names = []) {
   const f = fields(text);
   const say = clean(f.SAY) || (f.TO || f.ASIDE ? "" : String(text).trim());
   const to = addressees(f.TO, names);
-  return { to, say, aside: clean(f.ASIDE) };
+  return { to, say, aside: clean(f.ASIDE || f.ITM) };
+}
+
+// A guess, for a loop or a graph whose judge is code: the GUESS line, or failing that the first line of the reply.
+export function parseGuess(text) {
+  const f = fields(text);
+  const guess = clean(f.GUESS) || clean(String(text).trim().split(/\r?\n/)[0]);
+  return { guess, say: clean(f.SAY), why: clean(f.WHY) };
+}
+
+// The judge that is code: does the guess say the hidden answer (one word or a list of them)? Case, punctuation, and
+// extra words don't matter ("Purple!", "is it purple?"), but the whole answer has to be there.
+const words = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+export function matches(guess, answer) {
+  const said = ` ${words(guess)} `;
+  return [answer].flat().filter((a) => words(a)).some((a) => said.includes(` ${words(a)} `));
 }
 
 // "everyone", "Ada", "Ada and Bo", "Ada, Bo" → ["everyone"] or the names that match the cast.

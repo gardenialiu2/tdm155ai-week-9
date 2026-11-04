@@ -1,49 +1,62 @@
-# tdm155ai-week-9
+# TDM 155AI week 9 — agents, systems, orchestration
 
-TDM 155AI week 9 (class 2026-11-04): Agents, systems, orchestration. Unit 3 begins: beyond the single piece. A local Next app in `nextjs/`, and beside it the Theater's systems (`systems/`) and a sample repository:
+Class November 4, 2026. Unit 3 begins: beyond the single piece. This repository contains a local Next app for creative agent systems, podcast preparation, and the week's glossary and research. Public repo: https://github.com/tdm155ai/tdm155ai-week-9.
 
-- **Theater** (`/theater`, `/theater/runs`, `/theater/view`; code in `nextjs/app/theater/` and `nextjs/lib/theater/`, docs in `nextjs/content/docs/theater/`): the theater of agents, added the morning of November 4 for the class as Marlon redesigned it (agents, systems, orchestration; students design an agent system with a theatrical spin, run it, then inspect and visualize it). A **system** is a folder in `systems/<name>/`: `system.md` (kind `loop`, `switch`, or `cast`, the caps, the premise), `cast/*.md` (characters: voice, wants, secrets), and as the kind needs `judge.md`, `router.md` + `branches/`, `director.md`, `producers/`, `observers/`. Six presets follow the class's steps: `01-taboo` (the loop: a judge rejects until try 3 at the earliest, hard maximum 8), `02-stage-door` (the switch), `03-dinner-party` (the cast, 10 rounds, confessionals, a chorus), `04-the-heist` (a director's goal), `05-the-villa` (reality-show producers, votes, eliminations, observers, the ratings loop), `06-werewolf` (a social-deduction game with a moderator). The server runs a system one model call at a time (`lib/theater/run.mjs`), streams each event to the page, and appends it to the gitignored `runs/<system>/<run>.jsonl` (`{t, seq, run, layer, speaker, kind, to, text, state, tokens, cost, round, prompt}`). Caps on by default: turns and tries clamped, a cost ceiling (default $0.50), and a Stop button. *Rehearse* runs the same wiring with stand-in replies, no model and no cost (`lib/theater/rehearsal.mjs`). The dashboard (`app/theater/Dashboard.jsx`, from the events alone, so it reads any log) shows the stats, the graph with what fired, the script with what each agent was given, a timeline by speaker, who addressed whom, the running cost, and the observers' notes; it downloads the `.jsonl` and the script, and prints light. Default model Claude Haiku 5.5 through OpenRouter; keys stay on the server. The presets and docs are Claude's design, not a report of the class.
+## Start the app
 
-- **Podcast prep** (`/podcast`, code in `nextjs/app/podcast/` and `nextjs/lib/podcast/`, docs at `/docs/podcast-prep`): added November 4 from TL's harmonization brief, the same four agents as the Slack Producer (`tdm155ai/tdm155ai-podcast-producer`), sharing `lib/podcast/contract.mjs`. The **Collector** saves every original to the gitignored `output/podcast/<session>/originals/` and reads it (text as is; audio and video through ffmpeg and OpenRouter's transcription; images described and PDFs read by Claude Haiku 5.5; links fetched). the **Interviewer** writes a reading and two to four questions per item; the **Sidekick** up to three kind, optional jokes, the guest never the butt. The **Producer** writes the host's briefing (eight fixed sections) only after *I'm done adding material* closes a revision and every item in it is finished; failures stop it until they're retried or the person goes ahead with gaps, and later material goes into the next revision. Jobs run on the server and resume after a restart (`lib/podcast/jobs.mjs`). The avatars (`app/podcast/Avatar.jsx`, still versions for Slack in `app/podcast/avatars/`) move only while their agent works, and stay still for reduced motion and print. **Remix** (`/remix`, `nextjs/app/remix/`) is a self-contained copy for students, with its own storage in `output/podcast-remix/`. Tested November 4 with an invented fixture (a spoken voice memo, an unreadable file, pasted notes, a late email): transcription, questions, jokes, the blocked and proceed-with-gaps paths, a briefing with all eight sections, the late item in revision 2, originals kept.
+Use Node 22.12+ and pnpm. Copy `.env.example` to `.env` at the repository root and add your `OPENROUTER_API_KEY`. Keep credentials local. Audio/video transcription also needs ffmpeg.
 
-The parts built October 30:
-
-
-- **Docs** (`/docs`, Markdown in `nextjs/content/docs/`): the ensemble on paper (a proposal for the in-class paper activity), what an agent is, and how the screen version works.
-- **Ensemble** (`/ensemble`, code in `nextjs/app/ensemble/`): four roles read a context repository and brief a podcast host. A **Conductor** sees the file list and proposes who reads what; an **Archivist** reads the files and writes a map; a **Researcher** reads the map, not the files, and looks things up on the web; a **Briefer** writes the host's one-page briefing. The person at the keyboard is above all four: they pick the folder, withhold files from the whole ensemble, approve or change the plan, and can edit any card before the next role reads it. Every system prompt is on the page and editable; every request is shown before it's sent; the whole run comes out as a **trace** (Markdown) that prints, for marking up on paper.
-- **Ensemble remix** (`/ensemble/remix`, code in `nextjs/app/ensemble/remix/`; until November 4 at `/remix`): an identical copy of the ensemble for students to change. Everything it needs is in its folder, including its own server routes, so changing it never touches `/ensemble`.
-- **`sample-context-repo/`**: an invented student's context repository for a letterpress-and-stop-motion piece about the two versions of Emily Dickinson's "Safe in their Alabaster Chambers," with primary documents, secondary criticism, an unchecked AI summary, dictated notes, process logs, prompts, Slack posts, credits, and a `private/` folder and a venting note that should be withheld. *Use the sample repository* on the Ensemble page loads it. The poem, the versions, Sue's objection, and the books are real; the student and everything else are not.
-- **`examples/`**: one real run on the sample (October 30, Claude Haiku 5.5, every file allowed so the Conductor had to decide about `private/` itself): the trace, 900 lines, ready to print for the paper exercise, and the briefing it produced.
-
-Private, in the `tdm155ai` org (moved from `ll-26-27`); nested in The Notebook at `apps/tdm155ai/tdm155ai-week-9`.
-
-## Run it
-
-Copy `.env.example` to `.env` at the repo root and add `OPENROUTER_API_KEY`. Then:
-
-```
-cd nextjs
+```sh
+git clone https://github.com/tdm155ai/tdm155ai-week-9.git
+cd tdm155ai-week-9/nextjs
 pnpm install
 pnpm dev
 ```
 
-Open http://localhost:3000/theater in Chrome for the Theater: pick a system, press *Rehearse* to see it for free, then *Run it*. For the ensemble, open http://localhost:3000/ensemble. Press *Use the sample repository*, untick `private/` and `notebook/venting.md`, write a line about the piece, and press *Run all three*. Or ask the Conductor first.
+Open the address printed by Next (normally http://localhost:3000). An already running instance may use a different port.
 
-## How it works
+## The app
 
-- `nextjs/app/ensemble/prompts.mjs`: the four roles, their system prompts, the function that composes each role's message (what it's given), the request body, and the parser for the Conductor's plan. The page imports this file to show exactly what will be sent; the route imports it to build the request.
-- `nextjs/app/ensemble/Ensemble.jsx` (in the browser): the four steps. Reads a folder picked with the browser's folder input (text files only, whole, skipping `node_modules`, `.git`, `_media`, `_raw`, `output`, and dotfiles), keeps the session in localStorage, composes each request, and records each card with what was sent, what came back, its cost, and whether a person edited it.
-- `nextjs/app/ensemble/api/run/route.js`: one model call for one role. POST `{ model, role, instructions, message }` to OpenRouter's chat completions; the Researcher's call adds the web plugin (Exa, up to six results) and returns its citations as `sources`. Default model Claude Haiku 5.5; Sonnet and Opus 5.5 on the page. Keys come from the repo's root `.env` through `lib/keys.mjs` and never reach the browser.
-- `nextjs/app/ensemble/api/sample/route.js`: serves `sample-context-repo/` to the page with the same filter.
-- `nextjs/app/ensemble/trace.mjs`: the trace as Markdown: the file table (allowed, withheld, who got what), then per role what it was told, what it was given, what it said, pages it used, and whether a person edited it. Downloaded as `trace.md`, or printed (print hides everything but the trace).
-- The Markdown site (`lib/content.mjs`, `/docs`, `/print`, the catch-all) is week 8's, unchanged.
+- **Systems (Theaters of Agents)** — `/systems`: three starting systems, with instructions, run controls and the resulting conversation/log.
+  - `systems/00-favorite-color/`: guess a secret favorite color, use the feedback, stop when correct or after at most ten guesses. No forced minimum.
+  - `systems/09-rushmore/`: Washington, Jefferson, Theodore Roosevelt and Lincoln argue about what they like best about relocating to South Dakota. Separate character files, one scenario, **20 total speeches**, not 20 rounds.
+  - `systems/10-divine-villa/`: eight Greek gods, modern human producers, three secret traitors, public dialogue and private truthful ITMs. An advanced remix of the simple cast mechanic. The Systems page supplies a copyable Claude Code remix prompt.
+- **Sessions** — `/systems/sessions`: local system history, initially empty. Running a system creates a saved session. Logs can be inspected/downloaded; they are gitignored and do not ship with a fresh clone.
+- **Research** — `/ai-research`: AI-generated research notes, ensemble/format libraries, official documentation, API history and primary readings, with source links and verification limits.
+- **Glossary** — `/ai-research/glossary`: agent definitions and the week's related terms.
+- **Podcast prep** — `/podcast`: submit files, notes and links; Collector reads/transcribes, Interviewer generates questions, Sidekick suggests optional guest-supporting humor, Producer briefs after explicit finish. Failed items need retry or an explicit proceed-with-gaps choice. Later material opens another revision.
+- **Remix** — `/remix`: a self-contained student copy of Podcast prep, with its own routes/library and storage.
 
-## Where it came from
+Systems defaults to the supported Claude Sonnet model. It has a turn/guess limit, cost ceiling and Stop control. Free rehearsal uses stand-in replies, not a live model; it demonstrates the wiring. Read the actual run's ending to see whether it succeeded, hit a limit or was stopped.
 
-**Copied 2026-10-30 from `tdm155ai/tdm155ai-week-8` at `3e335a6`**, the Markdown-rendering parts of its Next app only: `lib/content.mjs`, `lib/keys.mjs`, the catch-all page, `/print`, `/context-media`, `/docs`, the components, and the CSS. Left behind: the interview machines and their docs. The ensemble's request and route follow the shape of week 8's mwRemix `api/suggest`. Unlike week 8, nothing an agent is given is ever cut: no per-file or total character caps. If a role is given more than the model can take, the route reports the model's refusal and the fix is fewer files for that role, never shorter ones.
+## Make something of your own
 
-Written by Claude on 2026-10-30 with Madeleine, from Marlon's Story of Week 9 canvas (theme: agents and systems; Unit 3, beyond the single work) and his October 29 hackathon-readout notes (software as a jig; the transcript and the archive as what persists; understanding the agents by laying their activity out on paper). Tested that day: `pnpm build`, the five prompt and trace tests (`pnpm test`), and two full runs on the sample through the live routes with Claude Haiku 5.5. The first run found that a Claude model given a whole repository spends its entire output budget on hidden reasoning and answers with nothing, so the request now caps reasoning at a small budget (the newer models refuse to turn it off); the second run is in `examples/`. Not yet run with students or on paper; the paper activity is a proposal.
+Ask Claude Code to copy one of the starting folders into a new `systems/<name>/`, then change the copy. A system has a premise/configuration and separate character instructions; more elaborate systems add producer, role or observer files. Keep the built-in examples and other people's work intact. For a simple cast, specify the scenario and **total** number of speaking turns explicitly. Keep secrets out of characters' contexts unless those characters are meant to know them.
 
-## The Theater, November 4
+A class goal is to design conditions for interactions and aesthetic effects, run them, and understand what changed. A cast of familiar characters is a starting point, not a required final form.
 
-Written by Claude (thread `1fe938b9-602d-4118-9c01-9f1152567783`) on the morning of 2026-11-04 from the class design agreed that morning (the plan folder `_context/projects/50-in-focus/orchestration-patterns/plans/20261104-tdm155ai-week-9/` in The Notebook). Presets 04–06 and the step docs were drafted by a subagent and checked against the engine. Nothing was copied from `ll-26-27/mk-agent-studies` (read at `0d02903` for its graph editor and executor; the Theater's runner is new because that executor has no loops). Tested: `pnpm test` (the engine with a fake model: the loop's minimum and maximum, the switch, round-robin, asides, the cost ceiling, Stop, the director, votes and eliminations, the dashboard's counts), `pnpm build`, and a rehearsal of every preset through the live routes, including Stop.
+## Where the code and material live
+
+- `nextjs/app/`: pages/routes. The creative-system implementation retains internal `theater/` paths; old public Theater URLs may redirect to Systems. `nextjs/lib/theater/` loads and runs system definitions, enforces caps, and records events. The visible activity is named Systems.
+- `systems/`: Markdown-based systems. Earlier examples may remain as source/reference; the initial picker is the three systems above.
+- `runs/`: gitignored system event logs behind Sessions. Old classroom-test logs are cleared/archived out of active history before delivery; no sample run is required to start.
+- `nextjs/lib/podcast/contract.mjs`: shared podcast role IDs, output shapes, statuses, revision rules and eight briefing headings. `nextjs/lib/podcast/` implements the web workflow; `nextjs/app/podcast/` is the UI, including state-driven SVG avatars.
+- `output/podcast/`, `output/podcast-remix/`: separate gitignored server-side prep stores. Originals, transcripts, state and briefings remain local.
+- `.claude/agents/podcast-*.md`: Collector, Interviewer, Sidekick and Producer subagents. The parent Claude session coordinates them. `.claude/utils/podcast/` contains their contract/helper and usage guide; they store sessions separately in `output/podcast-claude/`.
+- `draft-skills/podcast-prep/SKILL.md`: deliberately parked outside skill discovery. The active subagents do not depend on loading it.
+- `nextjs/content/`: rendered Markdown. The front page is `content/README.md`; reference content is under `content/ai-research/`. Earlier `content/docs/` files and the October 30 `/ensemble` example are legacy material, not another required section of the current app.
+- `utils/`: media-generation and editing tools carried forward from earlier weeks. See [utils/README.md](utils/README.md); run root `pnpm install` for their dependencies. The Next app installs separately.
+
+## The Slack demo
+
+[tdm155ai-podcast-producer](https://github.com/tdm155ai/tdm155ai-podcast-producer) is a separate local Slack app, handed to Madeleine. It follows the same Collector/Interviewer/Sidekick/Producer contract, with Slack-specific triggers and per-person sessions. It is not a submodule or a prerequisite for this app. Access to that separate repo may be required. Do not share live session files or credentials between implementations.
+
+## Local material and checks
+
+Root `.env` and `nextjs/.env.local`, generated media, podcast data and system histories are gitignored. Keys stay on the server; never put them in browser code. The built-in `sample-context-repo/` and test fixtures describe invented work, not real student submissions. Student material belongs in local ignored storage, not course-content folders.
+
+App checks: `pnpm --dir nextjs test` and `pnpm --dir nextjs build`. General media-tool checks: `pnpm test` at the repo root. Test the behavior affected by a change; a free rehearsal or passing unit test alone does not establish the quality of generated dialogue.
+
+## Origins
+
+The Markdown reader came from week 8 on October 30. The initial fixed podcast-briefing graph remains at `/ensemble` with its own `/ensemble/remix`; it is distinct from today's Podcast prep and `/remix`. The creative-system runner, podcast team, research and simplified three-system interface were developed for November 4. They are prepared teaching material, not a report of classroom outcomes.

@@ -9,7 +9,7 @@ const repoRoot = path.dirname(/* turbopackIgnore: true */ process.cwd());
 export const systemsRoot = path.join(repoRoot, "systems");
 export const runsRoot = path.join(repoRoot, "runs");
 
-export const DEFAULT_MODEL = "anthropic/claude-haiku-5.5";
+export const DEFAULT_MODEL = "anthropic/claude-sonnet-5.5";
 
 const safe = (name) => /^[A-Za-z0-9._-]+$/.test(name) && !name.startsWith(".");
 
@@ -26,7 +26,7 @@ async function readAgent(file) {
     content = raw.replace(/^---[\s\S]*?---\s*/, "");
   }
   const base = path.basename(file, ".md").replace(/^\d+[-_]/, "");
-  return { file: path.relative(repoRoot, file), name: String(data.name || data.title || base), data, body: content.trim(), raw, problem };
+  return { file: path.relative(repoRoot, file), id: base.toLowerCase(), name: String(data.name || data.title || base), data, body: content.trim(), raw, problem };
 }
 
 async function readFolder(dir) {
@@ -42,6 +42,15 @@ async function readFolder(dir) {
 async function optional(file) {
   try {
     return await readAgent(file);
+  } catch {
+    return null;
+  }
+}
+
+// A plain file beside the system (its README, a prompt to copy), or null.
+async function text(file) {
+  try {
+    return await readFile(file, "utf8");
   } catch {
     return null;
   }
@@ -63,7 +72,7 @@ export async function loadSystem(name) {
   const dir = path.join(systemsRoot, name);
   const system = await readAgent(path.join(dir, "system.md"));
   const d = system.data;
-  const kind = ["loop", "switch", "cast"].includes(d.kind) ? d.kind : "cast";
+  const kind = ["loop", "switch", "graph", "cast"].includes(d.kind) ? d.kind : "cast";
   const config = {
     kind,
     model: d.model || DEFAULT_MODEL,
@@ -76,6 +85,16 @@ export async function loadSystem(name) {
     producersEvery: Number(d.producersEvery ?? 1) || 1,
     observersEvery: Number(d.observersEvery ?? 0),
     ratingsLoop: Boolean(d.ratingsLoop),
+    // The hidden answer a loop's or a graph's judge checks in code (never shown to the agents), and the newer knobs:
+    // a cast's total number of speeches, the name of the private line (ASIDE, or ITM), the vote's question, whether a
+    // banishment reveals the true role from the cast files, and where the system sits on the Theater page.
+    answer: d.answer ?? null,
+    speeches: Number(d.speeches ?? 0),
+    asideLabel: /^[A-Z]{2,12}$/.test(String(d.asideLabel || "")) ? String(d.asideLabel) : "ASIDE",
+    voteQuestion: String(d.voteQuestion || ""),
+    revealOnBanish: Boolean(d.revealOnBanish),
+    featured: Number(d.featured ?? 0),
+    level: String(d.level || ""),
   };
   const router = await optional(path.join(dir, "router.md"));
   return {
@@ -92,6 +111,9 @@ export async function loadSystem(name) {
     director: await optional(path.join(dir, "director.md")),
     producers: await readFolder(path.join(dir, "producers")),
     observers: await readFolder(path.join(dir, "observers")),
+    roles: await readFolder(path.join(dir, "roles")),
+    guide: await text(path.join(dir, "README.md")),
+    prompt: await text(path.join(dir, "prompt.md")),
     raw: system.raw,
   };
 }

@@ -58,6 +58,7 @@ export function summarize(events = []) {
     verdicts: events.filter((e) => e.kind === "verdict"),
     route: events.find((e) => e.kind === "route") || null,
     eliminated: events.filter((e) => e.kind === "eliminate").map((e) => e.state?.eliminated).filter(Boolean),
+    speeches: events.filter((e) => e.kind === "line").length,
   };
 }
 
@@ -76,7 +77,7 @@ export function scriptMarkdown(events = []) {
     if (e.kind === "start") out.push(`*${e.text}*`, "");
     else if (e.kind === "input") out.push(`**Input:** ${e.text}`, "");
     else if (e.kind === "line") out.push(`**${e.speaker.toUpperCase()}**${to}: ${e.text}`, "");
-    else if (e.kind === "aside") out.push(`> *${e.speaker}, aside:* ${e.text}`, "");
+    else if (e.kind === "aside") out.push(`> *${e.speaker}, ${e.state?.label === "ITM" ? "ITM (private)" : "aside"}:* ${e.text}`, "");
     else if (e.kind === "vote") out.push(`> *${e.speaker} votes for ${e.state?.target || "nobody"}:* ${e.text}`, "");
     else if (e.kind === "verdict") out.push(`**[${e.speaker}: ${e.state?.accept ? "ACCEPT" : "REJECT"}]** ${e.text}`, "");
     else if (e.kind === "route") out.push(`**[${e.speaker} routes to ${e.state?.branch}]** ${e.text}`, "");

@@ -1,39 +1,35 @@
 ---
-title: Agents and systems
-description: TDM 155AI, week 9 · November 4, 2026 · Agents, systems, orchestration. Unit 3 begins.
-author: claude
-print_set: [docs/theater, docs/theater/01-the-loop, docs/theater/02-the-switch, docs/theater/03-the-cast, docs/theater/09-system-format, docs/what-an-agent-is]
+title: Agents, systems, orchestration
+description: TDM 155AI · Week 9 · November 4, 2026. Unit 3: beyond the single piece.
+author: codex
 ---
 
-## Today: agents, systems, orchestration
+This week we move from making one piece to designing a system: the characters, instructions, tools, and conditions that let something happen. We will run small systems, inspect what they did, and change them. Directing, producing, and choreography are useful places to start.
 
-October was about making one thing. Unit 3 is about going beyond the single piece, by building a system that works for you. Today the system is a theater of agents: an ensemble of characters you design, talking to each other, that you let run and then inspect. Directing, producing, and choreography are in the background: you're the director and the producer, and the agents are your company.
+## Systems (Theaters of Agents)
 
-The steps, each adding one idea:
+Start with these three examples in [Systems](/systems):
 
-1. **The loop.** One agent tries until a judge accepts: at least three tries, never more than a cap. ([Taboo](/theater?system=01-taboo))
-2. **The graph.** Three nodes and a switch: a router sends the input down one of two branches. ([The stage door](/theater?system=02-stage-door))
-3. **The cast.** Characters you write (a voice, wants, secrets) take ten turns each. ([The dinner party](/theater?system=03-dinner-party))
-4. **A goal.** A director checks after every round whether the story got where it was going. ([The heist](/theater?system=04-the-heist))
-5. **The producers.** A second system that writes into the first: twists, challenges, votes, eliminations, confessionals. A reality show, or a game-theory simulation. ([The villa](/theater?system=05-the-villa), [Werewolf](/theater?system=06-werewolf))
-6. **Your own.** Something creative: fork a folder and make it yours.
-7. **The observers.** When the system gets too hard to follow, agents that only watch: a chorus, a critic, an inspector, writing notes for the dashboard.
+1. **[Guess my favorite color](/systems?system=00-favorite-color).** One agent guesses, gets feedback, and tries again. It stops when correct, or after ten guesses. What repeats? Who decides when it is done?
+2. **[The Rushmore four](/systems?system=09-rushmore).** Washington, Jefferson, Theodore Roosevelt, and Lincoln have moved to South Dakota. What do they like best about it? Four character descriptions, one scenario, and twenty speaking turns in all. Each speaker responds to the others; they do not have to agree.
+3. **[The Divine Villa](/systems?system=10-divine-villa).** Eight Greek gods move into a reality-show villa run by modern-day producers. Three are secretly traitors. They can deceive one another in public, but tell the truth in their private in-the-moment interviews. What changes when producers shape the conditions for drama?
 
-Cast, producers, observers: three systems stacked on each other, a graph of graphs. You're graded on the creativity of what you design, not on code: you design, and Claude Code builds. Every run leaves a log, one line per event, and the dashboard turns any log into a script, a timeline, who addressed whom, and the running cost. Print it and mark it up.
+Inspect the instructions, run a system, and read the conversation it leaves. Then make a copy with Claude Code and change the cast, scenario, or rules. The Systems page includes a prompt you can copy to start a remix. The aim is creative work you can judge and explain.
 
-## The one idea
+## Sessions
 
-An agent is not a smarter chatbot. It is a model plus **what it's told** (its instructions), **what it can see** (the files and messages it's given), and **what it can do** (write a card, search the web, call another agent). Change any of the three and you have a different agent. A system of agents is a set of these with the wiring between them: who reads what, in what order, and where a person steps in. The wiring is the design. What an agent must *not* see is part of the design too.
+[Sessions](/systems/sessions) is your local history. It starts empty: running a system creates your first session. Come back to read what happened, compare attempts, or download a log. Your sessions stay on the computer running this app; they are not uploaded to GitHub.
 
-## On this site
+## Podcast prep
 
-- **[Theater](/theater):** pick a system, rehearse it for free, run it, stop it, and read its dashboard. Systems are folders in `systems/` at the repo root; [the Theater docs](/docs/theater) explain each step and [the format](/docs/theater/09-system-format).
-- **[Runs](/theater/runs):** every run on this computer; [View a log](/theater/view) opens anyone's `.jsonl`.
-- **[Research](/ai-research) and the [Glossary](/ai-research/glossary):** orchestration in AI and in human practice (music, dance, film and theater, reality TV, labs, startups), and the terms for today, each with its AI sense, its human sense, and an example from the theater. Written with AI on the morning of the class; check before citing.
-- **[Docs](/docs):** the Theater, what an agent is, and the ensemble on paper.
-- **[Podcast prep](/podcast):** four agents get the host ready for next week's interview: the Collector takes the guest's material in as it comes, the Interviewer proposes questions, the Sidekick offers kind jokes, and the Producer writes the briefing once you say you're done. The same four run in Slack. [Remix](/remix) is your own copy of it to change.
-- **[Ensemble](/ensemble):** the October 30 version, a worked example of a fixed graph: four roles read a context repository and brief a podcast host, with a person approving each step. [Its remix](/ensemble/remix) is a copy to change.
+[Podcast prep](/podcast) is another kind of agent system: a team preparing a host to interview someone about their creative work. The **Collector** saves and reads the material, the **Interviewer** proposes questions, the **Sidekick** offers optional supportive humor, and the **Producer** makes a briefing when you say you are done adding material. The host still chooses what to ask.
+
+[Remix](/remix) is your separate copy of the podcast team to change. The Slack demo follows the same functions through a different interface.
+
+## Glossary and research
+
+The [Glossary](/ai-research/glossary) explains agents, agentic AI, orchestration, harnesses, loops, graphs, and related terms. The [Research](/ai-research) brings together readings, existing ensembles and show mechanics, agent products, and links to original papers and official documentation. AI-generated notes and adaptations are labeled alongside their sources.
 
 ## For Friday and next week
 
-The First Project package is due Friday, November 6: the finished piece and your context repository. The week after, you record the podcast hour with two classmates. The host prepares from the guest's repository. This week's ensemble is one way to do that preparation; the host still decides what to ask.
+Your First Project package is due **Friday, November 6**: the finished piece and a context repository documenting the work behind it. The podcast follows the next week; the host prepares from the guest's work and repository. Podcast prep is a tool for that preparation, not a substitute for knowing the work.

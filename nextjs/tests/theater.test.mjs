@@ -42,7 +42,7 @@ test("labelled replies parse, across lines and with stray bold", () => {
 test("every preset loads", async () => {
   const systems = await listSystems();
   assert.ok(systems.length >= 3);
-  for (const s of systems) assert.ok(["loop", "switch", "cast"].includes(s.config.kind), s.name);
+  for (const s of systems) assert.ok(["loop", "switch", "graph", "cast"].includes(s.config.kind), s.name);
 });
 
 test("the loop takes at least minTries even when the judge would accept at once, and stops at maxTries", async () => {

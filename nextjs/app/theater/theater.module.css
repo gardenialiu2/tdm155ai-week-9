@@ -105,3 +105,15 @@
   .panel { break-inside: avoid-page; border-color: #ccc; }
   .event { break-inside: avoid; }
 }
+
+/* A system's README ("How it works") and the make-your-own prompt. */
+.guide { font-size: 14px; line-height: 1.55; padding-bottom: 6px; }
+.guide p, .guide ul { margin: 0 0 10px; }
+.guide li { margin-bottom: 4px; }
+.guide table { border-collapse: collapse; font-size: 13px; margin: 0 0 10px; }
+.guide th, .guide td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; vertical-align: top; }
+details.systems > summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 6px 0; }
+.publicOnly .private { display: none; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px; }
+.roles { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 13px; }
+.roles span strong { color: var(--accent); }

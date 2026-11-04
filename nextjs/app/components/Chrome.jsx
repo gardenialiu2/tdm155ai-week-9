@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { site } from "../../lib/content.mjs";
 
-// `current` marks the section you're on: "docs", "theater", "runs", "research", "glossary", "podcast", "remix", or nothing.
+// `current` marks the section you're on: "theater", "sessions", "research", "glossary", "podcast", "remix", or nothing.
+// The only reference links are Research and Glossary (Marlon, Nov 4); the older /docs pages still open by address.
 const sections = [
-  ["docs", "/docs", "Docs"],
-  ["theater", "/theater", "Theater"],
-  ["runs", "/theater/runs", "Runs"],
+  ["theater", "/systems", "Systems"],
+  ["sessions", "/systems/sessions", "Sessions"],
   ["research", "/ai-research", "Research"],
   ["glossary", "/ai-research/glossary", "Glossary"],
   ["podcast", "/podcast", "Podcast prep"],

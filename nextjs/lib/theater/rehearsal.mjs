@@ -20,12 +20,21 @@ export function rehearsal() {
     else if (system.includes(", the router in a system")) {
       const branches = system.match(/BRANCH: <exactly one of: (.*)>/)?.[1]?.split(", ") || [];
       text = `BRANCH: ${branches[n % branches.length] || ""}\nREASON: (rehearsal) the router picks a branch in turn.`;
-    } else if (system.includes(", the branch in a system")) text = `(rehearsal) ${me} answers the input here.`;
+    } else if (system.includes("GUESS: <")) text = `GUESS: (rehearsal guess ${n})\n${system.includes("WHY: <") ? "WHY" : "SAY"}: (rehearsal) a stand-in guess, never the answer.`;
+    else if (system.includes(", the branch in a system")) text = `(rehearsal) ${me} answers the input here.`;
     else if (system.includes(", the director in a system")) text = "GOAL: NOT YET\nREASON: (rehearsal) the director keeps the scene going.\nNOTE: (rehearsal) a note to the cast.";
-    else if (system.includes(", the producer in a system")) text = n % 3 === 0 ? "ACTION: vote\nTEXT: (rehearsal) the producers call a vote." : n % 3 === 1 ? "ACTION: twist\nTEXT: (rehearsal) a twist arrives." : "ACTION: none";
+    else if (system.includes(", the producer in a system")) {
+      // Only what this producer may do (its ACTION: line lists it).
+      const allowed = system.match(/ACTION: (.*)/)?.[1]?.split(" | ") || ["none"];
+      const action = allowed[n % allowed.length];
+      text = action === "none" ? "ACTION: none" : `ACTION: ${action}\nTEXT: (rehearsal) the producer's ${action} would be announced here.`;
+    }
     else if (system.includes(", the observer in a system")) text = `(rehearsal) ${me}'s notes on the run would go here.`;
     else if (user.includes("VOTE:")) text = `VOTE: ${others[n % Math.max(1, others.length)] || ""}\nWHY: (rehearsal) a private vote.`;
-    else text = `TO: ${others.length ? others[n % others.length] : "everyone"}\nSAY: (rehearsal) ${me} speaks, call ${n}.\nASIDE: (rehearsal) ${me}'s private aside.`;
+    else {
+      const label = system.match(/\n([A-Z]{2,12}): <(?:optional: a private|your private)/)?.[1];
+      text = `TO: ${others.length ? others[n % others.length] : "everyone"}\nSAY: (rehearsal) ${me} speaks, call ${n}.${label ? `\n${label}: (rehearsal) ${me}'s private ${label === "ITM" ? "ITM" : "aside"}.` : ""}`;
+    }
     return { text, tokens: { in: Math.round((system.length + user.length) / 4), out: Math.round(text.length / 4) }, cost: 0, model: "rehearsal" };
   };
 }

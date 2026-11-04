@@ -17,6 +17,9 @@ A system is a folder at the repository root, `systems/<name>/`. Every file in it
 | `director.md` | cast (optional) | checks the narrative goal after every round |
 | `producers/<file>.md` | cast (optional) | change the game: twists, challenges, votes, eliminations |
 | `observers/<file>.md` | cast (optional) | read the log and write notes for the dashboard |
+| `roles/<role>.md` | cast (optional) | a secret role (`traitor`, `faithful`): told only to the characters who have it |
+| `README.md` | all (optional) | "How it works", shown beside the system on the Systems page |
+| `prompt.md` | all (optional) | a prompt to copy into Claude Code, shown with Copy buttons |
 
 ## system.md
 
@@ -27,7 +30,7 @@ The frontmatter holds the settings; the body is the premise or scene, given to e
 title: Taboo
 description: one line
 kind: loop            # loop | switch | cast
-model: anthropic/claude-haiku-5.5   # optional, default Haiku 5.5
+model: anthropic/claude-sonnet-5.5   # optional, default Sonnet 5.5
 costCeiling: 0.25     # USD; the run stops when spent (default 0.50)
 # loop only
 minTries: 3           # the judge is told it may not accept before this try
@@ -120,6 +123,20 @@ On `vote`, the Theater asks every remaining character in private for `VOTE: <nam
 
 Frontmatter `name:`. The body says what to watch for. An observer reads the whole log so far and replies with free notes in Markdown, shown on the dashboard. Observers never write into the cast. With `ratingsLoop: true`, producers see the observers' latest notes.
 
+## Added November 4: hidden answers, speeches, secret roles
+
+These are the settings the three starters use (`00-favorite-color`, `09-rushmore`, `10-divine-villa`).
+
+- **`answer:`** in `system.md` (loop or graph): the judge is code. Each guess (a `GUESS:` line) is checked against the answer, ignoring capitals and punctuation, and the run stops the moment one is right. The answer is in no agent's prompt; `judge.md` is optional and gives the judge its name.
+- **`kind: graph`**: a switch with a final judge. The router picks one branch, the branch replies with `GUESS:` and `WHY:`, and the judge (code with `answer:`, or a `judge.md`) says right or wrong.
+- **`speeches:`** in a cast's `system.md`: the total number of speeches, not rounds (`speeches: 20` with four characters is five each). Each line in the log carries its number in `turn`.
+- **`asideLabel: ITM`**: the private line is called an ITM (an in-the-moment interview to camera) instead of an ASIDE. Each character sees only its own.
+- **`role:`** in a cast file names a file in `roles/`. The character is told that role and nobody else's; `knowEachOther: true` in the role file also tells its members who the others are; `count:` must match the number of cast files with that role, or the run won't start. Producers and observers see the role list (the "control room"); the cast never does.
+- **`actions:`** and **`rounds:`** in a producer's file limit what it may do and when (`actions: [vote]`, `rounds: [2]`). Anything else it tries is logged as a pass.
+- **`voteQuestion:`** is what the cast is asked at a vote; **`revealOnBanish: true`** announces the banished player's true role, from the files, not from a model.
+- **Votes:** each player votes in private, only for someone else still in the game. The most votes goes; a tie, or no valid votes, sends nobody home.
+- **`featured:`** puts a system among the starters (1, 2, 3, in order) at the top of the Systems page; everything else is listed below them, folded.
+
 ## The log
 
 Each run writes `runs/<system>/<runid>.jsonl`, one JSON object per line:
@@ -131,7 +148,7 @@ Each run writes `runs/<system>/<runid>.jsonl`, one JSON object per line:
 | Field | Values |
 |---|---|
 | `layer` | system, cast, judge, router, branch, director, producer, observer |
-| `kind` | start, input, line, aside, verdict, route, reply, goal, note, twist, challenge, vote-call, vote, eliminate, pass, observation, stop, error |
+| `kind` | start, input, line, aside, verdict, route, reply, goal, note, twist, challenge, vote-call, vote, eliminate, tie, pass, observation, stop, error |
 
 `t` is the time, `seq` the event's number in the run, `run` the run id (`<system>~<runid>`, the same as the file name), `prompt` what the agent was given (`{system, user}`), `cost` in US dollars, `tokens` the tokens in and out of that model call.
 

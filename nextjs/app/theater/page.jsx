@@ -2,8 +2,8 @@ import { SiteFooter, SiteHeader } from "../components/Chrome.jsx";
 import Theater from "./Theater.jsx";
 
 export const metadata = {
-  title: "Theater",
-  description: "Design a system of agents as a folder of files, run it, and inspect what it did.",
+  title: "Systems",
+  description: "Three systems of agents to run and remix: a loop, a cast, and a reality show with secrets.",
 };
 
 export default function TheaterPage() {
@@ -13,12 +13,12 @@ export default function TheaterPage() {
       <main id="main" className="machine-shell">
         <header className="machine-heading">
           <p className="eyebrow">Week 9 · Agents, systems, orchestration</p>
-          <h1>The theater of agents</h1>
+          <h1>Systems <span className="machine-sub">(theaters of agents)</span></h1>
           <p className="hero-deck">
-            A system is a folder of files you write: characters, a judge, a router, a director, producers, observers. Run it, watch it, stop it, and read the log it leaves.
+            A system is a folder of plain files: who's in it, what they're told, and the rules. Three to start: a loop, a cast, and a reality show with secrets. Rehearse one for free, run it, stop it, and read what it did.
           </p>
           <p className="machine-more">
-            Start with <a href="/docs/theater">the Theater docs</a>: the loop, the switch, the cast, a goal, the producers, the observers. Every run is saved at <a href="/theater/runs">Runs</a>; drop anyone's log onto <a href="/theater/view">View a log</a>.
+            Each system's page says how it works. Every session is saved at <a href="/systems/sessions">Sessions</a>; drop anyone's log onto <a href="/systems/view">View a log</a>. Words you don't know are in the <a href="/ai-research/glossary">Glossary</a>.
           </p>
         </header>
         <Theater />

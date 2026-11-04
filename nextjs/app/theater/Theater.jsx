@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Dashboard from "./Dashboard.jsx";
 import styles from "./theater.module.css";
 
@@ -9,21 +11,34 @@ import styles from "./theater.module.css";
 // end the run after the call in progress, so the log still ends with a stop event.
 
 const MODELS = [
-  ["anthropic/claude-haiku-5.5", "Claude Haiku 5.5 (default, cheapest)"],
-  ["anthropic/claude-sonnet-5.5", "Claude Sonnet 5.5"],
+  ["anthropic/claude-sonnet-5.5", "Claude Sonnet 5.5 (default)"],
+  ["anthropic/claude-haiku-5.5", "Claude Haiku 5.5 (cheaper)"],
   ["anthropic/claude-opus-5.5", "Claude Opus 5.5 (expensive)"],
 ];
 
-const GROUPS = [
-  ["loop", "Step 0a · the loop"],
-  ["switch", "Step 0b · the switch"],
-  ["cast", "Steps 1–5 · the cast"],
-];
+// The starters are the systems with `featured:` in system.md, in that order; everything else in systems/ (the earlier
+// examples, and any copy you make) is listed below them, folded.
+const KINDS = { loop: "the loop", cast: "the cast", graph: "a graph", switch: "a switch" };
+const starterLabel = (s, i) => `${i + 1} · ${s.config.level === "advanced" ? "advanced" : KINDS[s.config.kind] || s.config.kind}`;
+
+function Copy({ text, label = "Copy" }) {
+  const [done, setDone] = useState(false);
+  return (
+    <button className={styles.button} onClick={async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        setDone(true);
+        setTimeout(() => setDone(false), 1500);
+      } catch {}
+    }}>{done ? "Copied" : label}</button>
+  );
+}
 
 function agentFiles(system) {
   return [
     { label: "system.md", file: system.files.system, text: system.raw },
     ...system.cast.map((a) => ({ label: `cast · ${a.name}`, file: a.file, text: a.raw, problem: a.problem })),
+    ...(system.roles || []).map((a) => ({ label: `secret role · ${a.name}`, file: a.file, text: a.raw })),
     ...(system.judge ? [{ label: `judge · ${system.judge.name}`, file: system.judge.file, text: system.judge.raw }] : []),
     ...(system.router ? [{ label: `router · ${system.router.name}`, file: system.router.file, text: system.router.raw }] : []),
     ...system.branches.map((a) => ({ label: `branch · ${a.name}`, file: a.file, text: a.raw })),
@@ -55,7 +70,8 @@ export default function Theater() {
       try {
         wanted = new URLSearchParams(window.location.search).get("system") || localStorage.getItem("theater:system") || "";
       } catch {}
-      setPicked(list.find((s) => s.name === wanted)?.name || list[0]?.name || "");
+      const first = list.filter((s) => s.config.featured > 0).sort((a, b) => a.config.featured - b.config.featured)[0] || list[0];
+      setPicked(list.find((s) => s.name === wanted)?.name || first?.name || "");
     }).catch((e) => setError(e.message));
   }, []);
 
@@ -111,26 +127,31 @@ export default function Theater() {
   if (!systems.length) return <p className={styles.muted}>No systems yet: make a folder in <code>systems/</code> at the repo root (see <a href="/docs/theater/09-system-format">the format</a>).</p>;
 
   const c = system?.config || {};
+  const starters = systems.filter((s) => s.config.featured > 0).sort((a, b) => a.config.featured - b.config.featured);
+  const others = systems.filter((s) => !(s.config.featured > 0));
+  const extension = systems.find((s) => s.prompt && s.config.level === "advanced");
+  const button = (s, label) => (
+    <button key={s.name} className={styles.systemButton} aria-pressed={s.name === picked} onClick={() => pick(s.name)} disabled={running}>
+      {label && <small>{label}</small>}
+      <span>{s.title}</span>
+      <small><code>systems/{s.name}/</code></small>
+    </button>
+  );
   return (
     <div className={styles.theater}>
       <div className={`${styles.layout}`}>
         <nav className={`${styles.systems} ${styles.noPrint}`} aria-label="Systems">
-          {GROUPS.map(([kind, label]) => {
-            const list = systems.filter((s) => s.config.kind === kind);
-            if (!list.length) return null;
-            return (
-              <div key={kind} className={styles.systems}>
-                <h2>{label}</h2>
-                {list.map((s) => (
-                  <button key={s.name} className={styles.systemButton} aria-pressed={s.name === picked} onClick={() => pick(s.name)} disabled={running}>
-                    <span>{s.title}</span>
-                    <small><code>systems/{s.name}/</code></small>
-                  </button>
-                ))}
-              </div>
-            );
-          })}
-          <p className={styles.muted}>Fork one: copy its folder in <code>systems/</code> to a new name, change the files, reload this page.</p>
+          <div className={styles.systems}>
+            <h2>Start here</h2>
+            {starters.map((s, i) => button(s, starterLabel(s, i)))}
+          </div>
+          <p className={styles.muted}>Make your own: copy a folder in <code>systems/</code> to a new name, change the files, reload this page. It appears below.</p>
+          {others.length > 0 && (
+            <details className={styles.systems} open={others.some((s) => s.name === picked)}>
+              <summary>More systems ({others.length}): earlier examples and yours</summary>
+              {others.map((s) => button(s, KINDS[s.config.kind] || s.config.kind))}
+            </details>
+          )}
         </nav>
 
         {system && (
@@ -140,6 +161,12 @@ export default function Theater() {
               <h2>{system.title}</h2>
               <p className={styles.muted}>{system.description}</p>
               <p className={styles.premise}>{system.premise}</p>
+              {system.guide && (
+                <details className={styles.file} open>
+                  <summary>How it works<small><code>systems/{system.name}/README.md</code></small></summary>
+                  <div className={styles.guide}><ReactMarkdown remarkPlugins={[remarkGfm]}>{system.guide}</ReactMarkdown></div>
+                </details>
+              )}
 
               <div className={styles.controls}>
                 <label>
@@ -150,13 +177,15 @@ export default function Theater() {
                 </label>
                 {c.kind === "loop" && (
                   <>
-                    <label>At least (tries)<input type="number" min="1" max="20" value={settings.minTries ?? c.minTries} onChange={set("minTries")} disabled={running} /></label>
-                    <label>At most (tries)<input type="number" min="1" max="20" value={settings.maxTries ?? c.maxTries} onChange={set("maxTries")} disabled={running} /></label>
+                    {(c.minTries > 1 || !c.answer) && <label>At least (tries)<input type="number" min="1" max="20" value={settings.minTries ?? c.minTries} onChange={set("minTries")} disabled={running} /></label>}
+                    <label>At most ({c.answer ? "guesses" : "tries"})<input type="number" min="1" max="20" value={settings.maxTries ?? c.maxTries} onChange={set("maxTries")} disabled={running} /></label>
                   </>
                 )}
-                {c.kind === "cast" && <label>Rounds (turns each)<input type="number" min="1" max="30" value={settings.turns ?? c.turns} onChange={set("turns")} disabled={running} /></label>}
+                {c.kind === "cast" && (c.speeches > 0
+                  ? <label>Speeches in all<input type="number" min="1" max="120" value={settings.speeches ?? c.speeches} onChange={set("speeches")} disabled={running} /></label>
+                  : <label>Rounds (turns each)<input type="number" min="1" max="30" value={settings.turns ?? c.turns} onChange={set("turns")} disabled={running} /></label>)}
                 <label>Cost ceiling ($)<input type="number" min="0.01" max="5" step="0.05" value={settings.costCeiling ?? c.costCeiling} onChange={set("costCeiling")} disabled={running} /></label>
-                {c.kind === "switch" && (
+                {(c.kind === "switch" || c.kind === "graph") && (
                   <label className={styles.wide}>
                     The input (what the router reads)
                     <textarea rows={3} value={settings.input ?? c.input} onChange={set("input")} disabled={running} />
@@ -169,8 +198,8 @@ export default function Theater() {
                 {!running && <button className={styles.button} onClick={() => run(true)} title="Stand-in replies, no model, no cost">Rehearse (no model, free)</button>}
                 {running && <button className={styles.stop} onClick={stop}>Stop</button>}
                 <span className={styles.muted}>
-                  {c.kind === "cast" ? `${system.cast.length} characters × ${settings.turns ?? c.turns} rounds` : c.kind === "loop" ? `${system.cast.length} + judge, each try` : "router + one branch"}
-                  {system.director ? " · a director" : ""}{system.producers.length ? ` · ${system.producers.length} producer${system.producers.length > 1 ? "s" : ""} every ${c.producersEvery} round${c.producersEvery > 1 ? "s" : ""}` : ""}{system.observers.length ? ` · ${system.observers.length} observer${system.observers.length > 1 ? "s" : ""}` : ""}{c.confessionals ? " · confessionals on" : ""}{c.ratingsLoop ? " · ratings loop" : ""}
+                  {c.kind === "cast" ? (c.speeches > 0 ? `${system.cast.length} characters · ${settings.speeches ?? c.speeches} speeches in all` : `${system.cast.length} characters × ${settings.turns ?? c.turns} rounds`) : c.kind === "loop" ? (c.answer ? "one guess at a time · the judge is code" : `${system.cast.length} + judge, each try`) : `router + one branch${c.answer || system.judge ? " + a final judge" : ""}`}
+                  {system.director ? " · a director" : ""}{system.producers.length ? ` · ${system.producers.length} producer${system.producers.length > 1 ? "s" : ""} every ${c.producersEvery} round${c.producersEvery > 1 ? "s" : ""}` : ""}{system.observers.length ? ` · ${system.observers.length} observer${system.observers.length > 1 ? "s" : ""}` : ""}{c.confessionals ? (c.asideLabel === "ITM" ? " · private ITMs" : " · confessionals on") : ""}{system.roles?.length ? " · secret roles" : ""}{c.ratingsLoop ? " · ratings loop" : ""}
                 </span>
               </div>
               {error && <p className={styles.error}>{error}</p>}
@@ -185,10 +214,30 @@ export default function Theater() {
               </div>
             </div>
             <Dashboard events={events} live={running} />
-            {!running && events.length > 0 && <p className={`${styles.muted} ${styles.noPrint}`}>Saved as <code>runs/{(events[0]?.run || "").replace("~", "/")}.jsonl</code>. Every run is at <a href="/theater/runs">Runs</a>.</p>}
+            {!running && events.length > 0 && <p className={`${styles.muted} ${styles.noPrint}`}>Saved in <a href="/systems/sessions">Sessions</a> (the log is <code>runs/{(events[0]?.run || "").replace("~", "/")}.jsonl</code>, on this computer only).</p>}
+            {extension && c.kind === "cast" && c.featured > 0 && <MakeYourOwn system={extension} here={system.name === extension.name} />}
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+// The creative extension, at the bottom of the cast pages: the prompt that made the advanced system, to copy into
+// Claude Code and change. Each fenced block in its prompt.md gets a Copy button.
+function MakeYourOwn({ system, here }) {
+  const blocks = [...system.prompt.matchAll(/```[a-z]*\n([\s\S]*?)```/g)].map((m) => m[1].trim());
+  return (
+    <section className={`${styles.panel} ${styles.noPrint}`} aria-label="Make your own">
+      <h3>Make your own{here ? "" : `: from a cast to ${system.title}`}</h3>
+      <div className={styles.guide}><ReactMarkdown remarkPlugins={[remarkGfm]}>{system.prompt.replace(/```[a-z]*\n[\s\S]*?```/g, "")}</ReactMarkdown></div>
+      {blocks.map((text, i) => (
+        <details className={styles.file} key={i} open={i === 0}>
+          <summary>{i === 0 ? "Your own system: the prompt" : `The prompt that made ${system.title}`}<small><code>systems/{system.name}/prompt.md</code></small></summary>
+          <pre>{text}</pre>
+          <div className={styles.row}><Copy text={text} label="Copy the prompt" /></div>
+        </details>
+      ))}
+    </section>
   );
 }

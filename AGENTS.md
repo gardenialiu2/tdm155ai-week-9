@@ -1,57 +1,64 @@
 # TDM 155AI week 9 — instructions for AI assistants
 
-This is a local course workspace for TDM 155AI (*Making Stuff in the Age of AI*), class November 4, 2026: **agents, systems, orchestration**, the start of Unit 3. It includes podcast preparation, creative agent systems, research/readings, and general media utilities. Read the user's request first, then the relevant part of this map. The presence of an app or example does not make it your assignment.
+This local course workspace is for TDM 155AI (*Making Stuff in the Age of AI*), November 4, 2026: **agents, systems, orchestration**. It contains creative agent systems, podcast preparation, reference research and media utilities. Read the user's request first; a repository feature is not automatically your assignment.
 
-## Start with the requested task
+## Identify the task before making things
 
-- Identify what the user wants to accomplish and which files/feature it concerns. Use their current brief and session instructions; do not infer a new task from whichever feature has the longest documentation.
-- “Create skills/subagents” specifies a mechanism, not their purpose. If the purpose is supplied, follow it. If the purpose cannot be found in the request or provided brief, ask one short question before creating domain-specific agents. Do not default to Theater or create a sample catalog of skills on speculation.
-- Keep the roles separate: the agent helping modify this repository, a Claude subagent defined in `.claude/agents/`, and an agent character inside a running app are different things. Creating one does not automatically require creating the others.
-- Read the relevant source and current contract before implementing. Keep source material, instructor decisions, and AI proposals distinguishable. Prepared activities are not evidence of what happened in class.
-- Other people/agents may be editing concurrently. Check the working tree, honor assigned ownership, and avoid sweeping up or overwriting their work. A current explicit user assignment takes precedence over this general map.
+Use the current request and supplied brief to determine the purpose and files. “Create skills/subagents” names a mechanism, not a subject. When the purpose is already given, follow it; when it cannot be found, ask one short question before inventing domain-specific agents. Do not default to building shows because the repo contains systems.
 
-## Podcast preparation — three interfaces, one workflow
+An assistant modifying the repo, a Claude subagent, and a character inside an app are distinct. Check the working tree and respect concurrent ownership. Keep instructor decisions, source material and AI proposals separate; prepared examples do not establish what happened in class. Read README.md and relevant nested instructions before changes.
 
-The web app, separate Slack Producer, and Claude-native agents prepare a host for a podcast interview about creative work. Shared functions: collect/save submitted material; read/transcribe it when needed; generate source-specific questions; generate optional guest-supporting sidekick humor; produce a structured host briefing after the person explicitly finishes intake.
+## Current app structure
 
-- **Web:** `/podcast`, implemented in `nextjs/app/podcast/` and `nextjs/lib/podcast/`. The contract is `nextjs/lib/podcast/contract.mjs`: roles, output fields, statuses, finish/revision semantics and briefing headings. Start there.
-- **Slack:** separate repository `tdm155ai-podcast-producer`, a sibling of this repo in The Notebook. Read its `src/prompts.js` for the matched prompts. Coordinate changes to the shared contract; do not edit the sibling without assignment.
-- **Claude-native:** use function titles **Collector**, **Interviewer**, **Sidekick**, **Producer**. Collector maps to the shared internal role ID `intake`; the other IDs are `interviewer`, `sidekick`, `producer`. Active project subagents belong in `.claude/agents/`. The parent Claude session coordinates them directly.
-- **Skills are deliberately inactive for today's podcast work:** put new podcast skill drafts in `draft-skills/podcast-prep/`, outside `.claude/skills/` and all other discovery locations. Do not expose them through symlinks, hooks, registration or automatic loading. Agents must work without those drafts. Existing unrelated skills/subagents are not instructions to expand their topic; do not delete or repurpose them without a user request.
-- The apps and the Slack bot display the same function titles, Collector, Interviewer, Sidekick, Producer (Marlon, November 4; they were Piper, Quinn, Kit, Bea until then). Optional student-chosen names can later be display aliases over the stable IDs; do not rename the IDs.
-- Start per-item work as material arrives during an active workflow. Make the final briefing only after explicit “done” and after pending work for that revision completes. Failed work requires retry or an explicit proceed-with-gaps choice. Later material belongs to the next revision; preserve which material each briefing used.
-- Humor supports the guest. The host, sidekick or situation can be the butt; never mock the guest or their work. No joke is an acceptable result.
-- Local server-side storage is intended: `output/podcast/` is gitignored. Keep originals, extracted text/transcripts, agent outputs, inventory, state and briefings there. Do not put submitted material in public assets or course-content folders. A Claude utility must coordinate storage formats with the app, or use a separate `output/podcast-claude/` folder.
+Top-level destinations: **Systems**, **Sessions**, **Research**, **Glossary**, **Podcast prep**, **Remix**. Page title: **Systems (Theaters of Agents)**. No top-level Docs section. Definitions of agents belong in the glossary; brief mechanic instructions belong beside the relevant system. Older example routes/files may remain for compatibility, but do not reintroduce their teaching ladder or navigation as the current plan.
 
-**Student remix:** `/remix` (`nextjs/app/remix/`) is the self-contained podcast copy with its own routes/lib/avatars and `output/podcast-remix/` storage. Student requests to customize podcast prep normally go there; instructor maintenance of `/podcast` is a separate, authorized task.
+### Systems
 
-## Theater — creative systems when requested
+The initial picker has three examples, in this order:
 
-Students design a system with a theatrical spin: loops, routing, casts, goals, producers and observers. They run, inspect and visualize it, with creativity rather than code quality as the emphasis. This is one activity in the repo, not the default topic for every task.
+1. `systems/00-favorite-color/`: one color guess at a time; use feedback; stop when correct, maximum **10 guesses**, no forced minimum. Keep the target private to the judge/configuration, not in the guesser's context. A deterministic judge is sufficient.
+2. `systems/09-rushmore/`: Washington, Jefferson, **Theodore** Roosevelt and Lincoln, relocating to South Dakota, discuss their preferences and disagree while responding to prior dialogue. Separate character files + scenario + **20 total speeches**, not 20 rounds.
+3. `systems/10-divine-villa/`: advanced Greek-gods reality-show system with modern human producers, exactly three secret traitors, public conversation and private ITMs. Traitors may deceive publicly but their ITMs must honestly state their role/plans. Never give faithful players other characters' hidden roles or ITMs. Public voting/reveals must follow game state, not a model's invented result.
 
-- `systems/<name>/`: each system's Markdown definition and characters; format in `nextjs/content/docs/theater/09-system-format.md`. For a new student show, copy a preset into a new folder; preserve presets `01-` through `06-`. Change students' characters only as requested.
-- `nextjs/lib/theater/`: runner/prompts (`run.mjs`), parsers (`parse.mjs`), loading (`systems.mjs`), model calls (`model.mjs`) and the free stand-in (`rehearsal.mjs`). `nextjs/app/theater/` holds pages/routes/dashboard.
-- Keep turn/cost caps and Stop working. New model calls in this engine go through `ask` in `run.mjs` so they count toward the ceiling and log.
-- `runs/` is gitignored: run events as JSONL. Do not commit a student's logs or output.
+Students remix by copying a system into a new `systems/<name>/` and changing its characters/scenario/rules. Preserve built-in examples and student work unless explicitly asked otherwise. The copyable remix prompt is part of the Systems experience. Earlier presets may stay as source/reference without appearing as additional required starters.
 
-## Earlier ensemble example
+Default the creative-system runner to the supported **Sonnet** option. Keep Stop, total-turn/guess limits and cost ceiling working. New model calls must go through the runner's accounting helper so they count toward logs/caps. Free rehearsal is stand-in output, not evidence of live-model behavior.
 
-`/ensemble` (`nextjs/app/ensemble/`) is the October 30 worked example: Conductor → Archivist → Researcher → Briefer. Its prompts and trace explain a fixed graph reading a context repository. It is historical teaching material alongside the new podcast flow; do not use its role names as the current podcast contract. Its separate student copy is `/ensemble/remix`, not `/remix`. Preserve the teaching example when changing a student's copy.
+Internal implementation remains under `nextjs/lib/theater/` and relevant `nextjs/app/` routes. Prefer the visible Systems/Sessions naming without a needless wholesale internal rename. Consult the actual loader/runner/file format before extending a system; do not assume Markdown instructions alone enforce hidden-state or vote rules.
 
-`sample-context-repo/` is invented material for demonstrations. Keep it invented; never replace it with a student's work.
+### Sessions
 
-## Research, documents and general tools
+Sessions is local history for the Systems activity. It starts empty; running a system creates a session. Backing JSONL logs are in gitignored `runs/`. They are not uploaded to GitHub. Previous test logs must be cleared/archived out of active history before classroom delivery, after checks and with no active run. Do not clear Podcast/Remix sessions or delete system definitions as part of that cleanup. Do not add a seeded initial session unless requested.
 
-- `nextjs/content/`: Markdown displayed by the site; `content/docs/` supplies `/docs`. Research is displayed at `/ai-research`. Keep the source-research/copy arrangement documented; research authors own their sources and the app maintainer owns rendering.
-- Course-content Markdown uses YAML frontmatter: `title`, one-line `description`, and `author`; `order` sets sidebar position. Do not put an H1 in the body when the page renders its title. This is a content-page convention, not a demand to apply course-page frontmatter to every README, instruction file or agent/skill definition. Use the native format required for those files.
-- Distinguish original documentation links and sources from generated notes/adaptations. Support dark screen reading and light printing. For bot SVGs, animate only during the corresponding job; respect reduced motion and print stills.
-- `utils/` contains general text/image/video generation, model listers, batches, stills, compression and editing tools copied forward from earlier weeks. Read `utils/README.md`. Root package commands include `pnpm text`, `pnpm image`, `pnpm video`, `pnpm stills`, `pnpm compress-image`, and `pnpm test`. These utilities are available tools, not an instruction to generate something without a task.
+### Podcast prep and Remix
 
-## Running, credentials and local material
+`/podcast`: `nextjs/app/podcast/` + `nextjs/lib/podcast/`. Read `nextjs/lib/podcast/contract.mjs` first. Stable IDs/functions: `intake` (**Collector**), `interviewer` (**Interviewer**), `sidekick` (**Sidekick**), `producer` (**Producer**). Optional student names are display aliases, not new workflow IDs.
 
-- Use pnpm. The app is plain JavaScript and CSS; no TypeScript or Tailwind. Read nested instructions before modifying `nextjs/`.
-- The person runs the dev server: `cd nextjs`, `pnpm install`, `pnpm dev`. Do not start background servers unless asked.
-- Credentials live in gitignored root `.env` and `nextjs/.env.local`; `.env.example` contains empty variable names. Server routes use `lib/keys.mjs`. Never print keys, include them in browser code, commit them, or overwrite existing local credentials casually.
-- Process only material the person submits/chooses for the workflow. Preserve exclusions; do not scan unrelated folders. Save originals before transformations and report unreadable/failed items rather than pretending they were processed.
-- Submitted student files, private notes, transcripts, generated briefings, sessions and logs stay in gitignored local storage. Use invented fixtures for shared tests and demonstrations.
-- Read README.md for implementation details. Run checks relevant to your changes; report what was verified and what remains uncertain.
+Save submitted originals, read/transcribe when needed, generate per-item questions and optional guest-supporting humor, then brief only after explicit finish and pending work completes. Failed work needs retry or explicit proceed-with-gaps. Later material belongs to the next revision. Never ridicule the guest or their work, even gently; no joke is a valid result.
+
+`/remix` (`nextjs/app/remix/`) is the self-contained student podcast copy with separate routes/library and `output/podcast-remix/` storage. Student podcast customizations normally go there; instructor maintenance of `/podcast` is a separate authorized task. Main prep storage is `output/podcast/`, server-side and gitignored. Do not merge live stores.
+
+The separate Slack repo `tdm155ai-podcast-producer` follows the same role IDs/output fields/headings/finish behavior, with its own triggers and per-person storage. **Madeleine owns that repo now.** Coordinate shared-contract changes; do not change it as part of a course-app task without explicit assignment. It is not a submodule or dependency of this repo.
+
+### Claude-native podcast agents
+
+`.claude/agents/podcast-collector.md`, `podcast-interviewer.md`, `podcast-sidekick.md`, `podcast-producer.md` use simple function titles. The parent Claude session delegates. Their reference/helper is `.claude/utils/podcast/`; read its README for usage. Its separate store is `output/podcast-claude/`.
+
+New podcast skills are deliberately parked in `draft-skills/podcast-prep/`, outside discovery. Do not register/link/load the parked SKILL.md automatically or move it into `.claude/skills/`. Active agents must work without that skill. Existing unrelated skills/agents are not invitations to expand their topic; do not remove them without a request. Do not promise always-on activity outside an active Claude invocation or start watchers/hooks/schedules just to simulate it.
+
+### Research and Glossary
+
+Reference pages live in `nextjs/content/ai-research/` at `/ai-research`; the glossary is `/ai-research/glossary`. Preserve the documented source/copy arrangement: research authors own sources, app maintainers own rendering. Agent definitions and overlapping buzzwords belong here, not a restored generic Docs section.
+
+Keep original-documentation links, dates/access limits and AI-generated/adaptation labels. Dark screen reading and light printing must both work. SVG agent avatars move only while their actual job runs; retain reduced-motion alternatives and still print output.
+
+Rendered course Markdown uses YAML `title`, one-line `description`, `author` and optional `order`; omit a body H1 when the page renders the title. This convention is for course-content pages, not every README/instruction/subagent file. Use each file type's native format.
+
+## Tools, legacy material and local operation
+
+- Use pnpm. The app is JavaScript and CSS; no TypeScript or Tailwind. Read `nextjs/AGENTS.md` before code changes. The person runs the server (`cd nextjs`, `pnpm install`, `pnpm dev`); do not start a background server unless asked.
+- `utils/` holds general generation/model/media/editing tools. Read `utils/README.md`; root dependencies and package commands are separate from `nextjs/`.
+- `/ensemble` and `/ensemble/remix` retain October 30's Conductor/Archivist/Researcher/Briefer graph. They are legacy teaching material, not the current podcast contract or required navigation. Preserve them unless the user asks to remove them.
+- Root `.env` and `nextjs/.env.local` are ignored credentials; `.env.example` holds empty variable names. Keep keys server-side, never print/commit them, and do not overwrite local credentials casually.
+- Process only material the person explicitly submits/chooses. Preserve exclusions and originals; report failed/unreadable material honestly. Student media, private notes, transcripts, briefings, logs and sessions stay in ignored local storage, outside public assets/content. Use invented fixtures for shared checks. `sample-context-repo/` must remain invented.
+- Run checks relevant to the change; distinguish loader/rehearsal/unit-test checks from live generation and rendered UI checks. Report remaining gaps rather than claiming a requested example is complete before it runs.
