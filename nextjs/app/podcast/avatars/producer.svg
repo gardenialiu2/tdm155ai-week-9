@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Bea, Producer">
+  <title>Bea, Producer</title>
+  <circle cx="128" cy="128" r="128" fill="#361a28"/>
+  <g transform="scale(2.56)" stroke="#ecece6" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="35" y="50" width="10" height="18" fill="#ee93b0" />
+    <path d="M18.25 86 Q22 70 38 67 L62 67 Q78 70 81.75 86 A48 48 0 0 1 18.25 86 Z" fill="#5f8fd6" />
+    <circle cx="40" cy="18" r="6.5" fill="#6b3b4a" />
+    <circle cx="40" cy="38" r="16" fill="#ee93b0" />
+    <path d="M24 37 Q24 21 40 21 Q56 21 56 37 Q51 28 40 28.5 Q29 28 24 37 Z" fill="#6b3b4a" />
+    <path d="M22.5 39 A17.5 17.5 0 0 1 57.5 39" fill="none" stroke="#a7adb3" stroke-width="2.6" />
+    <rect x="19" y="34" width="7" height="11" rx="3" fill="#3a3d40" />
+    <path d="M23 44 Q24 51.5 32 50.5" fill="none" stroke="#a7adb3" stroke-width="2" />
+    <circle cx="33" cy="50.3" r="2" fill="#3a3d40" stroke="none" />
+    <circle cx="35.5" cy="40" r="2" fill="#161816" stroke="none" />
+    <circle cx="46.5" cy="40" r="2" fill="#161816" stroke="none" />
+    <path d="M36 46 Q41 49.5 46 46" fill="none" stroke="#161816" stroke-width="2" />
+    <rect x="50" y="55" width="28" height="31" rx="3" fill="#b48a5e" />
+    <rect x="53.5" y="60" width="21" height="23" rx="1" fill="#f2efe6" stroke="none" />
+    <rect x="58" y="52" width="12" height="6.5" rx="2" fill="#a7adb3" />
+    <g>
+    <path d="M56.5 65 L71.5 65" fill="none" stroke="#3a3d40" stroke-width="1.8" />
+    </g>
+    <g>
+    <path d="M56.5 69.5 L69 69.5" fill="none" stroke="#3a3d40" stroke-width="1.8" />
+    </g>
+    <g>
+    <path d="M56.5 74 L71.5 74" fill="none" stroke="#3a3d40" stroke-width="1.8" />
+    </g>
+    <g>
+    <path d="M56.5 78.5 L65 78.5" fill="none" stroke="#3a3d40" stroke-width="1.8" />
+    </g>
+    <circle cx="51" cy="72" r="4.5" fill="#ee93b0" />
+  </g>
+</svg>

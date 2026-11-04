@@ -1,0 +1,69 @@
+/* Podcast prep: the cast, the items with a lane per agent, the briefing. Site tokens from app/globals.css;
+   print is light and shows the briefing and the items without controls. */
+
+.podcast { display: grid; gap: 20px; }
+.podcast button { font: inherit; cursor: pointer; }
+.podcast button:disabled { cursor: default; opacity: .45; }
+.podcast select, .podcast input[type="text"], .podcast textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--wash); color: var(--ink); font: inherit; font-size: 14px; }
+.podcast select { width: auto; max-width: 100%; }
+.podcast textarea { resize: vertical; line-height: 1.5; }
+.podcast pre { margin: 6px 0 0; max-height: 360px; overflow: auto; padding: 10px; border-radius: 6px; background: var(--paper); font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.panel { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--wash); display: grid; gap: 12px; }
+.panel h2 { margin: 0; font-size: 22px; letter-spacing: -.03em; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.row input[type="text"] { flex: 1 1 220px; width: auto; }
+.inline { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.muted { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.note { margin: 0; font-size: 13px; color: var(--muted); }
+.warn { margin: 0; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--paper); font-size: 14px; }
+.error { margin: 0; color: var(--error); font-size: 13px; }
+.state { margin: 2px 0 4px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.badge { margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--line); font-size: 12px; font-weight: 700; vertical-align: 4px; }
+.button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); font-size: 13px; font-weight: 600; }
+.button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.small { margin-left: auto; padding: 3px 9px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--ink); font-size: 12px; }
+.small:hover { border-color: var(--accent); color: var(--accent); }
+.primary { padding: 11px 22px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 800; }
+
+.cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.agent { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 14px; border: 1px solid var(--line); border-radius: 14px; }
+.agent[data-state="working"] { border-color: var(--accent); }
+.agent h3 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+.agent h3 span { color: var(--muted); font-weight: 500; font-size: 14px; }
+.told summary { margin-top: 6px; color: var(--muted); font-size: 12px; cursor: pointer; }
+
+.drop { display: grid; place-items: center; min-height: 96px; border: 2px dashed var(--line); border-radius: 12px; color: var(--muted); cursor: pointer; text-align: center; padding: 12px; }
+.drop[data-over="true"], .drop:hover { border-color: var(--accent); color: var(--ink); }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 16px; }
+.fields label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.wide { grid-column: 1 / -1; }
+
+.items { display: grid; gap: 12px; }
+.item { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.item[data-excluded="true"] { opacity: .5; }
+.itemHead { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.itemHead h3 { margin: 0; font-size: 16px; overflow-wrap: anywhere; }
+.number { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--line); font-size: 13px; font-weight: 800; }
+.lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.lane { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--wash); font-size: 14px; line-height: 1.5; }
+.lane[data-status="running"] { border-color: var(--accent); }
+.lane[data-status="failed"] { border-color: var(--error); }
+.laneHead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.laneHead .state { margin: 0; }
+.list { margin: 4px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.from { color: var(--muted); font-size: 12px; font-style: italic; }
+.read summary { color: var(--muted); font-size: 12px; cursor: pointer; }
+
+.briefHead { display: flex; align-items: center; gap: 14px; }
+.briefing { max-width: 760px; font-size: 16px; line-height: 1.7; }
+.briefing h2 { margin: 1.6em 0 .5em; font-size: 22px; letter-spacing: -.03em; }
+.briefing h2:first-child { margin-top: .4em; }
+.briefing ul, .briefing ol { padding-left: 1.3em; }
+
+@media print {
+  .podcast { --paper: #fff; --ink: #111311; --muted: #555a54; --line: #d5d8d2; --accent: #c8102e; --wash: #fff; --error: #8a1c14; color: var(--ink); }
+  .noPrint, .told, .read { display: none !important; }
+  .panel, .item { break-inside: avoid-page; }
+  .briefing { max-width: none; font-size: 11pt; }
+}

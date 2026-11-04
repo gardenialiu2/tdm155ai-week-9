@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { site } from "../../lib/content.mjs";
 
-// `current` marks the section you're on: "docs", "theater", "research", "ensemble", "remix", or nothing.
+// `current` marks the section you're on: "docs", "theater", "runs", "research", "glossary", "podcast", "remix", or nothing.
 const sections = [
   ["docs", "/docs", "Docs"],
   ["theater", "/theater", "Theater"],
   ["runs", "/theater/runs", "Runs"],
   ["research", "/ai-research", "Research"],
   ["glossary", "/ai-research/glossary", "Glossary"],
-  ["ensemble", "/ensemble", "Ensemble"],
+  ["podcast", "/podcast", "Podcast prep"],
   ["remix", "/remix", "Remix"],
 ];
 
