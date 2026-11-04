@@ -3,7 +3,7 @@ title: "A glossary of orchestration: agents, loops, graphs, and the people who r
 description: Core terms for designing a theater of agents, each with its meaning in AI engineering, its meaning in a human practice where it has one, and an example from a student's ensemble.
 author: claude (RS research pane, TDM 155AI week 9)
 date: 2026-11-04
-status: "batches 1 and 2; agent research, check before citing"
+status: "batches 1 to 3; agent research, check before citing"
 order: 0
 ---
 
@@ -968,3 +968,161 @@ Written in the pane on November 4 for terms the notes didn't cover; sources are 
 **In the theater of agents.** Give the producer an intent ("keep the season heading toward a betrayal in episode five") in place of a list of rules.
 
 **Sources.** Nov 1 essay 05, "Intent, not instructions" (Anthropic, ["How we built our multi-agent research system"](https://www.anthropic.com/engineering/multi-agent-research-system), quoted there, not re-read today).
+
+## Batch 3 (November 4, from notes 06 and 07)
+
+Batch 3 gathers the glossary candidates from [note 06](notes/06-drama-managers-and-interactive-narrative.md) (the director layer) and [note 07](notes/07-how-ensembles-fail-and-how-to-watch-them.md) (failures and observers). Source marks are their authors': "verified" means the subagent read the source on November 4, 2026.
+
+## Directors and drama managers
+
+### Drama manager
+
+**In AI engineering.** An agent outside the cast that watches the run and acts, usually through characters, to keep it heading toward a story.
+
+**In human practice.** The director or stage manager who doesn't perform but decides what happens next.
+
+**In the theater of agents.** After each turn the director agent reads the transcript, checks the next milestone, and either does nothing or whispers a cue to one character.
+
+**Sources.** [Riedl and Bulitko 2013](https://faculty.cc.gatech.edu/~riedl/pubs/aimag.pdf) (verified); [Mateas and Stern 2005](https://cdn.aaai.org/AIIDE/2005/AIIDE05-016.pdf) (verified)
+
+### Beat
+
+**In AI engineering.** The smallest unit the director sequences: a short scene with preconditions, a default sequence, and an effect on story state such as tension.
+
+**In human practice.** The smallest unit of dramatic action in a scene, in playwriting and acting vocabulary.
+
+**In the theater of agents.** "The argument about the will" is one beat; the director picks it next because tension is low and the inheritance hasn't come up yet.
+
+**Sources.** [Mateas and Stern 2005](https://cdn.aaai.org/AIIDE/2005/AIIDE05-016.pdf) (verified)
+
+### Tension arc
+
+**In AI engineering.** A target curve of story tension over time that the director tries to match when choosing what comes next.
+
+**In human practice.** The rising action, climax, and falling action of a play; Façade's authors used an Aristotelian arc.
+
+**In the theater of agents.** An observer scores each turn 0 to 10; the dashboard draws actual against target and marks where the director stepped in.
+
+**Sources.** [Mateas and Stern 2005](https://cdn.aaai.org/AIIDE/2005/AIIDE05-016.pdf) (verified); [Booth 2009](https://cdn.fastly.steamstatic.com/apps/valve/2009/ai_systems_of_l4d_mike_booth.pdf) (verified)
+
+### Intervention and accommodation
+
+**In AI engineering.** The two answers to a character leaving the story: block the deviation, or let it stand and replan the remaining milestones.
+
+**In human practice.** A GM steering the party back versus rewriting the adventure around them.
+
+**In the theater of agents.** The detective leaves town; the director sends a storm that closes the road, or moves the confession to the train station.
+
+**Sources.** [Riedl and Bulitko 2013](https://faculty.cc.gatech.edu/~riedl/pubs/aimag.pdf) (verified)
+
+### Adaptive pacing
+
+**In AI engineering.** Adjusting how often pressure arrives from a running estimate of the participants' intensity, cycling through build-up, peak, and relax.
+
+**In human practice.** The rhythm a director or DJ gives a show by alternating intense and quiet stretches.
+
+**In the theater of agents.** After three high-tension turns the director holds back new events for two turns before adding the next complication.
+
+**Sources.** [Booth 2009](https://cdn.fastly.steamstatic.com/apps/valve/2009/ai_systems_of_l4d_mike_booth.pdf) (verified)
+
+### Scenario (canovaccio)
+
+**In AI engineering.** A skeleton of scenes and entrances given to agents in place of a script, leaving dialogue to them.
+
+**In human practice.** The commedia dell'arte outline of acts and scenes, improvised by masked stock types.
+
+**In the theater of agents.** The director's file lists six scenes and who enters in each; each character gets two lazzi to fall back on.
+
+**Sources.** [Wikipedia, Canovaccio](https://en.wikipedia.org/wiki/Canovaccio) (verified); [Wikipedia, Commedia dell'arte](https://en.wikipedia.org/wiki/Commedia_dell%27arte) (verified)
+
+### Joker
+
+**In AI engineering.** A facilitator role that runs replays and judges interventions without writing content.
+
+**In human practice.** Boal's Forum Theatre facilitator, who lets spect-actors stop and replace a character, and asks whether a fix is "magic."
+
+**In the theater of agents.** A student stops the run at turn 12, rewrites one character's prompt, replays from there, and the class judges whether the change was plausible.
+
+**Sources.** [Wikipedia, Forum theatre](https://en.wikipedia.org/wiki/Forum_theatre) (verified; Boal's texts unverified)
+
+## Failures, judges, and observers
+
+### Failure taxonomy
+
+**In AI engineering.** A named list of the ways a system goes wrong, built by coding real traces; MAST has 14 modes in three categories.
+
+**In human practice.** An error classification that lets different reviewers file the same incident the same way.
+
+**In the theater of agents.** After each run an observer checks the log against six MAST modes and the dashboard shows "step repetition: 2."
+
+**Sources.** [Cemri et al. 2025](https://arxiv.org/abs/2503.13657) (verified); human-practice sense (unverified: general knowledge)
+
+### Conformity
+
+**In AI engineering.** An agent dropping its own answer, often a correct one, to match the group after reading other agents' turns.
+
+**In human practice.** Yielding to a group majority, the subject of Asch's line-judgment experiments.
+
+**In the theater of agents.** The skeptic agrees with the other four at turn 5 without a new argument, and the observer tags a position switch.
+
+**Sources.** [Wynn et al. 2025](https://arxiv.org/abs/2509.05396) (verified); [Weng et al. 2025](https://arxiv.org/abs/2501.13381) (verified); Asch (unverified: not read)
+
+### Persona drift
+
+**In AI engineering.** A character's voice, goals, or claims sliding away from its system prompt; measured within eight rounds of dialogue.
+
+**In human practice.** An actor losing the character over a long run, which the stage manager notes and corrects.
+
+**In the theater of agents.** By turn 8 the cynic is cheerful; the observer's prompt-to-line score drops from 4 to 1.
+
+**Sources.** [Li et al. 2024](https://arxiv.org/abs/2402.10962) (verified); [Abdulhai et al. 2025](https://proceedings.nips.cc/paper_files/paper/2025/hash/4c91443877f8388d8190c938ac5a4d4d-Abstract-Conference.html) (verified); stage practice (unverified: general knowledge)
+
+### Position bias
+
+**In AI engineering.** An LLM judge preferring an answer because of where it appears; checked by judging twice with the order swapped.
+
+**In human practice.** Order effects in judging, such as performers late in a competition scoring differently from early ones.
+
+**In the theater of agents.** The director picks proposal A, then picks the other text when the order flips; the swap gap is logged.
+
+**Sources.** [Zheng et al. 2023](https://arxiv.org/abs/2306.05685) (verified); competition order effects (unverified: not read)
+
+### Self-preference bias
+
+**In AI engineering.** A judge model scoring its own model's output higher, linked to its ability to recognize its own text.
+
+**In human practice.** Judging your own work or your own student's; the reason for recusal.
+
+**In the theater of agents.** Director and characters run on one model, so a judge from another family rescores the finale.
+
+**Sources.** [Panickssery et al. 2024](https://arxiv.org/abs/2404.13076) (verified); [Verga et al. 2024](https://arxiv.org/abs/2404.18796) (verified)
+
+### Span
+
+**In AI engineering.** One timed unit of work inside a trace (a model call, tool call, or agent invocation) with named attributes; traces group into sessions.
+
+**In human practice.** One line of a play-by-play log: who did what, when, with what result.
+
+**In the theater of agents.** Each turn is a span tagged `gen_ai.agent.name=cynic` inside the trace for run 7.
+
+**Sources.** [OpenTelemetry agent spans](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md) (verified, Development status, Nov 4, 2026); [Langfuse](https://langfuse.com/docs/observability/data-model) (verified)
+
+### Coding scheme
+
+**In AI engineering.** A fixed set of tags an observer agent applies to each turn, defined with examples so they can be counted across runs.
+
+**In human practice.** A category system for observed behavior, such as Bales's twelve categories for small-group talk (1950).
+
+**In the theater of agents.** Two observers tag every public turn with a Bales category; the dashboard charts "agrees" against "disagrees."
+
+**Sources.** [Encyclopedia.com, "Observation Systems"](https://www.encyclopedia.com/social-sciences/encyclopedias-almanacs-transcripts-and-maps/observation-systems) (verified)
+
+### Inter-rater reliability
+
+**In AI engineering.** Agreement between two judges coding the same items, corrected for chance; MAST reports kappa 0.88 among humans and 0.77 for its LLM annotator.
+
+**In human practice.** Cohen's kappa (1960), used to show a coding scheme can be applied consistently by different observers.
+
+**In the theater of agents.** Two observers from different model families code run 7; kappa 0.45 says the "on card" tag needs a clearer definition.
+
+**Sources.** [Wikipedia, "Cohen's kappa"](https://en.wikipedia.org/wiki/Cohen%27s_kappa) (verified); [Cemri et al. 2025](https://arxiv.org/html/2503.13657v3) (verified)
