@@ -28,7 +28,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .eyebrow { margin: 0; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 
 .hero { max-width: 1220px; padding: clamp(72px, 14vh, 150px) var(--gutter) clamp(64px, 11vh, 120px); }
-.hero h1 { max-width: 1050px; margin: 22px 0 0; font-size: clamp(52px, 9vw, 124px); font-weight: 800; letter-spacing: -.065em; line-height: .88; text-wrap: balance; }
+.hero h1 { max-width: 1050px; margin: 22px 0 0; font-size: clamp(52px, 9vw, 124px); font-weight: 800; letter-spacing: -.065em; line-height: 1.02; text-wrap: balance; }
 .hero h1 span { color: var(--accent); }
 .hero-deck { max-width: 760px; margin: 42px 0 0; color: var(--muted); font-size: clamp(20px, 2.5vw, 30px); line-height: 1.4; letter-spacing: -.025em; }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 32px; margin-top: 34px; font-size: 14px; }
