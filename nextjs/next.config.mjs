@@ -14,6 +14,14 @@ export default {
     "/*": ["./content/**/*"],
   },
   // The Theater is shown as Systems, and its runs as Sessions (Marlon, Nov 4); the code stays in app/theater/.
+  async redirects() {
+    return [
+      { source: "/theater", destination: "/systems", permanent: false },
+      { source: "/theater/sessions", destination: "/systems/sessions", permanent: false },
+      { source: "/theater/sessions/:id", destination: "/systems/sessions/:id", permanent: false },
+      { source: "/theater/view", destination: "/systems/view", permanent: false },
+    ];
+  },
   async rewrites() {
     return [
       { source: "/systems", destination: "/theater" },

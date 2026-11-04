@@ -13,7 +13,7 @@ export default function TheaterPage() {
       <main id="main" className="machine-shell">
         <header className="machine-heading">
           <p className="eyebrow">Week 9 · Agents, systems, orchestration</p>
-          <h1>Systems <span className="machine-sub">(theaters of agents)</span></h1>
+          <h1>Systems (Theaters of Agents)</h1>
           <p className="hero-deck">
             A system is a folder of plain files: who's in it, what they're told, and the rules. Three to start: a loop, a cast, and a reality show with secrets. Rehearse one for free, run it, stop it, and read what it did.
           </p>

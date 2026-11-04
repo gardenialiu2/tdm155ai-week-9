@@ -12,7 +12,7 @@ export default async function SessionsPage() {
       <SiteHeader current="sessions" />
       <main id="main" className="machine-shell">
         <header className="machine-heading">
-          <p className="eyebrow">Systems (theaters of agents)</p>
+          <p className="eyebrow">Systems (Theaters of Agents)</p>
           <h1>Sessions</h1>
           <p className="machine-more">Each time you press Run it or Rehearse in Systems, the session is saved here, newest first. It stays on this computer: the logs are in <code>runs/</code> at the repo root, which git ignores. Open one for its dashboard. Somebody else's log? <a href="/systems/view">View a log</a>.</p>
         </header>

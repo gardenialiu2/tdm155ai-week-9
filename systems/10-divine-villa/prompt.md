@@ -1,13 +1,13 @@
 Want a system of your own? Copy the first prompt below into Claude Code, opened in this repository, and fill in the blanks. It makes a **new** folder, so the built-in examples stay as they are and the caps stay on. The second prompt is the one that made the Divine Villa, for reference: borrow from it.
 
 ```text
-In this repository, read AGENTS.md, the Theater's system format (nextjs/content/docs/theater/09-system-format.md), and the example systems in systems/00-favorite-color/, systems/09-rushmore/ and systems/10-divine-villa/. Then make me a NEW system in a new folder, systems/<a-short-name-of-mine>/, by copying whichever example is closest (the Rushmore cast for a conversation, the Divine Villa for a game with secrets and producers). Don't change the built-in examples.
+In this repository, read AGENTS.md, the system format (nextjs/content/docs/theater/09-system-format.md), and the example systems in systems/00-favorite-color/, systems/09-rushmore/ and systems/10-divine-villa/. Then make me a NEW system in a new folder, systems/<a-short-name-of-mine>/, by copying whichever example is closest (the Rushmore cast for a conversation, the Divine Villa for a game with secrets and producers). Don't change the built-in examples.
 
 My idea: ______ (who is in it, where they are, what they talk about or compete for).
 The cast: ______ (names, and one line each on who they are and how they speak). Give each one their own file in cast/.
 The rules: ______ (how many speeches in all, or rounds; any secret roles and how many of each; private asides or ITMs; any producers and what they're allowed to do; any vote).
 
-Keep it small: short lines, a clearly shown turn count, a cost ceiling, and the Stop button working. Keep everything an agent shouldn't know out of its prompt (other players' roles, private interviews, hidden answers). Write a short README.md in the folder saying who is in it, what each layer sees, and its limits. Then tell me the folder name, and I'll pick it in the Theater (under "More systems"), Rehearse it for free, and Run it.
+Keep it small: short lines, a clearly shown turn count, a cost ceiling, and the Stop button working. Keep everything an agent shouldn't know out of its prompt (other players' roles, private interviews, hidden answers). Write a short README.md in the folder saying who is in it, what each layer sees, and its limits. Then tell me the folder name, and I'll pick it on the Systems page (under "More systems"), Rehearse it for free, and Run it.
 ```
 
 ```text

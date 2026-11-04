@@ -42,4 +42,4 @@ Three rounds and one round table. This is a small demonstration of hidden inform
 
 ## How to run it
 
-Pick **The Divine Villa** in the Theater. **Rehearse** to see the flow with free stand-in lines, or **Run it** to call the model, within the cost ceiling ($1.50) and with Stop always available.
+Pick **The Divine Villa** on the Systems page. **Rehearse** to see the flow with free stand-in lines, or **Run it** to call the model, within the cost ceiling ($1.50) and with Stop always available.
