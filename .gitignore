@@ -38,3 +38,6 @@ pnpm-debug.log*
 
 # --- logs ---
 *.log
+
+# --- the Theater: run logs (each student keeps their own) ---
+runs/
