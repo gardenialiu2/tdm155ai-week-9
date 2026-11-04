@@ -281,3 +281,11 @@ body:has(.print-root) { background: #ffffff; color-scheme: light; }
 @media print {
   body.print-trace .site-header, body.print-trace .site-footer, body.print-trace .machine-heading { display: none !important; }
 }
+
+/* --- "On this page": the H2s of a long document, above its text --- */
+.page-contents { max-width: 740px; margin: -20px 0 44px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 10px; }
+.page-contents ol { margin: 8px 0 0; padding-left: 1.3em; columns: 2 260px; column-gap: 28px; font-size: 14px; line-height: 1.6; }
+.page-contents a:hover { color: var(--accent); }
+@media print { .page-contents { display: none; } }
+/* Wide tables (the product table in the research notes): small type on paper so they fit the page. */
+.print-root .prose table { display: table; width: 100%; font-size: 9px; line-height: 1.35; }

@@ -46,6 +46,19 @@ function FolderList({ folder }) {
   );
 }
 
+// The H2s of a long document, as links, above its text: the same slugs rehype-slug gives the headings (github-slugger:
+// lowercase, punctuation dropped, spaces to hyphens, repeats numbered).
+function contents(markdown) {
+  const seen = new Map();
+  return [...markdown.replace(/```[\s\S]*?```/g, "").matchAll(/^##\s+(.+)$/gm)].map((match) => {
+    const text = match[1].replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").trim();
+    const base = text.toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/ /g, "-");
+    const n = seen.get(base) || 0;
+    seen.set(base, n + 1);
+    return { text, id: n ? `${base}-${n}` : base };
+  });
+}
+
 export default async function EntryPage({ params }) {
   const { slug } = await params;
   const found = await getEntry(slug);
@@ -93,7 +106,15 @@ export default async function EntryPage({ params }) {
             <FolderList folder={entry} />
           </>
         ) : (
-          <article className="prose"><Markdown doc={entry} /></article>
+          <>
+            {contents(entry.content).length >= 4 && (
+              <nav className="page-contents" aria-label="On this page">
+                <p className="eyebrow">On this page</p>
+                <ol>{contents(entry.content).map((h) => <li key={h.id}><a href={`#${h.id}`}>{h.text}</a></li>)}</ol>
+              </nav>
+            )}
+            <article className="prose"><Markdown doc={entry} /></article>
+          </>
         )}
         {(previous || next) && <nav className="pager" aria-label="More in this folder">
           {previous ? <Link href={previous.href}><span className="eyebrow">← Previous</span><strong>{previous.title}</strong></Link> : <span />}
