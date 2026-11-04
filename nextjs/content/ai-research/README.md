@@ -3,7 +3,7 @@ title: "Research: orchestration, in AI and in human practice"
 description: The glossary and research notes for TDM 155AI class 9 (agents, systems, orchestration), with what is in each file and how far it has been checked.
 author: claude (RS research pane, TDM 155AI week 9)
 date: 2026-11-04
-status: "glossary and five notes drafted Nov 4; agent research, check before citing"
+status: "glossary, seven notes, and two card libraries drafted Nov 4; agent research, check before citing"
 order: 0
 ---
 
@@ -23,6 +23,9 @@ These files are the source. The week 9 app (`tdm155ai/tdm155ai-week-9`) copies t
 | [notes/03-reality-tv-and-game-masters.md](notes/03-reality-tv-and-game-masters.md) | reality-TV producing (story producers, confessionals, frankenbiting, casting) and game masters and moderators | done, about 4,800 words |
 | [notes/04-choreography-scores-and-conducting.md](notes/04-choreography-scores-and-conducting.md) | choreography and dance notation, chance procedures, game pieces, conduction, *In C* | done, about 4,800 words |
 | [notes/05-labs-startups-and-coaches.md](notes/05-labs-startups-and-coaches.md) | research labs, startups and founders, sports coaching | done, about 4,800 words |
+| [notes/06-drama-managers-and-interactive-narrative.md](notes/06-drama-managers-and-interactive-narrative.md) | the director layer for class step 2: *Façade*'s drama manager, experience management, Left 4 Dead's AI Director, LLM directors 2024–2026, commedia scenarios, *Sleep No More*, Forum Theatre | done, about 2,850 words |
+| [notes/07-how-ensembles-fail-and-how-to-watch-them.md](notes/07-how-ensembles-fail-and-how-to-watch-them.md) | failure modes (the MAST taxonomy, conformity, persona drift, loops), judge bias, tracing, coding observations, and a proposed event log and dashboard | done, about 3,100 words |
+| [libraries/](libraries/README.md) | card libraries to mix: [ensembles](libraries/ensembles.md) (Friends, Seinfeld, the Olympians, the nine Muses, the Beatles, the Backstreet Boys; 40 character cards) and [formats and mechanics](libraries/formats-and-mechanics.md) (10 podcast and radio cards, 10 reality-show cards) | done, Nov 4 |
 
 ## What was already covered elsewhere
 
