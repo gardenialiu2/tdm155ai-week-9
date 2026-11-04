@@ -32,4 +32,4 @@ The [Glossary](/ai-research/glossary) explains agents, agentic AI, orchestration
 
 ## For Friday and next week
 
-Your First Project package is due **Friday, November 6**: the finished piece and a context repository documenting the work behind it. The podcast follows the next week; the host prepares from the guest's work and repository. Podcast prep is a tool for that preparation, not a substitute for knowing the work.
+Your First Project package is due **Friday, November 6**: the finished piece and a context repository documenting the work behind it. The podcast follows the next week; the host prepares from the guest's work and repository. Podcast prep is a tool for that preparation, not a substitute for knowing the work. See the [Project 2 prompt and podcast instructions](/projects/unit-2-project), carried forward from last week, and the [Project 3 and final portfolio prompt](/projects/unit-3-project) for what comes next.
