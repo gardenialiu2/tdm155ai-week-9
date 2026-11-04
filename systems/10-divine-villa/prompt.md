@@ -1,15 +1,15 @@
-Copy this sample prompt into Claude Code with this repository open. It makes a **new** system without changing the three examples. Change the cast, setting, or rules to make it yours; the named files let you inspect what you asked for and what Claude built.
+Try a simple remix: **the same reality show, but with Norse gods instead of Greek gods**. Copy this prompt into Claude Code with this repository open.
 
 ```text
-Read AGENTS.md and the examples in systems/09-rushmore/ and systems/10-divine-villa/. Make a NEW system in systems/my-divine-villa/ by copying the Divine Villa. Do not edit the built-in examples.
+Read AGENTS.md and systems/10-divine-villa/. Copy the Divine Villa to a NEW folder, systems/norse-villa/. Leave the original alone.
 
-My show is Olympus After Hours: eight Greek gods have been stranded in a modern reality-show hotel. Give each a separate character description with a distinct voice, wants, relationships and reasons to disagree. Put the scenario and rules in system.md.
+Replace the Greek cast with Odin, Thor, Loki, Freyja, Freyr, Tyr, Heimdall and Frigg. Give each a separate character file with a distinct voice, wants and relationships. Update the scenario and all cast references for this Norse ensemble; call the show The Norse Villa.
 
-Exactly three gods are secretly traitors. The others try to identify them through public conversations, challenges and a round-table vote. Two modern-day human producers arrange the conditions for drama without scripting every line. Each god has private in-the-moment (ITM) interviews. Traitors can deceive publicly but are honest in their own ITMs about their role, plans and lies. A character must never receive another character's private role or ITMs. Keep real roles and votes in game state, not in a model's guess.
+Keep the same modern-day producers and game mechanics: exactly three secret traitors, public conversations, honest private ITMs, challenges and the round-table vote. Update the role assignments and any name references consistently. Preserve what each character can and cannot see, including other players' private roles and interviews.
 
-Keep it small: short speeches, a clear bounded turn count, Sonnet as the default model, a cost ceiling, and a working Stop button. Preserve public/private context separation and the existing legal-vote and tie rules. Include a short README saying who is in the cast, what each layer sees, and how to change the show.
+Keep the existing turn limit, Sonnet default, cost ceiling and Stop button. This is a cast remix, so use the existing engine without changing it. Write a short README explaining the new cast.
 
-Leave featured and archived unset in my new system.md so this copy appears under Your systems. Tell me when it is ready: I will reload Systems, choose my new show, rehearse it for free, and run it. Explain any engine change you need before making it, and keep Podcast prep and Remix untouched.
+Remove featured and archived from the copied system.md so it appears under Your systems. Tell me when to reload Systems and try it. Don't change the built-in examples, Podcast prep or Remix.
 ```
 
-For a simpler project, ask for a copy of the Rushmore example instead: give it your own four characters, one scenario and twenty total speaking turns. You can also keep a cast and change just one rule, then compare the sessions.
+After trying it, compare the sessions: what changed when the rules stayed the same but the characters changed?
