@@ -3,7 +3,7 @@ title: "Research: orchestration, in AI and in human practice"
 description: The glossary and research notes for TDM 155AI class 9 (agents, systems, orchestration), with what is in each file and how far it has been checked.
 author: claude (RS research pane, TDM 155AI week 9)
 date: 2026-11-04
-status: "glossary, seven notes, and two card libraries drafted Nov 4; agent research, check before citing"
+status: "glossary, seven notes, two card libraries, and a documentation set drafted Nov 4; agent research, check before citing"
 order: 0
 ---
 
@@ -26,6 +26,7 @@ These files are the source. The week 9 app (`tdm155ai/tdm155ai-week-9`) copies t
 | [notes/06-drama-managers-and-interactive-narrative.md](notes/06-drama-managers-and-interactive-narrative.md) | the director layer for class step 2: *Façade*'s drama manager, experience management, Left 4 Dead's AI Director, LLM directors 2024–2026, commedia scenarios, *Sleep No More*, Forum Theatre | done, about 2,850 words |
 | [notes/07-how-ensembles-fail-and-how-to-watch-them.md](notes/07-how-ensembles-fail-and-how-to-watch-them.md) | failure modes (the MAST taxonomy, conformity, persona drift, loops), judge bias, tracing, coding observations, and a proposed event log and dashboard | done, about 3,100 words |
 | [libraries/](libraries/README.md) | card libraries to mix: [ensembles](libraries/ensembles.md) (Friends, Seinfeld, the Olympians, the nine Muses, the Beatles, the Backstreet Boys; 40 character cards) and [formats and mechanics](libraries/formats-and-mechanics.md) (10 podcast and radio cards, 10 reality-show cards) | done, Nov 4 |
+| [documentation/](documentation/README.md) | the official documentation behind agent products, harnesses, and APIs: a [catalog](documentation/catalog.md) of 80 cards with direct links to official pages, a [history](documentation/history.md) of agent APIs with the Assistants deprecation case, and 24 [papers and essays](documentation/papers-and-essays.md) | done, Nov 4; every link opened that day |
 
 ## What was already covered elsewhere
 

@@ -286,6 +286,9 @@ body:has(.print-root) { background: #ffffff; color-scheme: light; }
 .page-contents { max-width: 740px; margin: -20px 0 44px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 10px; }
 .page-contents ol { margin: 8px 0 0; padding-left: 1.3em; columns: 2 260px; column-gap: 28px; font-size: 14px; line-height: 1.6; }
 .page-contents a:hover { color: var(--accent); }
+.page-contents li { break-inside: avoid; margin-bottom: 6px; }
+.page-contents-sub { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
+.page-contents:has(.page-contents-sub) ol { columns: 1; }
 @media print { .page-contents { display: none; } }
 /* Wide tables (the product table in the research notes): small type on paper so they fit the page. */
 .print-root .prose table { display: table; width: 100%; font-size: 9px; line-height: 1.35; }

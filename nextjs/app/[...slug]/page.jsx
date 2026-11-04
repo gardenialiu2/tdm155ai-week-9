@@ -46,17 +46,25 @@ function FolderList({ folder }) {
   );
 }
 
-// The H2s of a long document, as links, above its text: the same slugs rehype-slug gives the headings (github-slugger:
-// lowercase, punctuation dropped, spaces to hyphens, repeats numbered).
+// The H2s of a long document, as links above its text, each with its H3s under it (the glossary's terms, the catalog's
+// cards): the same slugs rehype-slug gives the headings (github-slugger: lowercase, punctuation dropped, spaces to
+// hyphens, repeats numbered, counted across the whole document).
 function contents(markdown) {
   const seen = new Map();
-  return [...markdown.replace(/```[\s\S]*?```/g, "").matchAll(/^##\s+(.+)$/gm)].map((match) => {
-    const text = match[1].replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").trim();
+  const slug = (text) => {
     const base = text.toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/ /g, "-");
     const n = seen.get(base) || 0;
     seen.set(base, n + 1);
-    return { text, id: n ? `${base}-${n}` : base };
-  });
+    return n ? `${base}-${n}` : base;
+  };
+  const sections = [];
+  for (const match of markdown.replace(/```[\s\S]*?```/g, "").matchAll(/^(#{2,6})\s+(.+)$/gm)) {
+    const text = match[2].replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").trim();
+    const id = slug(text);
+    if (match[1] === "##") sections.push({ text, id, children: [] });
+    else if (match[1] === "###" && sections.length) sections.at(-1).children.push({ text, id });
+  }
+  return sections;
 }
 
 export default async function EntryPage({ params }) {
@@ -110,7 +118,14 @@ export default async function EntryPage({ params }) {
             {contents(entry.content).length >= 4 && (
               <nav className="page-contents" aria-label="On this page">
                 <p className="eyebrow">On this page</p>
-                <ol>{contents(entry.content).map((h) => <li key={h.id}><a href={`#${h.id}`}>{h.text}</a></li>)}</ol>
+                <ol>
+                  {contents(entry.content).map((h) => (
+                    <li key={h.id}>
+                      <a href={`#${h.id}`}>{h.text}</a>
+                      {h.children.length > 0 && <span className="page-contents-sub">{h.children.map((c, i) => <span key={c.id}>{i ? " · " : ""}<a href={`#${c.id}`}>{c.text}</a></span>)}</span>}
+                    </li>
+                  ))}
+                </ol>
               </nav>
             )}
             <article className="prose"><Markdown doc={entry} /></article>
