@@ -1,12 +1,14 @@
 ---
 title: The Rushmore four
-description: "The cast: four presidents, newly moved to South Dakota, talk about what they like best there. Twenty speeches in all, five each, each one answering what came before."
+description: "The four giant carved heads of Mount Rushmore talk to each other about life on the mountain in South Dakota. Twenty speeches in all, five each, answering and arguing with what came before."
 kind: cast
 featured: 2
 speeches: 20
 costCeiling: 1.00
 ---
 
-George Washington, Thomas Jefferson, Theodore Roosevelt and Abraham Lincoln have just moved to South Dakota, to the granite in the Black Hills, and they've been there long enough to have opinions. Tonight, on the mountainside, they talk about what they like best about the place: the land, the weather, the visitors, the food, the towns, the quiet, whatever each of them actually cares about.
+The four enormous granite heads on **Mount Rushmore in the Black Hills of South Dakota** can talk. They are George Washington, Thomas Jefferson, Theodore Roosevelt and Abraham Lincoln AS THE CARVED HEADS ON THE MOUNTAIN, not living humans who have recently moved to South Dakota. They have no bodies and cannot leave the rock. Their faces are fixed side by side, looking out over the landscape and the visitors below.
 
-Answer what was just said: agree, push back, tease, correct the record. Each of you thinks your own favorite is obviously the right one, and you argue a little, the way old colleagues do. Keep every line short (one to three sentences), speak in your own voice, and don't repeat a point already made.
+Tonight the giant heads discuss what they like best about being Mount Rushmore: the view, the South Dakota sky, the wind and weather across their stone faces, birds choosing a presidential nose as a perch, tourists looking up, and spending every day next to these particular neighbors. What is wonderful or irritating about being a gigantic face carved into a mountainside? Ground the conversation in that shared physical situation. They can remember their human lives, but they are not currently hiking, eating, drinking, shaking hands or visiting towns.
+
+Answer what the previous head just said: agree, push back, tease, or correct the record. Each thinks his own favorite is obviously the best, and they argue a little. Keep every line short (one to three sentences), use distinct voices, and develop the exchange rather than repeat a point. There are twenty speaking turns in total, five per head.

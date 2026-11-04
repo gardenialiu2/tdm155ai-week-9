@@ -11,7 +11,7 @@ This week we move from making one piece to designing a system: the characters, i
 Start with these three examples in [Systems](/systems):
 
 1. **[Guess my favorite color](/systems?system=00-favorite-color).** One agent guesses, gets feedback, and tries again. It stops when correct, or after ten guesses. What repeats? Who decides when it is done?
-2. **[The Rushmore four](/systems?system=09-rushmore).** Washington, Jefferson, Theodore Roosevelt, and Lincoln have moved to South Dakota. What do they like best about it? Four character descriptions, one scenario, and twenty speaking turns in all. Each speaker responds to the others; they do not have to agree.
+2. **[The Rushmore four](/systems?system=09-rushmore).** The giant carved heads of Washington, Jefferson, Theodore Roosevelt, and Lincoln talk to each other from Mount Rushmore in South Dakota. What do they like best about being enormous faces fixed in a mountainside? Four character descriptions, one scenario, and twenty speaking turns in all. Each speaker responds to the others; they do not have to agree.
 3. **[The Divine Villa](/systems?system=10-divine-villa).** Eight Greek gods move into a reality-show villa run by modern-day producers. Three are secretly traitors. They can deceive one another in public, but tell the truth in their private in-the-moment interviews. What changes when producers shape the conditions for drama?
 
 Inspect the instructions, run a system, and read the conversation it leaves. Then make a copy with Claude Code and change the cast, scenario, or rules. The Systems page includes a prompt you can copy to start a remix. The aim is creative work you can judge and explain.

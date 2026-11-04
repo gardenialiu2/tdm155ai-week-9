@@ -19,7 +19,7 @@ Open the address printed by Next (normally http://localhost:3000). An already ru
 
 - **Systems (Theaters of Agents)** — `/systems`: three starting systems, with instructions, run controls and the resulting conversation/log.
   - `systems/00-favorite-color/`: guess a secret favorite color, use the feedback, stop when correct or after at most ten guesses. No forced minimum.
-  - `systems/09-rushmore/`: Washington, Jefferson, Theodore Roosevelt and Lincoln argue about what they like best about relocating to South Dakota. Separate character files, one scenario, **20 total speeches**, not 20 rounds.
+  - `systems/09-rushmore/`: The giant carved heads of Washington, Jefferson, Theodore Roosevelt and Lincoln argue about life as Mount Rushmore in South Dakota, fixed side by side in the mountain. Separate character files, one scenario, **20 total speeches**, not 20 rounds.
   - `systems/10-divine-villa/`: eight Greek gods, modern human producers, three secret traitors, public dialogue and private truthful ITMs. An advanced remix of the simple cast mechanic. The Systems page supplies a copyable Claude Code remix prompt.
 - **Sessions** — `/systems/sessions`: local system history, initially empty. Running a system creates a saved session. Logs can be inspected/downloaded; they are gitignored and do not ship with a fresh clone.
 - **Research** — `/ai-research`: AI-generated research notes, ensemble/format libraries, official documentation, API history and primary readings, with source links and verification limits.
