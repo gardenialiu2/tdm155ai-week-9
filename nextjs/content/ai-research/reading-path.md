@@ -25,7 +25,7 @@ The class builds up a theater of agents one step at a time. For each step: the g
 
 ## Step 1: an ensemble, ten turns each
 
-- **Terms:** Ensemble, Persona, Turn-taking, Event log, and from batch 3, Conformity and Persona drift.
+- **Terms:** Ensemble, Persona, Turn-taking, Event log, Conformity, Persona drift.
 - **Read:** pick a cast from [Ensembles](libraries/ensembles.md) and use its persona seeds. Then read "Conversation failures" and the table "Failures in a ten-turn ensemble" in [note 07](notes/07-how-ensembles-fail-and-how-to-watch-them.md), so you know what to look for when everyone starts agreeing.
 - **Primary source:** *Generative Agents* (Park et al., 2023), in [Papers and essays](documentation/papers-and-essays.md) and [note 02](notes/02-simulations-of-people.md).
 
@@ -37,7 +37,7 @@ The class builds up a theater of agents one step at a time. For each step: the g
 
 ## Step 3: reality-show mechanics, or a simulation of people
 
-- **Terms:** Producer, Confessional, Moderator, and the batch 2 terms from "Producers and game masters" and "Simulations of people."
+- **Terms:** Producer, Confessional, Moderator, and the glossary sections "Producers and game masters" and "Simulations of people."
 - **Read:** [Formats and mechanics](libraries/formats-and-mechanics.md) for rules an agent can follow (vote, elimination, alliance, twist, producer intervention), then [note 03](notes/03-reality-tv-and-game-masters.md) for how producers actually work, including the case against frankenbiting. For a simulation, [note 02](notes/02-simulations-of-people.md): the scoring rule decides who wins.
 - **Try:** one row of "Combining them" at the end of Formats and mechanics.
 
@@ -48,7 +48,7 @@ The class builds up a theater of agents one step at a time. For each step: the g
 
 ## Step 5: observers feeding a dashboard
 
-- **Terms:** Observer, Event log, Graph of graphs, and from batch 3, Span, Coding scheme, Inter-rater reliability, Position bias, Self-preference bias.
+- **Terms:** Observer, Event log, Graph of graphs, Span, Coding scheme, Inter-rater reliability, Position bias, Self-preference bias.
 - **Read:** "A minimal event log and dashboard (proposal)" in [note 07](notes/07-how-ensembles-fail-and-how-to-watch-them.md): one row per turn and eight counts worth showing. Then the story producer and the string-out in [note 03](notes/03-reality-tv-and-game-masters.md), and the film session in [note 05](notes/05-labs-startups-and-coaches.md), for observers that work after the fact.
 - **Rule worth keeping:** observers quote only whole turns, by ID (note 03).
 

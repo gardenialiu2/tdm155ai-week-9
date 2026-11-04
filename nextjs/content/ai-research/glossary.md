@@ -3,29 +3,26 @@ title: "A glossary of orchestration: agents, loops, graphs, and the people who r
 description: Core terms for designing a theater of agents, each with its meaning in AI engineering, its meaning in a human practice where it has one, and an example from a student's ensemble.
 author: claude (RS research pane, TDM 155AI week 9)
 date: 2026-11-04
-status: "the big words (Nov 4) and batches 1 to 3; agent research, check before citing"
+status: "draft, Nov 4; agent research, check before citing"
 order: 0
 ---
 
 # A glossary of orchestration
 
-Terms for class 9 of TDM 155AI, *agents, systems, orchestration*, with directing, producing, and choreography in the background. It opens with the big words students have already heard (agent, agentic AI, agentic system, tool, loop and graph engineering), with a note on how loosely they are used. Batch 1 (33 core terms) follows the class sequence: the smallest loop, the small graph, how much the model decides, running without you, and the theater (the cast, the producers, the observers). Batch 2 (58 more) follows the research notes: the products as of today, simulations of people, producers and game masters, scores and choreography, and labs, startups, and coaches, plus a few more building blocks.
+Terms for class 9 of TDM 155AI, *agents, systems, orchestration*, with directing, producing, and choreography in the background.
 
 Each entry has four parts. **In AI engineering** gives the term as builders of agent systems use it. **In human practice** gives its meaning in music, theater, film, television, or another field where people orchestrate other people. **In the theater of agents** is a one-line example from the kind of system you are building this week: an ensemble of characters (system 1), the producers who write into it (system 2), and the observers who read both (system 3). **Sources** says where each claim comes from and how far it has been checked.
 
 How the sources are marked:
 
 - **read Nov 4**: the page was read on November 4, 2026, and the quoted words are on it.
+- **verified**: a research agent read the source on November 4, 2026.
 - **Nov 1 essay**: taken from the Lab's *Orchestration across industries* essays (drafted by research agents on November 1, 2026, in the `mk-agent-studies` repository) and not re-read today.
 - **unverified**: general background, not checked against a source today.
 
 Product details change weekly. Every product claim carries a date. The research notes linked below go further than the glossary on each topic.
 
 ## The big words: agent, agentic, and their neighbors
-
-Students arrive having heard *agent* and *agentic AI*. These words overlap, and none of them has one standard definition: vendors, researchers, and this course use them differently, and their meanings have shifted since 2023. Marlon's framing for November 4 is a set of features that overlap and nest rather than a taxonomy: acting without the user launching each action (autonomy), deciding what to do next, calling tools, resources, and APIs, and graph complexity, with decisions and loops inside it. Not everything called an agent has every feature. The Lab's November 1 working frame of three parts (orchestration, agency, autonomy) is one useful cut through those features, not an exhaustive list. Marlon also offers a way to think about "one agent": a circle drawn around some nodes because it is useful to treat them as a unit, a metaphor that lets us borrow intuitions from human collaboration without assuming agent systems must copy it.
-
-The entries in this section are new on November 4. Related entries elsewhere in the glossary: Agent, Augmented LLM, Loop, Stop condition, Cap, Graph, Router (switch), State, Workflow vs. agent, Agency, Orchestration, Autonomy, Trigger, Heartbeat, Harness, Subagent, Graph of graphs, Commander's intent.
 
 ### Agentic AI
 
@@ -221,7 +218,7 @@ The entries in this section are new on November 4. Related entries elsewhere in 
 
 **In the theater of agents.** Turn agency up by letting characters choose whom to address and when to stay silent. Turn it down by fixing the order.
 
-**Sources.** The Nov 1 working frame (one cut through overlapping features, not a taxonomy; see "The big words" above): weekly doc, "the theme: agents and systems" (terms proposed by Claude, agreed by Marlon, Nov 1). CrewAI usage and mission command: Nov 1 essays 07 and 05.
+**Sources.** The Nov 1 working frame: weekly doc, "the theme: agents and systems" (terms proposed by Claude, agreed by Marlon, Nov 1). CrewAI usage and mission command: Nov 1 essays 07 and 05.
 
 ### Orchestration
 
@@ -426,10 +423,6 @@ The entries in this section are new on November 4. Related entries elsewhere in 
 **In the theater of agents.** Draw your three systems as three boxes, then draw the arrows between them: the producers write into the cast, and the observers read both.
 
 **Sources.** Class design, Nov 4 (Marlon). Story of Week 9 canvas, Nov 2: "each student makes a big graph, and then there's a graph of those graphs." Orchestra sections: Nov 1 essay 04.
-
-## Batch 2 (November 4, from the research notes)
-
-Batch 2 gathers the glossary candidates from the five research notes and adds eight terms written in the pane. Entries from the notes keep their authors' source marks: "verified" means the subagent read the source on November 4, 2026. Read the note for the context and the full source list.
 
 ## Always on: the agent products as of November 4
 
@@ -963,8 +956,6 @@ How research groups, young companies, and sports teams pass control and keep rec
 
 ## More building blocks
 
-Written in the pane on November 4 for terms the notes didn't cover; sources are marked as in batch 1.
-
 ### Skill
 
 **In AI engineering.** A folder of instructions (a `SKILL.md` file, plus any scripts or references it needs) that a harness loads only when the task calls for it, so an agent can carry many abilities without filling its context with all of them. Claude Code, Hermes Agent, and OpenClaw all use skills, and the format is shared as an open standard (agentskills.io, per Hermes's README). Marlon's Nov 2 point applies here: many "agents" are really just skill or personality files that a harness runs.
@@ -1044,10 +1035,6 @@ Written in the pane on November 4 for terms the notes didn't cover; sources are 
 **In the theater of agents.** Give the producer an intent ("keep the season heading toward a betrayal in episode five") in place of a list of rules.
 
 **Sources.** Nov 1 essay 05, "Intent, not instructions" (Anthropic, ["How we built our multi-agent research system"](https://www.anthropic.com/engineering/multi-agent-research-system), quoted there, not re-read today).
-
-## Batch 3 (November 4, from notes 06 and 07)
-
-Batch 3 gathers the glossary candidates from [note 06](notes/06-drama-managers-and-interactive-narrative.md) (the director layer) and [note 07](notes/07-how-ensembles-fail-and-how-to-watch-them.md) (failures and observers). Source marks are their authors': "verified" means the subagent read the source on November 4, 2026.
 
 ## Directors and drama managers
 
