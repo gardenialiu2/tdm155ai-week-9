@@ -1,6 +1,7 @@
 ---
 title: Werewolf
 description: A game of hidden roles in a village of five; a moderator calls votes and night kills, an inspector and a game theorist watch.
+archived: true
 kind: cast
 costCeiling: 0.75
 turns: 6

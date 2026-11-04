@@ -14,13 +14,13 @@ Top-level destinations: **Systems**, **Sessions**, **Research**, **Glossary**, *
 
 ### Systems
 
-The initial picker has three examples, in this order:
+The initial picker has three examples, then **4 · Make your own**, in this order:
 
 1. `systems/00-favorite-color/`: one color guess at a time; use feedback; stop when correct, maximum **10 guesses**, no forced minimum. Keep the target private to the judge/configuration, not in the guesser's context. A deterministic judge is sufficient.
 2. `systems/09-rushmore/`: The giant carved heads of Washington, Jefferson, **Theodore** Roosevelt and Lincoln on Mount Rushmore, South Dakota, discuss life as enormous faces fixed in the rock. They talk to one another, not as living humans who moved there; no bodies, hiking or trips into town. They disagree while responding to prior dialogue. Separate character files + scenario + **20 total speeches**, not 20 rounds.
 3. `systems/10-divine-villa/`: advanced Greek-gods reality-show system with modern human producers, exactly three secret traitors, public conversation and private ITMs. Traitors may deceive publicly but their ITMs must honestly state their role/plans. Never give faithful players other characters' hidden roles or ITMs. Public voting/reveals must follow game state, not a model's invented result.
 
-Students remix by copying a system into a new `systems/<name>/` and changing its characters/scenario/rules. Preserve built-in examples and student work unless explicitly asked otherwise. The copyable remix prompt is part of the Systems experience. Earlier presets may stay as source/reference without appearing as additional required starters.
+Students remix by copying a system into a new `systems/<name>/` and changing its characters/scenario/rules. Preserve built-in examples and student work unless explicitly asked otherwise. The copyable remix prompt is part of the Systems experience. Earlier presets are marked `archived: true` and excluded from the picker/API list; preserve their source. Step4 is a selectable page with a copyable prompt. New student copies must not inherit `archived` or `featured`, so they appear under **Your systems**. Do not restore a More systems list of old examples.
 
 Default the creative-system runner to the supported **Sonnet** option. Keep Stop, total-turn/guess limits and cost ceiling working. New model calls must go through the runner's accounting helper so they count toward logs/caps. Free rehearsal is stand-in output, not evidence of live-model behavior.
 

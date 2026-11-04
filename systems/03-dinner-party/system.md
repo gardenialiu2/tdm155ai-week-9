@@ -1,6 +1,7 @@
 ---
 title: The dinner party
 description: "Step 1, the cast: four characters at one table, round-robin. Add a director, producers, or observers to grow it."
+archived: true
 kind: cast
 turns: 10
 confessionals: true

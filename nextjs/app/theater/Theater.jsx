@@ -17,7 +17,8 @@ const MODELS = [
 ];
 
 // The starters are the systems with `featured:` in system.md, in that order; everything else in systems/ (the earlier
-// examples, and any copy you make) is listed below them, folded.
+// active copies you make) is listed separately. Archived teaching examples are not in this picker.
+const CREATE = "__make-your-own__";
 const KINDS = { loop: "the loop", cast: "the cast", graph: "a graph", switch: "a switch" };
 const starterLabel = (s, i) => `${i + 1} · ${s.config.level === "advanced" ? "advanced" : KINDS[s.config.kind] || s.config.kind}`;
 
@@ -71,7 +72,7 @@ export default function Theater() {
         wanted = new URLSearchParams(window.location.search).get("system") || localStorage.getItem("theater:system") || "";
       } catch {}
       const first = list.filter((s) => s.config.featured > 0).sort((a, b) => a.config.featured - b.config.featured)[0] || list[0];
-      setPicked(list.find((s) => s.name === wanted)?.name || first?.name || "");
+      setPicked(wanted === CREATE ? CREATE : list.find((s) => s.name === wanted)?.name || first?.name || "");
     }).catch((e) => setError(e.message));
   }, []);
 
@@ -145,15 +146,20 @@ export default function Theater() {
             <h2>Start here</h2>
             {starters.map((s, i) => button(s, starterLabel(s, i)))}
           </div>
-          <p className={styles.muted}>Make your own: copy a folder in <code>systems/</code> to a new name, change the files, reload this page. It appears below.</p>
+          <button className={styles.systemButton} aria-pressed={picked === CREATE} onClick={() => pick(CREATE)} disabled={running}>
+            <small>4 · your turn</small>
+            <span>Make your own</span>
+            <small>A sample prompt to copy into Claude Code</small>
+          </button>
           {others.length > 0 && (
-            <details className={styles.systems} open={others.some((s) => s.name === picked)}>
-              <summary>More systems ({others.length}): earlier examples and yours</summary>
+            <div className={styles.systems}>
+              <h2>Your systems</h2>
               {others.map((s) => button(s, KINDS[s.config.kind] || s.config.kind))}
-            </details>
+            </div>
           )}
         </nav>
 
+        {picked === CREATE && extension && <MakeYourOwn system={extension} />}
         {system && (
           <div className={styles.theater}>
             <div className={`${styles.panel} ${styles.noPrint}`}>
@@ -215,7 +221,7 @@ export default function Theater() {
             </div>
             <Dashboard events={events} live={running} />
             {!running && events.length > 0 && <p className={`${styles.muted} ${styles.noPrint}`}>Saved in <a href="/systems/sessions">Sessions</a> (the log is <code>runs/{(events[0]?.run || "").replace("~", "/")}.jsonl</code>, on this computer only).</p>}
-            {extension && c.kind === "cast" && c.featured > 0 && <MakeYourOwn system={extension} here={system.name === extension.name} />}
+            {extension && c.kind === "cast" && c.featured > 0 && <p className={styles.muted}>Ready to change the cast or rules? <button className={styles.button} onClick={() => pick(CREATE)}>4 · Make your own</button></p>}
           </div>
         )}
       </div>
@@ -225,11 +231,12 @@ export default function Theater() {
 
 // The creative extension, at the bottom of the cast pages: the prompt that made the advanced system, to copy into
 // Claude Code and change. Each fenced block in its prompt.md gets a Copy button.
-function MakeYourOwn({ system, here }) {
+function MakeYourOwn({ system }) {
   const blocks = [...system.prompt.matchAll(/```[a-z]*\n([\s\S]*?)```/g)].map((m) => m[1].trim());
   return (
     <section className={`${styles.panel} ${styles.noPrint}`} aria-label="Make your own">
-      <h3>Make your own{here ? "" : `: from a cast to ${system.title}`}</h3>
+      <p className={styles.muted}>4 · your turn</p>
+      <h2>Make your own</h2>
       <div className={styles.guide}><ReactMarkdown remarkPlugins={[remarkGfm]}>{system.prompt.replace(/```[a-z]*\n[\s\S]*?```/g, "")}</ReactMarkdown></div>
       {blocks.map((text, i) => (
         <details className={styles.file} key={i} open={i === 0}>

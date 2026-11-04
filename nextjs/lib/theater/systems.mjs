@@ -64,7 +64,7 @@ export async function listSystems() {
     return [];
   }
   const systems = await Promise.all(names.map((n) => loadSystem(n).catch(() => null)));
-  return systems.filter(Boolean);
+  return systems.filter((s) => s && !s.config.archived);
 }
 
 export async function loadSystem(name) {
@@ -94,6 +94,7 @@ export async function loadSystem(name) {
     voteQuestion: String(d.voteQuestion || ""),
     revealOnBanish: Boolean(d.revealOnBanish),
     featured: Number(d.featured ?? 0),
+    archived: Boolean(d.archived),
     level: String(d.level || ""),
   };
   const router = await optional(path.join(dir, "router.md"));

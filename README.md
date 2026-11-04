@@ -20,7 +20,7 @@ Open the address printed by Next (normally http://localhost:3000). An already ru
 - **Systems (Theaters of Agents)** — `/systems`: three starting systems, with instructions, run controls and the resulting conversation/log.
   - `systems/00-favorite-color/`: guess a secret favorite color, use the feedback, stop when correct or after at most ten guesses. No forced minimum.
   - `systems/09-rushmore/`: The giant carved heads of Washington, Jefferson, Theodore Roosevelt and Lincoln argue about life as Mount Rushmore in South Dakota, fixed side by side in the mountain. Separate character files, one scenario, **20 total speeches**, not 20 rounds.
-  - `systems/10-divine-villa/`: eight Greek gods, modern human producers, three secret traitors, public dialogue and private truthful ITMs. An advanced remix of the simple cast mechanic. The Systems page supplies a copyable Claude Code remix prompt.
+  - `systems/10-divine-villa/`: eight Greek gods, modern human producers, three secret traitors, public dialogue and private truthful ITMs. An advanced remix of the simple cast mechanic. The fourth item, **Make your own**, supplies a copyable Claude Code remix prompt.
 - **Sessions** — `/systems/sessions`: local system history, initially empty. Running a system creates a saved session. Logs can be inspected/downloaded; they are gitignored and do not ship with a fresh clone.
 - **Research** — `/ai-research`: AI-generated research notes, ensemble/format libraries, official documentation, API history and primary readings, with source links and verification limits.
 - **Glossary** — `/ai-research/glossary`: agent definitions and the week's related terms.
@@ -38,7 +38,7 @@ A class goal is to design conditions for interactions and aesthetic effects, run
 ## Where the code and material live
 
 - `nextjs/app/`: pages/routes. The creative-system implementation retains internal `theater/` paths; old public Theater URLs may redirect to Systems. `nextjs/lib/theater/` loads and runs system definitions, enforces caps, and records events. The visible activity is named Systems.
-- `systems/`: Markdown-based systems. Earlier examples may remain as source/reference; the initial picker is the three systems above.
+- `systems/`: Markdown-based systems. Earlier examples are marked archived and excluded from the picker/API list. The initial picker contains the three systems above and **4 · Make your own**; new unfeatured, unarchived copies appear under **Your systems**.
 - `runs/`: gitignored system event logs behind Sessions. Old classroom-test logs are cleared/archived out of active history before delivery; no sample run is required to start.
 - `nextjs/lib/podcast/contract.mjs`: shared podcast role IDs, output shapes, statuses, revision rules and eight briefing headings. `nextjs/lib/podcast/` implements the web workflow; `nextjs/app/podcast/` is the UI, including state-driven SVG avatars.
 - `output/podcast/`, `output/podcast-remix/`: separate gitignored server-side prep stores. Originals, transcripts, state and briefings remain local.

@@ -1,6 +1,7 @@
 ---
 title: The Villa
 description: A reality show with five contestants, two producers who twist and eliminate, a chorus and a ratings critic.
+archived: true
 kind: cast
 costCeiling: 1.00
 turns: 8

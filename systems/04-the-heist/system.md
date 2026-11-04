@@ -1,6 +1,7 @@
 ---
 title: The Heist
 description: A crew of four plans a museum job the night before; a director waits for the plan, and for the betrayal.
+archived: true
 kind: cast
 costCeiling: 0.50
 turns: 6

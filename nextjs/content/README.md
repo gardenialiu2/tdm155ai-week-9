@@ -14,6 +14,8 @@ Start with these three examples in [Systems](/systems):
 2. **[The Rushmore four](/systems?system=09-rushmore).** The giant carved heads of Washington, Jefferson, Theodore Roosevelt, and Lincoln talk to each other from Mount Rushmore in South Dakota. What do they like best about being enormous faces fixed in a mountainside? Four character descriptions, one scenario, and twenty speaking turns in all. Each speaker responds to the others; they do not have to agree.
 3. **[The Divine Villa](/systems?system=10-divine-villa).** Eight Greek gods move into a reality-show villa run by modern-day producers. Three are secretly traitors. They can deceive one another in public, but tell the truth in their private in-the-moment interviews. What changes when producers shape the conditions for drama?
 
+4. **Make your own.** Choose the fourth item in [Systems](/systems) for a sample Claude Code prompt. Copy it, change the idea, and build a new system.
+
 Inspect the instructions, run a system, and read the conversation it leaves. Then make a copy with Claude Code and change the cast, scenario, or rules. The Systems page includes a prompt you can copy to start a remix. The aim is creative work you can judge and explain.
 
 ## Sessions

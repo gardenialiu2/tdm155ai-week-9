@@ -1,6 +1,7 @@
 ---
 title: Taboo
 description: "Step 0a, the loop: one character tries to get another to say a word without saying it, until the judge accepts."
+archived: true
 kind: loop
 minTries: 3
 maxTries: 8
