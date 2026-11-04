@@ -39,6 +39,7 @@ export default function Podcast() {
   const [over, setOver] = useState(false);
   const [message, setMessage] = useState("");
   const files = useRef(null);
+  const guest = useRef(null);
 
   const loadList = useCallback(async () => {
     const body = await fetch("/podcast/api/sessions", { cache: "no-store" }).then((r) => r.json());
@@ -52,26 +53,36 @@ export default function Podcast() {
     if (body.session) setSession(body.session);
   }, [id]);
 
+  // Start empty: open a session only when the address names one (?session=), never the last or first one on the list.
   useEffect(() => {
-    loadList().then((list) => {
-      let wanted = "";
-      try {
-        wanted = new URLSearchParams(window.location.search).get("session") || localStorage.getItem("podcast:session") || "";
-      } catch {}
-      const found = list.find((s) => s.id === wanted)?.id || list[0]?.id || "";
-      setId(found);
-    });
+    let wanted = "";
+    try {
+      wanted = new URLSearchParams(window.location.search).get("session") || "";
+    } catch {}
+    loadList().then((list) => setId(list.find((s) => s.id === wanted)?.id || ""));
   }, [loadList]);
 
   useEffect(() => {
     setSession(null);
-    if (!id) return;
+    if (sessions === null) return; // the list (and the ?session= it may open) isn't read yet
     try {
-      localStorage.setItem("podcast:session", id);
-      window.history.replaceState(null, "", `/podcast?session=${encodeURIComponent(id)}`);
+      window.history.replaceState(null, "", id ? `/podcast?session=${encodeURIComponent(id)}` : "/podcast");
     } catch {}
-    refresh(id);
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (id) refresh(id);
+    else guest.current?.focus();
+  }, [id, sessions === null]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Start again: close the session (it stays saved and on the list) and go back to the empty page.
+  const startAgain = () => {
+    setId("");
+    setTitle("");
+    setText("");
+    setTextName("");
+    setLink("");
+    setMessage("");
+    if (files.current) files.current.value = "";
+    loadList();
+  };
 
   // While anything is waiting or working, look again every second and a half.
   const active = Boolean(session && (session.items.some((i) => !i.excluded && ["intake", "interviewer", "sidekick"].some((a) => ACTIVE.has(i[a].status))) || session.revisions.some((r) => ACTIVE.has(r.briefing.status))));
@@ -158,13 +169,14 @@ export default function Podcast() {
           <label className={styles.inline}>
             Session
             <select value={id} onChange={(e) => setId(e.target.value)}>
-              {!sessions.length && <option value="">No sessions yet</option>}
+              <option value="">{sessions.length ? "Pick a session…" : "No sessions yet"}</option>
               {sessions.map((s) => <option key={s.id} value={s.id}>{s.title} · {s.items} item{s.items === 1 ? "" : "s"} · {s.created.slice(0, 10)}</option>)}
             </select>
           </label>
           <span className={styles.muted}>or</span>
-          <input type="text" placeholder="New guest: name and project" value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key === "Enter" && title.trim() && create()} />
+          <input ref={guest} type="text" placeholder="New guest: name and project" value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key === "Enter" && title.trim() && create()} />
           <button className={styles.button} onClick={create} disabled={!title.trim()}>Start a session</button>
+          {id && <button className={styles.button} onClick={startAgain}>Start again</button>}
         </div>
         {session && <p className={styles.muted}>Saved on this computer in <code>output/podcast/{session.id}/</code> · {session.items.length} item{session.items.length === 1 ? "" : "s"} · ${cost.toFixed(4)} so far</p>}
       </section>
