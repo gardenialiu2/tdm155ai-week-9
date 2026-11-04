@@ -9,7 +9,7 @@ order: 1
 
 The smallest system that is more than one call: an agent makes an attempt, a second agent (the judge) decides whether it is good enough, and if it is not, the first agent tries again with the judge's reason in front of it. The judge may not accept before try `minTries`, and the run stops at `maxTries` whatever happens.
 
-Anthropic's essay "Building effective agents" (December 2024) calls this pattern the **evaluator-optimizer** workflow: one model generates, another evaluates and gives feedback, in a loop. The same essay separates **workflows**, where the path through the models is fixed in advance, from **agents**, which choose their own path. The loop is a workflow: you decided its shape.
+Anthropic's essay ["Building effective agents"](https://www.anthropic.com/engineering/building-effective-agents) (December 2024) calls this pattern the **evaluator-optimizer** workflow: one model generates, another evaluates and gives feedback, in a loop. The same essay separates **workflows**, where the path through the models is fixed in advance, from **agents**, which choose their own path. The loop is a workflow: you decided its shape.
 
 ## Open
 

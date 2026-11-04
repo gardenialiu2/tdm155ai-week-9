@@ -11,7 +11,7 @@ Several agents share one scene. Each character is one file in `cast/`: a name, a
 
 Every line says who it is **TO** (a name, or everyone) and what the character **SAY**s. With `confessionals: true` a character can also add an **ASIDE**: a private line to the camera that the other characters never hear, but you do.
 
-Park and colleagues' "Generative Agents" (2023) put twenty-five model-driven characters in a small simulated town and watched social behavior emerge from their interactions. Your cast is a much smaller version of the same idea: you write the people, and the scene is what happens between them.
+Park and colleagues' ["Generative Agents: Interactive Simulacra of Human Behavior"](https://arxiv.org/abs/2304.03442) (2023) put twenty-five model-driven characters in a small simulated town and watched social behavior emerge from their interactions. Your cast is a much smaller version of the same idea: you write the people, and the scene is what happens between them.
 
 ## Open
 

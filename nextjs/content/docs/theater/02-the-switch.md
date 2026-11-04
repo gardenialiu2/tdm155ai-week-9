@@ -9,7 +9,7 @@ order: 2
 
 A graph with three nodes: a **router** and two **branches**. The router reads the input, picks one branch by name, and says why; only that branch runs. Nothing loops. This is the first time the path through your system depends on what came in.
 
-"Building effective agents" (Anthropic, December 2024) calls this **routing**: classify the input, then send it to a follow-up specialized for that kind of input, so each branch can have narrow, focused instructions.
+["Building effective agents"](https://www.anthropic.com/engineering/building-effective-agents) (Anthropic, December 2024) calls this **routing**: classify the input, then send it to a follow-up specialized for that kind of input, so each branch can have narrow, focused instructions.
 
 ## Open
 
