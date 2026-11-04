@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Piper, Intake">
+  <title>Piper, Intake</title>
+  <circle cx="128" cy="128" r="128" fill="#15302b"/>
+  <g transform="scale(2.56)" stroke="#ecece6" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="44" y="50" width="12" height="18" fill="#6fc0b0" />
+    <path d="M18.25 86 Q22 70 38 67 L62 67 Q78 70 81.75 86 A48 48 0 0 1 18.25 86 Z" fill="#6f86a0" />
+    <g>
+    <rect x="31" y="20" width="38" height="35" rx="13" fill="#6fc0b0" />
+    <path d="M29 40 Q28 15 50 15 Q72 15 71 40 L71 47 L65 47 L65 31 Q50 34 35 31 L35 47 L29 47 Z" fill="#2e5d55" />
+    <circle cx="43" cy="40.5" r="1.9" fill="#161816" stroke="none" />
+    <circle cx="57" cy="40.5" r="1.9" fill="#161816" stroke="none" />
+    <circle cx="43" cy="40.5" r="5" fill="none" stroke="#161816" stroke-width="1.8" />
+    <circle cx="57" cy="40.5" r="5" fill="none" stroke="#161816" stroke-width="1.8" />
+    <path d="M48 40.5 L52 40.5" fill="none" stroke="#161816" stroke-width="1.8" />
+    <path d="M45 48 Q50 51 55 48" fill="none" stroke="#161816" stroke-width="2" />
+    </g>
+    <rect x="30" y="70" width="40" height="8" rx="1" fill="#f2efe6" />
+    <g>
+    <rect x="37" y="58" width="26" height="22" rx="1.5" fill="#fbf9f2" />
+    <path d="M41 63 L59 63 M41 67.5 L55 67.5" fill="none" stroke="#8a8f86" stroke-width="1.6" />
+    </g>
+    <path d="M25 75 L75 75 L71 88 L29 88 Z" fill="#b48a5e" />
+    <path d="M42 81 L58 81" fill="none" stroke="#161816" stroke-width="1.8" />
+  </g>
+</svg>

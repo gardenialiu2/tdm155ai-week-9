@@ -18,7 +18,7 @@ export default function EnsemblePage() {
             A context repository goes in. A Conductor proposes who reads what, an Archivist maps the files, a Researcher looks things up, a Briefer writes the host's briefing. You decide what the ensemble may read, approve or change the plan, and can edit any card before it's passed on. Everything each role is told is on this page, and the whole run comes out as a trace you can print and mark up.
           </p>
           <p className="machine-more">
-            Done it on paper first? See <a href="/docs/paper-ensemble">the paper version</a>. Want to change this one? Your copy is at <a href="/remix">Remix</a>.
+            Done it on paper first? See <a href="/docs/paper-ensemble">the paper version</a>. Want to change this one? Your copy is at <a href="/ensemble/remix">the ensemble remix</a>.
           </p>
         </header>
         <Ensemble />

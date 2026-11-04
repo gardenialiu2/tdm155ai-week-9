@@ -31,7 +31,8 @@ An agent is not a smarter chatbot. It is a model plus **what it's told** (its in
 - **[Runs](/theater/runs):** every run on this computer; [View a log](/theater/view) opens anyone's `.jsonl`.
 - **[Research](/ai-research) and the [Glossary](/ai-research/glossary):** orchestration in AI and in human practice (music, dance, film and theater, reality TV, labs, startups), and the terms for today, each with its AI sense, its human sense, and an example from the theater. Written with AI on the morning of the class; check before citing.
 - **[Docs](/docs):** the Theater, what an agent is, and the ensemble on paper.
-- **[Ensemble](/ensemble):** a worked example of a fixed graph: four roles read a context repository and brief a podcast host, with a person approving each step. [Remix](/remix) is your copy to change.
+- **[Podcast prep](/podcast):** four agents get the host ready for next week's interview: Piper takes the guest's material in as it comes, Quinn proposes questions, Kit offers kind jokes, and Bea writes the briefing once you say you're done. The same four run in Slack. [Remix](/remix) is your own copy of it to change.
+- **[Ensemble](/ensemble):** the October 30 version, a worked example of a fixed graph: four roles read a context repository and brief a podcast host, with a person approving each step. [Its remix](/ensemble/remix) is a copy to change.
 
 ## For Friday and next week
 

@@ -1,27 +1,27 @@
 import { SiteFooter, SiteHeader } from "../components/Chrome.jsx";
-import Ensemble from "./Ensemble.jsx";
+import Podcast from "./Podcast.jsx";
 
 export const metadata = {
   title: "Remix",
-  description: "Four roles read a context repository and brief a podcast host. You decide who reads what.",
+  description: "Four agents prepare the host: Piper takes everything in, Quinn proposes questions, Kit offers kind jokes, Bea writes the briefing.",
 };
 
-export default function EnsemblePage() {
+export default function PodcastPage() {
   return (
     <>
       <SiteHeader current="remix" />
       <main id="main" className="machine-shell">
         <header className="machine-heading">
-          <p className="eyebrow">Week 9 · Agents and systems</p>
-          <h1>Remix</h1>
+          <p className="eyebrow">Week 9 · Agents, systems, orchestration</p>
+          <h1>Your podcast prep</h1>
           <p className="hero-deck">
-            A context repository goes in. A Conductor proposes who reads what, an Archivist maps the files, a Researcher looks things up, a Briefer writes the host's briefing. You decide what the ensemble may read, approve or change the plan, and can edit any card before it's passed on. Everything each role is told is on this page, and the whole run comes out as a trace you can print and mark up.
+            Four agents get the host ready for next week's interview. Add the guest's material as it comes; each piece is saved, read, and worked on as it arrives. When you're done adding, the producer writes the briefing.
           </p>
           <p className="machine-more">
-            This is your copy of <a href="/ensemble">the ensemble</a>, in <code>nextjs/app/remix/</code>. Change anything: the roles, what each is told, what it reads, what comes out. Changing it never touches the original.
+            This is your copy of <a href="/podcast">podcast prep</a>, all in <code>nextjs/app/remix/</code>: the page, the agents' instructions (<code>lib/prompts.mjs</code>), how Piper reads things (<code>lib/read.mjs</code>), who waits for whom (<code>lib/jobs.mjs</code>), and the avatars. Change anything; it never touches the original. Its sessions are saved apart, in <code>output/podcast-remix/</code>.
           </p>
         </header>
-        <Ensemble />
+        <Podcast />
       </main>
       <SiteFooter />
     </>

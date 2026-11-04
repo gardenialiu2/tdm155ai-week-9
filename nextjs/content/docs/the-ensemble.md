@@ -20,7 +20,7 @@ Every call is one request to a chat model on OpenRouter, from the server route `
 
 ## Your remix
 
-`nextjs/app/remix/` is a complete copy of the ensemble; changing it never touches `/ensemble`. Things worth trying, roughly in order of effort:
+`nextjs/app/ensemble/remix/` (at [/ensemble/remix](/ensemble/remix)) is a complete copy of the ensemble; changing it never touches `/ensemble`. Things worth trying, roughly in order of effort:
 
 - **Change a prompt.** Make the Briefer write for a hostile interviewer, or a ten-year-old. Make the Archivist write in the maker's voice. See what the trace shows.
 - **Change the wiring.** Give the Researcher the files, not the map. Run the Briefer before the Researcher. Take the Conductor out. Each is one line in `compose()` in `Ensemble.jsx` or one checkbox.

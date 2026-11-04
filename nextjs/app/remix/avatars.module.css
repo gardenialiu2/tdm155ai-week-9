@@ -1,0 +1,108 @@
+/* The podcast cast's avatars (Avatar.jsx). Drawings use a 100 x 100 grid, so px in a transform or origin below is
+   one grid unit at any size. Only [data-state="working"] animates; reduced motion and print get the still. */
+
+.avatar { display: inline-block; flex: none; vertical-align: middle; overflow: visible; }
+
+.disc { stroke: var(--line, #2c2f2b); stroke-width: 1.5; }
+
+/* The ink outline, inherited by every shape that doesn't set its own stroke. */
+.figure { stroke: var(--ink, #ecece6); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.inkFill { fill: var(--ink, #ecece6); }
+.badgeRing { stroke: var(--paper, #121412); stroke-width: 3; }
+
+/* Moving parts: where each one pivots. */
+.piperHead { transform-origin: 50px 55px; }
+.piperPage { transform-box: fill-box; transform-origin: center; }
+.quinnHead { transform-origin: 46px 60px; }
+.quinnRing1, .quinnRing2 { transform-origin: 74px 50px; }
+.kitHat { transform-origin: 50px 36px; }
+.beaLine1, .beaLine2, .beaLine3, .beaLine4 { transform-box: fill-box; transform-origin: left center; }
+
+/* Piper: a page drops into the tray and settles on the stack; a small nod when it lands. */
+.avatar[data-state="working"] .piperPage { animation: piperPage 1.6s ease-in-out infinite; }
+.avatar[data-state="working"] .piperHead { animation: piperNod 1.6s ease-in-out infinite; }
+@keyframes piperPage {
+  0% { transform: translate(26px, -14px) rotate(16deg); opacity: 0; }
+  20% { opacity: 1; }
+  60% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  85% { transform: translate(0, 4px); opacity: 1; }
+  100% { transform: translate(0, 4px); opacity: 0; }
+}
+@keyframes piperNod {
+  0%, 55%, 100% { transform: translateY(0); }
+  68% { transform: translateY(1.5px); }
+}
+
+/* Quinn: sound rings pulse from the mic; the question mark bobs; the head tilts, curious. */
+.avatar[data-state="working"] .quinnRing1 { animation: quinnRing1 1.4s ease-out infinite; }
+.avatar[data-state="working"] .quinnRing2 { animation: quinnRing2 1.4s ease-out infinite; }
+.avatar[data-state="working"] .quinnQ { animation: quinnBob 2.8s ease-in-out infinite; }
+.avatar[data-state="working"] .quinnHead { animation: quinnTilt 2.8s ease-in-out infinite; }
+@keyframes quinnRing1 {
+  0% { transform: scale(.7); opacity: 0; }
+  30% { transform: scale(1); opacity: 1; }
+  70%, 100% { transform: scale(1.15); opacity: 0; }
+}
+@keyframes quinnRing2 {
+  0%, 15% { transform: scale(.7); opacity: 0; }
+  50% { transform: scale(1); opacity: 1; }
+  90%, 100% { transform: scale(1.15); opacity: 0; }
+}
+@keyframes quinnBob {
+  0%, 100% { transform: translateY(0); opacity: .6; }
+  50% { transform: translateY(-2.5px); opacity: 1; }
+}
+@keyframes quinnTilt {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-4deg); }
+}
+
+/* Kit: tips the hat, eyebrow up, and puts it back. */
+.avatar[data-state="working"] .kitHat { animation: kitHat 1.8s ease-in-out infinite; }
+.avatar[data-state="working"] .kitBrow { animation: kitBrow 1.8s ease-in-out infinite; }
+@keyframes kitHat {
+  0%, 20%, 90%, 100% { transform: translate(0, 0) rotate(0deg); }
+  45%, 65% { transform: translate(-1px, -6px) rotate(-14deg); }
+}
+@keyframes kitBrow {
+  0%, 20%, 90%, 100% { transform: translateY(0); }
+  45%, 65% { transform: translateY(-2px); }
+}
+
+/* Bea: the clipboard's four lines write themselves in, then the page clears for the next brief. */
+.avatar[data-state="working"] .beaLine1 { animation: beaLine1 2s ease-out infinite; }
+.avatar[data-state="working"] .beaLine2 { animation: beaLine2 2s ease-out infinite; }
+.avatar[data-state="working"] .beaLine3 { animation: beaLine3 2s ease-out infinite; }
+.avatar[data-state="working"] .beaLine4 { animation: beaLine4 2s ease-out infinite; }
+@keyframes beaLine1 {
+  0% { transform: scaleX(0); opacity: 1; }
+  15%, 88% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes beaLine2 {
+  0%, 18% { transform: scaleX(0); opacity: 1; }
+  33%, 88% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes beaLine3 {
+  0%, 36% { transform: scaleX(0); opacity: 1; }
+  51%, 88% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes beaLine4 {
+  0%, 54% { transform: scaleX(0); opacity: 1; }
+  66%, 88% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar * { animation: none !important; }
+}
+
+@media print {
+  .avatar * { animation: none !important; }
+  .disc { fill: #fff; stroke: #111; }
+  .figure { stroke: #111; }
+  .inkFill { fill: #111; }
+  .badgeRing { stroke: #fff; }
+}

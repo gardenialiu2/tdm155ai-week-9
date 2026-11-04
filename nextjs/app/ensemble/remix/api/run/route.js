@@ -1,4 +1,4 @@
-import { env } from "../../../../lib/keys.mjs";
+import { env } from "../../../../../lib/keys.mjs";
 import { roles, runRequest } from "../../prompts.mjs";
 
 // POST { model, role, instructions, message } → { text, sources, cost, model }.

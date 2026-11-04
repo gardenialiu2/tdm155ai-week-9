@@ -9,7 +9,9 @@ This repository is the week 9 site for TDM 155AI (*Making Stuff in the Age of AI
 - **`runs/`** (gitignored): every run's log, one JSON object per line.
 - **`nextjs/content/`**: the Markdown the site shows; each file is a page at the same path. `content/docs/` is the Docs section, shown with a sidebar at `/docs`.
 - **`nextjs/app/ensemble/`**: the ensemble as taught. Don't change it when a student asks for changes; change their copy. `prompts.mjs` holds the roles, the system prompts, and what each role is given; `Ensemble.jsx` the page; `trace.mjs` the trace; `api/run/` the one model call; `api/sample/` serves the sample repository.
-- **`nextjs/app/remix/`**: the student's copy of the ensemble. This is where student changes go. It's self-contained, with its own routes, so changing it never affects `/ensemble`.
+- **`nextjs/app/podcast/`** and **`nextjs/lib/podcast/`**: podcast prep as taught (Piper, Quinn, Kit, Bea; the contract shared with the Slack Producer is `lib/podcast/contract.mjs`; keep it in step with `tdm155ai/tdm155ai-podcast-producer`). Sessions are saved in the gitignored `output/podcast/`.
+- **`nextjs/app/remix/`**: the student's copy of podcast prep, self-contained (its own `lib/`, routes, avatars, and storage in `output/podcast-remix/`). This is where student changes to podcast prep go; changing it never affects `/podcast`.
+- **`nextjs/app/ensemble/`** and **`nextjs/app/ensemble/remix/`**: the October 30 ensemble (Conductor, Archivist, Researcher, Briefer) and its copy, kept as a worked example of a fixed graph. Don't change `/ensemble` when a student asks; change the remix.
 - **`sample-context-repo/`**: an invented student's context repository, for running the ensemble in class. Keep it invented: no real student's material goes here.
 
 See `README.md` for how the ensemble works.

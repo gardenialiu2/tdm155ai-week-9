@@ -1,43 +1,30 @@
-import { roles } from "./prompts.mjs";
+import { CAST } from "./lib/contract.mjs";
 
-// The trace: everything that happened in one run of the ensemble, as Markdown, for the download and for printing.
-// It has the same shape as the paper version of the activity (docs/paper-ensemble): the file list with what was
-// withheld and who got what, then one section per role with what it was told, what it was given, and what it said,
-// marked where a person changed it before passing it on. A reader with the trace can mark up every decision.
+// The whole session as Markdown, for inspecting or printing: every item, what each agent was given and said, the
+// revisions and their briefings, and the event log. Pure: the page builds it from the session it already has.
+const who = (id) => CAST.find((c) => c.id === id);
 
-function when(ms) {
-  return ms ? new Date(ms).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }) : "";
-}
-
-export function buildTrace({ files = [], plan = {}, cards = {}, about = "", purpose = "", model = "", startedAt = 0 }) {
-  const lines = [];
-  lines.push("# Ensemble trace", "");
-  lines.push(`Run ${when(startedAt) || "(not started)"} · model ${model || "(none)"}`, "");
-  lines.push("## About the piece", "", about.trim() || "(nothing entered)", "");
-  lines.push("## Purpose", "", purpose.trim() || "(default)", "");
-
-  lines.push("## Files", "");
-  lines.push("| File | Size | Allowed | Archivist | Researcher | Briefer |", "| --- | ---: | :-: | :-: | :-: | :-: |");
-  for (const file of files) {
-    const allowed = file.allowed !== false;
-    const got = (role) => (allowed && (plan[role] || []).includes(file.path) ? "●" : "");
-    lines.push(`| ${file.path} | ${file.size} | ${allowed ? "yes" : "**withheld**"} | ${got("archivist")} | ${got("researcher")} | ${got("briefer")} |`);
-  }
-  if (!files.length) lines.push("| (no files) | | | | | |");
-  lines.push("");
-
-  roles.forEach((role, index) => {
-    const card = cards[role.key];
-    lines.push(`## ${index + 1}. ${role.name}`, "", `_${role.job}_`, "");
-    if (!card) { lines.push("(not run)", ""); return; }
-    lines.push(`Ran ${when(card.ranAt)}${card.cost != null ? ` · cost $${Number(card.cost).toFixed(4)}` : ""}${card.model ? ` · ${card.model}` : ""}`, "");
-    lines.push("### Told (system prompt)", "", "```", card.system || "", "```", "");
-    lines.push("### Given (message)", "", "```", card.message || "", "```", "");
-    lines.push(`### Said${card.edited ? " (edited by a person before it was passed on)" : ""}`, "", card.output || "(nothing)", "");
-    if (card.sources?.length) {
-      lines.push("### Pages it used", "", ...card.sources.map((s) => `- [${s.title}](${s.url})`), "");
+export function traceMarkdown(session) {
+  const out = [`# Trace: ${session.title}`, "", `Session \`${session.id}\` · created ${session.created} · ${session.items.length} items · ${session.revisions.length} revision(s) closed`, ""];
+  for (const item of session.items) {
+    out.push(`## Item ${item.number}: ${item.name}`, "", `${item.kind} · ${item.source}${item.url ? ` (${item.url})` : ""} · revision ${item.revision} · original \`${item.file}\`${item.excluded ? " · **left out by the person**" : ""}`, "");
+    for (const agent of ["intake", "interviewer", "sidekick"]) {
+      const s = item[agent];
+      const c = who(agent);
+      out.push(`### ${c.icon} ${c.name} (${c.role}): ${s.status}${s.cost ? ` · $${s.cost.toFixed(4)}` : ""}${s.model ? ` · ${s.model}` : ""}`, "");
+      if (s.error) out.push(`Error: ${s.error}`, "");
+      if (agent === "intake" && s.text) out.push(`${s.method}:`, "", "```", s.text, "```", "");
+      if (agent === "interviewer" && s.questions) out.push(...(s.summary ? [s.summary, ""] : []), ...s.questions.map((q, i) => `${i + 1}. ${q.question}${q.why ? ` *Why:* ${q.why}` : ""}`), "");
+      if (agent === "sidekick" && s.jokes) out.push(...(s.jokes.length ? s.jokes.map((j) => `- ${j.idea} *(on the ${j.butt})*`) : [`No joke: ${s.jokesNote}`]), "");
+      if (s.prompt) out.push("<details><summary>What it was given</summary>", "", "```", `SYSTEM\n${s.prompt.system}\n\nUSER\n${s.prompt.user}`, "```", "", "</details>", "");
     }
-  });
-
-  return lines.join("\n");
+  }
+  for (const rev of session.revisions) {
+    const b = rev.briefing;
+    out.push(`## ${who("producer").icon} Bea's briefing, revision ${rev.n}: ${b.status}`, "", `Closed ${rev.closedAt} with items ${rev.items.map((x) => Number(x.slice(1))).join(", ")}${rev.proceedWithGaps ? " · went ahead with gaps" : ""}${b.cost ? ` · $${b.cost.toFixed(4)}` : ""}`, "");
+    if (b.error) out.push(`Error: ${b.error}`, "");
+    if (b.text) out.push(b.text, "");
+  }
+  out.push("## Events", "", ...session.events.map((e) => `- ${e.t} · ${who(e.agent)?.name || e.agent} · ${e.kind}${e.item ? ` · ${e.item}` : ""}: ${e.text}`), "");
+  return out.join("\n");
 }
