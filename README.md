@@ -1,6 +1,11 @@
 # tdm155ai-week-9
 
-TDM 155AI week 9 (class 2026-11-04): Agents and systems. Unit 3 begins: beyond the single piece. A local Next app in `nextjs/` with three parts, one per link in the nav, and a sample repository beside it:
+TDM 155AI week 9 (class 2026-11-04): Agents, systems, orchestration. Unit 3 begins: beyond the single piece. A local Next app in `nextjs/`, and beside it the Theater's systems (`systems/`) and a sample repository:
+
+- **Theater** (`/theater`, `/theater/runs`, `/theater/view`; code in `nextjs/app/theater/` and `nextjs/lib/theater/`, docs in `nextjs/content/docs/theater/`): the theater of agents, added the morning of November 4 for the class as Marlon redesigned it (agents, systems, orchestration; students design an agent system with a theatrical spin, run it, then inspect and visualize it). A **system** is a folder in `systems/<name>/`: `system.md` (kind `loop`, `switch`, or `cast`, the caps, the premise), `cast/*.md` (characters: voice, wants, secrets), and as the kind needs `judge.md`, `router.md` + `branches/`, `director.md`, `producers/`, `observers/`. Six presets follow the class's steps: `01-taboo` (the loop: a judge rejects until try 3 at the earliest, hard maximum 8), `02-stage-door` (the switch), `03-dinner-party` (the cast, 10 rounds, confessionals, a chorus), `04-the-heist` (a director's goal), `05-the-villa` (reality-show producers, votes, eliminations, observers, the ratings loop), `06-werewolf` (a social-deduction game with a moderator). The server runs a system one model call at a time (`lib/theater/run.mjs`), streams each event to the page, and appends it to the gitignored `runs/<system>/<run>.jsonl` (`{t, seq, run, layer, speaker, kind, to, text, state, tokens, cost, round, prompt}`). Caps on by default: turns and tries clamped, a cost ceiling (default $0.50), and a Stop button. *Rehearse* runs the same wiring with stand-in replies, no model and no cost (`lib/theater/rehearsal.mjs`). The dashboard (`app/theater/Dashboard.jsx`, from the events alone, so it reads any log) shows the stats, the graph with what fired, the script with what each agent was given, a timeline by speaker, who addressed whom, the running cost, and the observers' notes; it downloads the `.jsonl` and the script, and prints light. Default model Claude Haiku 5.5 through OpenRouter; keys stay on the server. The presets and docs are Claude's design, not a report of the class.
+
+The parts built October 30:
+
 
 - **Docs** (`/docs`, Markdown in `nextjs/content/docs/`): the ensemble on paper (a proposal for the in-class paper activity), what an agent is, and how the screen version works.
 - **Ensemble** (`/ensemble`, code in `nextjs/app/ensemble/`): four roles read a context repository and brief a podcast host. A **Conductor** sees the file list and proposes who reads what; an **Archivist** reads the files and writes a map; a **Researcher** reads the map, not the files, and looks things up on the web; a **Briefer** writes the host's one-page briefing. The person at the keyboard is above all four: they pick the folder, withhold files from the whole ensemble, approve or change the plan, and can edit any card before the next role reads it. Every system prompt is on the page and editable; every request is shown before it's sent; the whole run comes out as a **trace** (Markdown) that prints, for marking up on paper.
@@ -8,7 +13,7 @@ TDM 155AI week 9 (class 2026-11-04): Agents and systems. Unit 3 begins: beyond t
 - **`sample-context-repo/`**: an invented student's context repository for a letterpress-and-stop-motion piece about the two versions of Emily Dickinson's "Safe in their Alabaster Chambers," with primary documents, secondary criticism, an unchecked AI summary, dictated notes, process logs, prompts, Slack posts, credits, and a `private/` folder and a venting note that should be withheld. *Use the sample repository* on the Ensemble page loads it. The poem, the versions, Sue's objection, and the books are real; the student and everything else are not.
 - **`examples/`**: one real run on the sample (October 30, Claude Haiku 5.5, every file allowed so the Conductor had to decide about `private/` itself): the trace, 900 lines, ready to print for the paper exercise, and the briefing it produced.
 
-Private, in the `ll-26-27` org; a standalone repo (not nested in The Notebook), cloned at `~/Development/tdm155ai-week-9`.
+Private, in the `tdm155ai` org (moved from `ll-26-27`); nested in The Notebook at `apps/tdm155ai/tdm155ai-week-9`.
 
 ## Run it
 
@@ -20,7 +25,7 @@ pnpm install
 pnpm dev
 ```
 
-Open http://localhost:3000/ensemble in Chrome. Press *Use the sample repository*, untick `private/` and `notebook/venting.md`, write a line about the piece, and press *Run all three*. Or ask the Conductor first.
+Open http://localhost:3000/theater in Chrome for the Theater: pick a system, press *Rehearse* to see it for free, then *Run it*. For the ensemble, open http://localhost:3000/ensemble. Press *Use the sample repository*, untick `private/` and `notebook/venting.md`, write a line about the piece, and press *Run all three*. Or ask the Conductor first.
 
 ## How it works
 
@@ -36,3 +41,7 @@ Open http://localhost:3000/ensemble in Chrome. Press *Use the sample repository*
 **Copied 2026-10-30 from `tdm155ai/tdm155ai-week-8` at `3e335a6`**, the Markdown-rendering parts of its Next app only: `lib/content.mjs`, `lib/keys.mjs`, the catch-all page, `/print`, `/context-media`, `/docs`, the components, and the CSS. Left behind: the interview machines and their docs. The ensemble's request and route follow the shape of week 8's mwRemix `api/suggest`. Unlike week 8, nothing an agent is given is ever cut: no per-file or total character caps. If a role is given more than the model can take, the route reports the model's refusal and the fix is fewer files for that role, never shorter ones.
 
 Written by Claude on 2026-10-30 with Madeleine, from Marlon's Story of Week 9 canvas (theme: agents and systems; Unit 3, beyond the single work) and his October 29 hackathon-readout notes (software as a jig; the transcript and the archive as what persists; understanding the agents by laying their activity out on paper). Tested that day: `pnpm build`, the five prompt and trace tests (`pnpm test`), and two full runs on the sample through the live routes with Claude Haiku 5.5. The first run found that a Claude model given a whole repository spends its entire output budget on hidden reasoning and answers with nothing, so the request now caps reasoning at a small budget (the newer models refuse to turn it off); the second run is in `examples/`. Not yet run with students or on paper; the paper activity is a proposal.
+
+## The Theater, November 4
+
+Written by Claude (thread `1fe938b9-602d-4118-9c01-9f1152567783`) on the morning of 2026-11-04 from the class design agreed that morning (the plan folder `_context/projects/50-in-focus/orchestration-patterns/plans/20261104-tdm155ai-week-9/` in The Notebook). Presets 04–06 and the step docs were drafted by a subagent and checked against the engine. Nothing was copied from `ll-26-27/mk-agent-studies` (read at `0d02903` for its graph editor and executor; the Theater's runner is new because that executor has no loops). Tested: `pnpm test` (the engine with a fake model: the loop's minimum and maximum, the switch, round-robin, asides, the cost ceiling, Stop, the director, votes and eliminations, the dashboard's counts), `pnpm build`, and a rehearsal of every preset through the live routes, including Stop.

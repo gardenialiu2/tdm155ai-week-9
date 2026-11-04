@@ -61,7 +61,7 @@ export default function Dashboard({ events = [], live = false }) {
 
       <div className={styles.panel}>
         <h3>The graph</h3>
-        <Graph s={s} />
+        <div className={styles.graph}><Graph s={s} /></div>
       </div>
 
       <div className={styles.two}>
@@ -135,7 +135,7 @@ function Script({ events, kind }) {
 function Line({ e }) {
   const to = e.to && !e.to.includes("everyone") && !e.to.includes("camera") ? <span className={styles.to}> → {e.to.join(", ")}</span> : null;
   switch (e.kind) {
-    case "start": return <span className={styles.direction}>{e.text}</span>;
+    case "start": return <div className={styles.direction}><ReactMarkdown remarkPlugins={[remarkGfm]}>{e.text}</ReactMarkdown></div>;
     case "input": return <span><span className={styles.who}>INPUT</span> {e.text}</span>;
     case "line": return <span><span className={styles.who}>{e.speaker.toUpperCase()}</span>{to}<br />{e.text}</span>;
     case "aside": return <span className={styles.aside}>({e.speaker}, to the camera) {e.text}</span>;
@@ -247,9 +247,9 @@ function Graph({ s }) {
   const W = 620;
   const node = (x, y, label, on, sub) => (
     <g key={label}>
-      <rect x={x - 70} y={y - 22} width={140} height={44} rx={10} fill={on ? "var(--accent)" : "var(--paper)"} stroke={on ? "var(--accent)" : "var(--muted)"} strokeWidth={1.5} />
+      <rect x={x - 80} y={y - 22} width={160} height={44} rx={10} fill={on ? "var(--accent)" : "var(--paper)"} stroke={on ? "var(--accent)" : "var(--muted)"} strokeWidth={1.5} />
       <text x={x} y={y + (sub ? -2 : 4)} textAnchor="middle" style={{ fill: on ? "var(--accent-ink)" : "var(--ink)", fontWeight: 700 }}>{label.length > 18 ? `${label.slice(0, 17)}…` : label}</text>
-      {sub && <text x={x} y={y + 13} textAnchor="middle" style={{ fill: on ? "var(--accent-ink)" : "var(--muted)", fontSize: 11 }}>{sub}</text>}
+      {sub && <text x={x} y={y + 13} textLength={sub.length > 26 ? 150 : undefined} lengthAdjust="spacingAndGlyphs" textAnchor="middle" style={{ fill: on ? "var(--accent-ink)" : "var(--muted)", fontSize: 11 }}>{sub}</text>}
     </g>
   );
   const edge = (x1, y1, x2, y2, on, label, key) => (
@@ -273,8 +273,8 @@ function Graph({ s }) {
         {node(110, 60, (s.meta.cast || []).join(" + ") || "the try", s.running, `try ${s.verdicts.length + (s.running ? 1 : 0)}`)}
         {node(330, 60, s.meta.judge || "judge", false, `${rejects} reject${rejects === 1 ? "" : "s"}`)}
         {node(530, 60, "done", accepted, accepted ? "accepted" : s.running ? "" : "not accepted")}
-        {edge(180, 52, 258, 52, s.running, "try", "try")}
-        {edge(400, 60, 458, 60, accepted, "accept", "acc")}
+        {edge(190, 52, 248, 52, s.running, "try", "try")}
+        {edge(410, 60, 448, 60, accepted, "accept", "acc")}
         <path d="M330,84 C330,130 110,130 110,86" fill="none" stroke={rejects ? "var(--accent)" : "var(--line)"} strokeWidth={rejects ? 2.5 : 1.5} markerEnd={rejects ? "url(#arrowOn)" : "url(#arrow)"} />
         <text x={220} y={136} textAnchor="middle" className={styles.faint} style={{ fontSize: 11 }}>reject: try again (×{rejects})</text>
       </svg>
@@ -290,9 +290,9 @@ function Graph({ s }) {
         {node(300, 85, s.meta.router || "router", Boolean(chosen), chosen ? "routed" : "")}
         {node(520, 35, a || "branch A", chosen === a)}
         {node(520, 135, b || "branch B", chosen === b)}
-        {edge(160, 85, 228, 85, true, "", "in")}
-        {edge(370, 78, 448, 42, chosen === a, chosen === a ? "fired" : "", "a")}
-        {edge(370, 92, 448, 128, chosen === b, chosen === b ? "fired" : "", "b")}
+        {edge(170, 85, 218, 85, true, "", "in")}
+        {edge(380, 78, 438, 42, chosen === a, chosen === a ? "fired" : "", "a")}
+        {edge(380, 92, 438, 128, chosen === b, chosen === b ? "fired" : "", "b")}
       </svg>
     );
   }
@@ -304,9 +304,9 @@ function Graph({ s }) {
       {defs}
       {node(310, 85, "1 · the cast", s.running, `${(s.meta.cast || []).length} characters, round-robin`)}
       {has("producers") ? node(90, 85, "2 · producers", producersOn, (s.meta.producers || []).join(", ")) : null}
-      {has("producers") ? edge(160, 85, 238, 85, producersOn, "write into", "p") : null}
+      {has("producers") ? edge(170, 85, 228, 85, producersOn, "write into", "p") : null}
       {has("observers") ? node(530, 85, "3 · observers", observersOn, (s.meta.observers || []).join(", ")) : null}
-      {has("observers") ? edge(380, 85, 458, 85, observersOn, "read", "o") : null}
+      {has("observers") ? edge(390, 85, 448, 85, observersOn, "read", "o") : null}
       {s.meta.director ? node(310, 25, s.meta.director, Boolean(s.stop?.state?.reached), s.stop?.state?.reached ? "goal reached" : "checks the goal") : null}
       {s.meta.director ? edge(310, 61, 310, 49, false, "", "d") : null}
       {s.meta.config?.ratingsLoop && has("producers") && has("observers") ? <path d="M530,109 C530,165 90,165 90,111" fill="none" stroke="var(--line)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow)" /> : null}

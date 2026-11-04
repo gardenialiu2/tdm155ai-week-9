@@ -49,7 +49,7 @@ A system of agents can run forever and spend money while it does. Every run in t
 2. In a terminal, from the repository root: `cd nextjs`
 3. `pnpm install` (the first time only)
 4. `pnpm dev`
-5. Open http://localhost:3000/theater, pick a system, and press Run.
+5. Open http://localhost:3000/theater, pick a system, and press *Rehearse* (free: stand-in replies, no model) to see its wiring, then *Run it* for the real thing.
 
 Saved runs are at `/theater/runs`. Any `.jsonl` log, yours or a classmate's, can be dropped into `/theater/view`.
 

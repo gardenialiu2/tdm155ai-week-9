@@ -72,14 +72,14 @@ export default function Theater() {
 
   const set = (key) => (event) => setSettings((old) => ({ ...old, [key]: event.target.value }));
 
-  const run = async () => {
+  const run = async (rehearse = false) => {
     setError("");
     setEvents([]);
     setRunning(true);
     runId.current = "";
     try {
       await load(); // pick up any edits to the files since the page opened
-      const res = await fetch("/theater/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ system: picked, overrides: settings }) });
+      const res = await fetch("/theater/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ system: picked, overrides: settings, rehearse }) });
       if (!res.ok || !res.body) throw new Error((await res.json().catch(() => ({}))).error || `The server answered ${res.status}.`);
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -165,7 +165,8 @@ export default function Theater() {
               </div>
 
               <div className={styles.row}>
-                {!running && <button className={styles.primary} onClick={run}>Run it</button>}
+                {!running && <button className={styles.primary} onClick={() => run(false)}>Run it</button>}
+                {!running && <button className={styles.button} onClick={() => run(true)} title="Stand-in replies, no model, no cost">Rehearse (no model, free)</button>}
                 {running && <button className={styles.stop} onClick={stop}>Stop</button>}
                 <span className={styles.muted}>
                   {c.kind === "cast" ? `${system.cast.length} characters × ${settings.turns ?? c.turns} rounds` : c.kind === "loop" ? `${system.cast.length} + judge, each try` : "router + one branch"}

@@ -114,7 +114,7 @@ TARGET: <character name>   (eliminate only)
 TEXT: <the announcement the cast hears>
 ```
 
-On `vote`, every remaining character votes privately (as an aside) and the most-voted character is eliminated.
+On `vote`, the Theater asks every remaining character in private for `VOTE: <name>` and `WHY: <one sentence>` (nobody can vote for themselves); the most-voted character is eliminated (a tie goes to whoever reached the top first). Eliminated characters stop taking turns. Votes and eliminations need at least three characters left.
 
 ## `observers/` (cast, optional)
 
@@ -131,10 +131,23 @@ Each run writes `runs/<system>/<runid>.jsonl`, one JSON object per line:
 | Field | Values |
 |---|---|
 | `layer` | system, cast, judge, router, branch, director, producer, observer |
-| `kind` | start, line, aside, verdict, route, reply, goal, note, twist, challenge, vote, eliminate, observation, stop, error |
+| `kind` | start, input, line, aside, verdict, route, reply, goal, note, twist, challenge, vote-call, vote, eliminate, pass, observation, stop, error |
 
-`t` is the time, `seq` the event's number in the run, `run` the run id, `cost` in US dollars, `tokens` the tokens in and out of that model call.
+`t` is the time, `seq` the event's number in the run, `run` the run id (`<system>~<runid>`, the same as the file name), `prompt` what the agent was given (`{system, user}`), `cost` in US dollars, `tokens` the tokens in and out of that model call.
 
 ## Caps
 
 Every run stops at the first of: the turn cap (`turns` per character, or `maxTries`), the goal (a director's REACHED or a judge's ACCEPT), the cost ceiling (`costCeiling`), or the Stop button.
+
+## The order of a round (cast)
+
+1. Every character still in the game speaks, in file order (`TO` / `SAY` / `ASIDE`).
+2. The director, if there is one, checks the goal. REACHED ends the run; its NOTE reaches the cast next round.
+3. The observers take notes, if `observersEvery` says this round (and always at the end).
+4. The producers act, in file order, one action each, if `producersEvery` says this round (never after the last round). With `ratingsLoop`, they see the observers' latest notes, so set `observersEvery` too.
+
+In a loop, each try is: every cast file in order, then the judge. Everyone in the next try sees the judge's REASON for the last one (the evaluator-optimizer loop).
+
+## Rehearse before you run
+
+*Rehearse* on the Theater page runs the whole system with stand-in replies: no model, no key, no cost. It shows the wiring (who speaks when, where the switch goes, when the producers and observers act) and fills the dashboard, so you can check a new system's shape before you spend anything on it.

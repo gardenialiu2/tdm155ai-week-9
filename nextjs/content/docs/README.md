@@ -4,7 +4,7 @@ description: The paper version of the ensemble, what an agent is, and how the sc
 author: claude
 ---
 
-Three documents for week 9:
+The documents for week 9:
 
 - **[The ensemble on paper](/docs/paper-ensemble):** four people, a stack of cards, a context repository. Run the system by hand first. A proposal, for Madeleine to shape.
 - **[What an agent is](/docs/what-an-agent-is):** instructions, what it can see, what it can do, the loop; the wiring between several; what to make visible; what an agent must not know.

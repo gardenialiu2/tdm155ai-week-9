@@ -11,7 +11,7 @@ A director watches; producers interfere. Producers are a second system that writ
 
 - **twist**: a rule change or a revelation the cast hears.
 - **challenge**: a task the cast must respond to.
-- **vote**: every remaining character votes privately, as an aside, and the most-voted is eliminated.
+- **vote**: the Theater asks every remaining character in private for a `VOTE:` and a `WHY:`, and the most-voted is eliminated.
 - **eliminate**: the producer removes one character by name (the TARGET).
 - **none**: leave the scene alone.
 

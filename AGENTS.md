@@ -1,9 +1,12 @@
 # TDM 155AI week 9: instructions for AI assistants
 
-This repository is the week 9 site for TDM 155AI (*Making Stuff in the Age of AI*): Agents and systems (class November 4, 2026), the first week of Unit 3, beyond the single piece. Students build their first system of agents: an ensemble that reads a context repository (the folder behind their First Project, due November 6) and briefs the host of next week's podcast interview. They do it on paper first, then on the screen.
+This repository is the week 9 site for TDM 155AI (*Making Stuff in the Age of AI*): Agents, systems, orchestration (class November 4, 2026), the first week of Unit 3, beyond the single piece. Students design a system of agents with a theatrical spin in the Theater (`/theater`): a loop, a switch, a cast of characters, a goal, producers, observers. They run it, then inspect and visualize it, and are graded on creativity, not code. The ensemble (`/ensemble`, built October 30) is a worked example of a fixed graph: it reads a context repository and briefs the host of next week's podcast interview.
 
 ## Where things go
 
+- **`systems/<name>/`**: the Theater's systems, one folder each (format in `nextjs/content/docs/theater/09-system-format.md`). When a student asks for a new show, copy a preset to a new folder and change the copy; don't edit the presets `01-` to `06-`. A student's characters are their creative work: change them only as asked.
+- **`nextjs/lib/theater/`**: the Theater's engine (`run.mjs` the runners and prompts, `parse.mjs` the reply formats, `systems.mjs` loading systems and logs, `model.mjs` the OpenRouter call, `rehearsal.mjs` the free stand-in). **`nextjs/app/theater/`**: the pages, the routes, and the dashboard (`Dashboard.jsx`, `derive.mjs`). Keep the caps (turns, cost ceiling, Stop) on; a new feature that calls a model goes through `ask` in `run.mjs` so it counts toward the ceiling and the log.
+- **`runs/`** (gitignored): every run's log, one JSON object per line.
 - **`nextjs/content/`**: the Markdown the site shows; each file is a page at the same path. `content/docs/` is the Docs section, shown with a sidebar at `/docs`.
 - **`nextjs/app/ensemble/`**: the ensemble as taught. Don't change it when a student asks for changes; change their copy. `prompts.mjs` holds the roles, the system prompts, and what each role is given; `Ensemble.jsx` the page; `trace.mjs` the trace; `api/run/` the one model call; `api/sample/` serves the sample repository.
 - **`nextjs/app/remix/`**: the student's copy of the ensemble. This is where student changes go. It's self-contained, with its own routes, so changing it never affects `/ensemble`.

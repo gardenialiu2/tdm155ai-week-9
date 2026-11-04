@@ -10,10 +10,10 @@ order: 4
 A system of agents is hard to see while it runs. So the Theater writes everything down. Each run leaves a log at `runs/<system>/<runid>.jsonl`: one JSON object per line, one line per event, in order. A line looks like this (shortened):
 
 ```json
-{"seq":12,"layer":"cast","speaker":"Vivian","kind":"line","to":"Pip","text":"You shouldn't be here tomorrow.","round":2,"turn":3,"cost":0.0004}
+{"seq":12,"layer":"cast","speaker":"Vivian","kind":"line","to":["Pip"],"text":"You shouldn't be here tomorrow.","round":2,"tokens":{"in":812,"out":41},"cost":0.0004}
 ```
 
-The main fields: `layer` (which part of the system: cast, judge, router, branch, director, producer, observer, or system), `speaker`, `kind` (what happened: a line, an aside, a verdict, a route, a twist, a vote, an elimination, an observation, a stop ...), `to`, `text`, `round` and `turn`, `tokens` and `cost`. The full list is in [the system format](/docs/theater/09-system-format).
+The main fields: `layer` (which part of the system: cast, judge, router, branch, director, producer, observer, or system), `speaker`, `kind` (what happened: a line, an aside, a verdict, a route, a twist, a vote, an elimination, an observation, a stop ...), `to`, `text`, `round` (the round, or the try in a loop), `tokens` and `cost`, and `prompt`: exactly what that agent was given (its system prompt and its message), shown on the dashboard under *What … was given*. The full list is in [the system format](/docs/theater/09-system-format).
 
 ## Where to find it
 

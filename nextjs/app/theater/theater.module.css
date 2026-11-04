@@ -82,6 +82,9 @@
 .matrix td[data-n="0"] { color: var(--line); }
 .scroll { overflow-x: auto; }
 
+.graph { max-width: 760px; margin: 0 auto; }
+.direction p { margin: 0 0 .6em; }
+.direction p:last-child { margin: 0; }
 .svg { width: 100%; height: auto; display: block; }
 .svg text { fill: var(--ink); font: 12px "Inter Variable", Inter, system-ui, sans-serif; }
 .svg .faint { fill: var(--muted); }
