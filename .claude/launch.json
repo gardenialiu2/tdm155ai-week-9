@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nextjs",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "nextjs", "dev"],
+      "port": 3000
+    }
+  ]
+}
