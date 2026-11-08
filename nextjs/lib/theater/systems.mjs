@@ -89,6 +89,8 @@ export async function loadSystem(name) {
     // a cast's total number of speeches, the name of the private line (ASIDE, or ITM), the vote's question, whether a
     // banishment reveals the true role from the cast files, and where the system sits on the Theater page.
     answer: d.answer ?? null,
+    // Optional: how many tokens one cast reply may use in a loop (default 1500). A long reply, such as a piece of ASCII art, needs more.
+    maxTokens: Number(d.maxTokens ?? 0),
     speeches: Number(d.speeches ?? 0),
     asideLabel: /^[A-Z]{2,12}$/.test(String(d.asideLabel || "")) ? String(d.asideLabel) : "ASIDE",
     voteQuestion: String(d.voteQuestion || ""),

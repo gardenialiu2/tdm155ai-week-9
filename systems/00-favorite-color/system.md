@@ -4,7 +4,7 @@ description: "The loop: one agent guesses a color, the judge says yes or no, and
 kind: loop
 featured: 1
 model: anthropic/claude-sonnet-5.5
-answer: purple
+answer: burgundy
 minTries: 1
 maxTries: 10
 costCeiling: 0.50

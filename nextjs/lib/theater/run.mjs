@@ -23,6 +23,7 @@ export async function runSystem(system, { call, emit, signal, overrides = {} }) 
   config.maxTries = clamp(config.maxTries, 1, 20);
   config.minTries = clamp(config.minTries, 1, config.maxTries);
   config.costCeiling = clamp(config.costCeiling, 0.01, 5);
+  if (config.maxTokens) config.maxTokens = clamp(config.maxTokens, 500, 8000);
   if (config.speeches > 0) {
     config.speeches = clamp(config.speeches, 1, 120);
     config.turns = Math.ceil(config.speeches / Math.max(1, system.cast.length));
@@ -175,7 +176,7 @@ async function runLoop(system, config, { ask, record, usage }) {
   if (hidden) return guessLoop(system, config, { ask, push, usage, events, names });
   for (let tries = 1; tries <= config.maxTries; tries++) {
     for (const who of cast) {
-      const answer = await ask(who, { system: characterPrompt(system, config, who, names), user: `The tries so far:\n${sceneSoFar(events, { self: who.name })}\n\nTry ${tries} of at most ${config.maxTries}. Your move.` }, 1500);
+      const answer = await ask(who, { system: characterPrompt(system, config, who, names), user: `The tries so far:\n${sceneSoFar(events, { self: who.name })}\n\nTry ${tries} of at most ${config.maxTries}. Your move.` }, config.maxTokens || 1500);
       const line = parseLine(answer.text, names);
       push({ layer: "cast", speaker: who.name, kind: "line", to: line.to, text: line.say, round: tries, ...usage(answer) });
     }

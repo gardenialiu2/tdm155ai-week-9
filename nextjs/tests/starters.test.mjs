@@ -23,13 +23,13 @@ const me = (system) => system.match(/^You are ([^,]+),/)?.[1];
 test("favorite color: one guess at a time, stops the moment it's right, and the guesser never sees the answer", async () => {
   const color = await loadSystem("00-favorite-color");
   assert.equal(color.config.model, "anthropic/claude-sonnet-5.5");
-  const guesses = ["red", "Blue!", "is it purple?", "green"];
+  const guesses = ["red", "Blue!", "is it burgundy?", "green"];
   const { events, prompts } = await run(color, (req, n) => reply(`GUESS: ${guesses[n - 1]}\nSAY: hmm`));
   const verdicts = events.filter((e) => e.kind === "verdict");
   assert.deepEqual(verdicts.map((v) => v.state.accept), [false, false, true]);
   assert.equal(prompts.length, 3, "three model calls: the judge is code");
   assert.match(events.at(-1).text, /guessed right on guess 3/);
-  for (const p of prompts) assert.doesNotMatch(`${p.system}\n${p.user}`, /purple/i);
+  for (const p of prompts) assert.doesNotMatch(`${p.system}\n${p.user}`, /burgundy/i);
   assert.match(prompts[2].user, /No, not red/, "the guesser sees the judge's earlier answers");
 });
 
