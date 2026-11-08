@@ -42,7 +42,7 @@ test("labelled replies parse, across lines and with stray bold", () => {
 test("every preset loads", async () => {
   const systems = await listSystems();
   assert.ok(systems.length >= 3);
-  for (const s of systems) assert.ok(["loop", "switch", "graph", "cast"].includes(s.config.kind), s.name);
+  for (const s of systems) assert.ok(["loop", "switch", "graph", "cast", "draw"].includes(s.config.kind), s.name);
 });
 
 test("the loop takes at least minTries even when the judge would accept at once, and stops at maxTries", async () => {
@@ -101,3 +101,35 @@ test("a director stops the scene, producers vote people out, and the summary cou
   assert.ok(s.cost > 0);
   assert.equal(s.addressed.Agnes.Felix, 1, "Felix is out after round 1, so nobody can address him");
 });
+
+test("a draw game keeps the word from the guesser, checks guesses in code, and ends a round on a right guess", async () => {
+  const game = await loadSystem("scribblio");
+  const prompts = [];
+  const call = async ({ system, user }) => {
+    prompts.push({ system, user });
+    const drawing = system.startsWith("You are Pip");
+    return { text: drawing ? "  /\\_/\\\n ( o.o )" : prompts.filter((p) => !p.system.startsWith("You are Pip")).length < 2 ? "GUESS: dog\nSAY: woof" : "GUESS: A cat!", tokens: { in: 1, out: 1 }, cost: 0.001, model: "fake" };
+  };
+  const events = [];
+  await runSystem(game, { call, emit: (e) => events.push(e), overrides: { input: "cat", rounds: 1, stages: 1 } });
+  const guessing = prompts.filter((p) => !p.system.startsWith("You are Pip"));
+  assert.ok(guessing.length >= 2);
+  for (const p of guessing) assert.ok(!/\bcat\b/i.test(p.system + p.user.replace(/A cat!/g, "")), "the guesser is never told the word");
+  assert.ok(prompts.find((p) => p.system.startsWith("You are Pip")).system.includes("## The secret word\ncat"));
+  assert.deepEqual(events.filter((e) => e.kind === "verdict").map((v) => v.state.accept), [false, true]);
+  assert.equal(events.find((e) => e.kind === "reveal").state.solved, true);
+  assert.equal(events.at(-1).state.solved, 1);
+  assert.ok(events.find((e) => e.kind === "line" && e.state?.art).text.includes("o.o"));
+});
+
+test("a draw game's clock cancels a guess that is still being thought of", async () => {
+  const game = await loadSystem("scribblio");
+  const call = ({ system, signal }) => system.startsWith("You are Pip")
+    ? Promise.resolve({ text: "( )", tokens: null, cost: 0, model: "fake" })
+    : new Promise((resolve, reject) => signal.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "AbortError" }))));
+  const events = [];
+  await runSystem(game, { call, emit: (e) => events.push(e), overrides: { input: "cat", rounds: 1, stages: 1, guessSeconds: 5 } });
+  const reveal = events.find((e) => e.kind === "reveal");
+  assert.equal(reveal.state.solved, false);
+  assert.match(reveal.text, /Time's up/);
+}, { timeout: 15000 });

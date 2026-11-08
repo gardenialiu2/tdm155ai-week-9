@@ -72,7 +72,7 @@ export async function loadSystem(name) {
   const dir = path.join(systemsRoot, name);
   const system = await readAgent(path.join(dir, "system.md"));
   const d = system.data;
-  const kind = ["loop", "switch", "graph", "cast"].includes(d.kind) ? d.kind : "cast";
+  const kind = ["loop", "switch", "graph", "cast", "draw"].includes(d.kind) ? d.kind : "cast";
   const config = {
     kind,
     model: d.model || DEFAULT_MODEL,
@@ -92,6 +92,12 @@ export async function loadSystem(name) {
     // Optional: how many tokens one cast reply may use in a loop (default 1500). A long reply, such as a piece of ASCII art, needs more.
     maxTokens: Number(d.maxTokens ?? 0),
     speeches: Number(d.speeches ?? 0),
+    // A draw game (Scribblio): the secret words, how many rounds, the seconds the guesser gets on the clock, and how many
+    // times the drawer adds to the picture while the guesser is guessing.
+    words: Array.isArray(d.words) ? d.words.map(String) : [],
+    rounds: Number(d.rounds ?? 3),
+    guessSeconds: Number(d.guessSeconds ?? 30),
+    stages: Number(d.stages ?? 3),
     asideLabel: /^[A-Z]{2,12}$/.test(String(d.asideLabel || "")) ? String(d.asideLabel) : "ASIDE",
     voteQuestion: String(d.voteQuestion || ""),
     revealOnBanish: Boolean(d.revealOnBanish),

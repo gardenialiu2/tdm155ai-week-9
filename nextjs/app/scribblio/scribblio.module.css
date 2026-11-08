@@ -1,0 +1,26 @@
+.room { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; background: #14163a; color: #e9e7ff; overflow: hidden; font-family: ui-rounded, "SF Pro Rounded", system-ui, sans-serif; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 1.25rem; font-size: 0.9rem; }
+.top a { color: #a9a6e6; text-decoration: none; }
+.top select { background: #1d2050; color: #a9a6e6; border: 1px solid #343a7a; border-radius: 6px; padding: 0.2rem 0.4rem; max-width: 40vw; }
+.logo { font-weight: 800; font-size: 1.3rem; letter-spacing: 0.04em; color: #ffd84d; text-shadow: 2px 2px 0 #ff5d8f; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.3rem 1.25rem; }
+.clock { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: #ffd84d; color: #14163a; font-weight: 800; font-size: 1.3rem; }
+.word { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: clamp(1.1rem, 3.4vw, 2rem); letter-spacing: 0.25em; white-space: pre; }
+.round { color: #a9a6e6; font-size: 0.85rem; min-width: 5.5rem; text-align: right; }
+.meter { height: 6px; margin: 0.3rem 1.25rem 0.6rem; background: #1d2050; border-radius: 3px; overflow: hidden; }
+.meter div { height: 100%; background: linear-gradient(90deg, #ff5d8f, #ffd84d); transition: width 0.1s linear; }
+.stage { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 0.8rem; padding: 0 1.25rem; }
+.canvas { margin: 0; min-height: 0; display: flex; align-items: center; justify-content: center; background: #fffdf5; color: #1c1c28; border-radius: 12px; white-space: pre; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: min(2.6vw, 3.4vh); line-height: 1.1; overflow: hidden; box-shadow: 0 6px 0 #0c0d26; }
+.chat { list-style: none; margin: 0; padding: 0.6rem; background: #1d2050; border-radius: 12px; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.35rem; font-size: 0.9rem; }
+.chat li { padding: 0.35rem 0.5rem; border-radius: 8px; background: #262a66; line-height: 1.35; }
+.chat li span { display: block; color: #a9a6e6; font-size: 0.8rem; }
+.chat .right { background: #1f7a4d; color: #e6ffef; font-weight: 700; }
+.chat .reveal { background: #ffd84d; color: #14163a; font-weight: 700; }
+.bottom { padding: 0.6rem 1.25rem 0.9rem; text-align: center; }
+.controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.4rem; }
+.controls button { min-width: 2.4rem; background: #1d2050; color: #cfcdf5; border: 1px solid #343a7a; border-radius: 6px; padding: 0.25rem 0.6rem; cursor: pointer; }
+.controls .on { background: #ffd84d; color: #14163a; border-color: #ffd84d; }
+.score { margin: 0; color: #a9a6e6; font-size: 0.85rem; }
+.empty { margin: auto; color: #a9a6e6; }
+.empty a { color: #ffd84d; }
+@media (max-width: 720px) { .stage { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) 9rem; } .canvas { font-size: min(3.2vw, 2.6vh); } }

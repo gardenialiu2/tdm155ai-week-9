@@ -19,7 +19,7 @@ const MODELS = [
 // The starters are the systems with `featured:` in system.md, in that order; everything else in systems/ (the earlier
 // active copies you make) is listed separately. Archived teaching examples are not in this picker.
 const CREATE = "__make-your-own__";
-const KINDS = { loop: "the loop", cast: "the cast", graph: "a graph", switch: "a switch" };
+const KINDS = { loop: "the loop", cast: "the cast", graph: "a graph", switch: "a switch", draw: "a game" };
 const starterLabel = (s, i) => `${i + 1} · ${s.config.level === "advanced" ? "advanced" : KINDS[s.config.kind] || s.config.kind}`;
 
 function Copy({ text, label = "Copy" }) {
@@ -187,10 +187,24 @@ export default function Theater() {
                     <label>At most ({c.answer ? "guesses" : "tries"})<input type="number" min="1" max="20" value={settings.maxTries ?? c.maxTries} onChange={set("maxTries")} disabled={running} /></label>
                   </>
                 )}
+                {c.kind === "draw" && (
+                  <>
+                    <label>Rounds (words)<input type="number" min="1" max="10" value={settings.rounds ?? c.rounds} onChange={set("rounds")} disabled={running} /></label>
+                    <label>Seconds to guess<input type="number" min="5" max="120" value={settings.guessSeconds ?? c.guessSeconds} onChange={set("guessSeconds")} disabled={running} /></label>
+                    <label>Drawing passes<input type="number" min="1" max="5" value={settings.stages ?? c.stages} onChange={set("stages")} disabled={running} /></label>
+                    <label>Most guesses per round<input type="number" min="1" max="20" value={settings.maxTries ?? c.maxTries} onChange={set("maxTries")} disabled={running} /></label>
+                  </>
+                )}
                 {c.kind === "cast" && (c.speeches > 0
                   ? <label>Speeches in all<input type="number" min="1" max="120" value={settings.speeches ?? c.speeches} onChange={set("speeches")} disabled={running} /></label>
                   : <label>Rounds (turns each)<input type="number" min="1" max="30" value={settings.turns ?? c.turns} onChange={set("turns")} disabled={running} /></label>)}
                 <label>Cost ceiling ($)<input type="number" min="0.01" max="5" step="0.05" value={settings.costCeiling ?? c.costCeiling} onChange={set("costCeiling")} disabled={running} /></label>
+                {c.kind === "draw" && (
+                  <label className={styles.wide}>
+                    Your own words, separated by commas (leave empty for the system's list; only the drawer sees them)
+                    <textarea rows={2} value={settings.input ?? ""} onChange={set("input")} disabled={running} />
+                  </label>
+                )}
                 {(c.kind === "switch" || c.kind === "graph") && (
                   <label className={styles.wide}>
                     The input (what the router reads)
@@ -204,7 +218,7 @@ export default function Theater() {
                 {!running && <button className={styles.button} onClick={() => run(true)} title="Stand-in replies, no model, no cost">Rehearse (no model, free)</button>}
                 {running && <button className={styles.stop} onClick={stop}>Stop</button>}
                 <span className={styles.muted}>
-                  {c.kind === "cast" ? (c.speeches > 0 ? `${system.cast.length} characters · ${settings.speeches ?? c.speeches} speeches in all` : `${system.cast.length} characters × ${settings.turns ?? c.turns} rounds`) : c.kind === "loop" ? (c.answer ? "one guess at a time · the judge is code" : `${system.cast.length} + judge, each try`) : `router + one branch${c.answer || system.judge ? " + a final judge" : ""}`}
+                  {c.kind === "cast" ? (c.speeches > 0 ? `${system.cast.length} characters · ${settings.speeches ?? c.speeches} speeches in all` : `${system.cast.length} characters × ${settings.turns ?? c.turns} rounds`) : c.kind === "draw" ? `a drawer + a guesser · ${settings.guessSeconds ?? c.guessSeconds}s to guess · the judge is code` : c.kind === "loop" ? (c.answer ? "one guess at a time · the judge is code" : `${system.cast.length} + judge, each try`) : `router + one branch${c.answer || system.judge ? " + a final judge" : ""}`}
                   {system.director ? " · a director" : ""}{system.producers.length ? ` · ${system.producers.length} producer${system.producers.length > 1 ? "s" : ""} every ${c.producersEvery} round${c.producersEvery > 1 ? "s" : ""}` : ""}{system.observers.length ? ` · ${system.observers.length} observer${system.observers.length > 1 ? "s" : ""}` : ""}{c.confessionals ? (c.asideLabel === "ITM" ? " · private ITMs" : " · confessionals on") : ""}{system.roles?.length ? " · secret roles" : ""}{c.ratingsLoop ? " · ratings loop" : ""}
                 </span>
               </div>
